@@ -1,7 +1,8 @@
-import SigninForm from 'components/forms/SigninForm'
-import Auth from 'layouts/Auth'
-import Root from 'layouts/Root'
+import SigninForm from '@components/forms/SigninForm'
+import Auth from '@layouts/Auth'
+import Root from '@layouts/Root'
 
+import { Button } from '@shadcn/button'
 import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
@@ -21,7 +22,9 @@ function App () {
               <div>
                 <h1 className='text-2xl'>Inventario</h1>
                 <p>Count: {count}</p>
-                <button onClick={() => setCount(count + 1)}>Increment</button>
+                <Button variant={'outline'} onClick={() => setCount(count + 1)}>
+                  Increment
+                </Button>
               </div>
             }
           />

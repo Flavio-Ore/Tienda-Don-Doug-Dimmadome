@@ -1,10 +1,13 @@
-import { Outlet } from "react-router-dom"
+import Leftsidebar from '@/components/Leftsidebar'
+import { Outlet } from 'react-router-dom'
 
 const Root = () => {
-  return <div>
-    <h1>Root</h1>
-    <Outlet />
-  </div>
+  return (
+    <div className='flex gap-x-8'>
+      <Leftsidebar />
+      <Outlet />
+    </div>
+  )
 }
 
 export default Root

@@ -2,10 +2,9 @@ import { Outlet } from 'react-router-dom'
 
 const Auth = () => {
   return (
-    <div>
-      <h1>Autorización</h1>
+    <section className='flex flex-1 items-center justify-center flex-col'>
       <Outlet />
-    </div>
+    </section>
   )
 }
 

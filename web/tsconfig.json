@@ -19,15 +19,15 @@
       "@/*": [
         "./src/*",
       ],
-      "layouts/*": [
+      "@layouts/*": [
         "./src/layouts/*",
       ],
-      "components/*": [
+      "@components/*": [
         "./src/components/*",
       ],
-      "@hooks/*": [
-        "./src/hooks/*",
-      ],
+      "@shadcn/*": [
+        "./src/components/ui/*"
+      ]
     },
     /* Bundler mode */
     "moduleResolution": "bundler",
