@@ -20,10 +20,10 @@ public class DetallePedidoProveedor {
     @Column(nullable = false)
     private int cantidad;
 
-    @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio_unitario", nullable = false)
     private double precioUnitario;
 
-    @Column(precision = 10, scale = 2)
+    @Column(nullable= false)
     private double subtotal;
 
     @ManyToOne

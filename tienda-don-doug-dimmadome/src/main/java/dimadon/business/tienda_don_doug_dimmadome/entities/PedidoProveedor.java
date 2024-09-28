@@ -26,7 +26,7 @@ public class PedidoProveedor {
     @Column(name = "fecha_entrega")
     private Date fechaEntrega;
 
-    @Column(precision = 10, scale = 2)
+    @Column(nullable = false)
     private double total;
 
     @ManyToOne

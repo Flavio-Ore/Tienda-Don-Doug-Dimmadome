@@ -22,7 +22,7 @@ public class Venta {
     @Column(name = "fecha_venta", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp fechaVenta;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false)
     private double total;
 
     @ManyToOne

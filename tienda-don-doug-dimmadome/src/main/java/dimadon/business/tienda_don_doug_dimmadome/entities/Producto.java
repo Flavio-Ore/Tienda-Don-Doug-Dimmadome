@@ -25,13 +25,13 @@ public class Producto {
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false)
     private double precio;
 
     @Column(name = "stock_actual", nullable = false)
     private int stockActual;
 
-    @Column(length = 50)
+    @Column(name="codigo_barra",length = 50)
     private String codigoBarra;
 
     @Column(name = "fecha_creacion", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
