@@ -140,7 +140,7 @@
 
   /*! Left Sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-4 xl:px-6 py-10 flex-col justify-between max-w-[270px] bg-dark-2 overflow-scroll custom-scrollbar;
+    @apply hidden md:flex px-4 xl:px-6 py-10 flex-col justify-between max-w-[270px] overflow-scroll custom-scrollbar;
   }
 
   .leftsidebar-link {
@@ -187,10 +187,10 @@
 
   /*! Button */
   .shad-button_primary {
-    @apply bg-primary-500 hover:bg-primary-500/80 text-light-1 flex gap-2;
+    @apply bg-dark-2 hover:bg-dark-2/80 text-light-1 flex gap-2;
   }
   .shad-button_secondary {
-    @apply bg-secondary-500 hover:bg-secondary-500/80 text-light-1 flex gap-2;
+    @apply bg-dark-2 hover:bg-dark-2/80 text-light-1 flex gap-2;
   }
 
   .shad-button_dark_4 {

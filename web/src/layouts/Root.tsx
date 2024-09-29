@@ -4,10 +4,12 @@ import { Outlet } from 'react-router-dom'
 
 const Root = () => {
   return (
-    <div className='flex gap-x-8'>
-      <Topsidebar />
+    <div className='w-full md:flex bg-dark-2'>
       <Leftsidebar />
-      <Outlet />
+      <div className='flex flex-col w-full'>
+        <Topsidebar />
+        <Outlet />
+      </div>
     </div>
   )
 }

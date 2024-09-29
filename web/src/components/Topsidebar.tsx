@@ -1,11 +1,13 @@
-import { Link } from 'react-router-dom'
-
 const Topsidebar = () => {
   return (
-    <header className='min-w-full'>
-      <nav className='bg-dark-1'>
-        <Link to='/'>Login</Link>
-      </nav>
+    <header className='w-full h-16 flex gap-x-2 justify-center items-center'>
+      <h1 className='text-2xl font-bold text-center'>
+        Sistema de Control de Inventario Kardex Método PEPS
+      </h1>
+      <img
+        className='block w-8'
+        src='/Stock_Image_of_Doug_Dimmadome_logo.png'
+      />
     </header>
   )
 }
