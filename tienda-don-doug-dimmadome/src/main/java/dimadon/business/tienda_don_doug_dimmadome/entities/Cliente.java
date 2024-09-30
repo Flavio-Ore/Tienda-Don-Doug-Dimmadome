@@ -13,10 +13,17 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="id_cliente")
     private int id;
+
+    @Column(nullable = false, length = 8)
+    private String dni;
 
     @Column(nullable = false, length = 100)
     private String nombre;
+
+    @Column(nullable =false,length = 100)
+    private String apellido;
 
     @Column(length = 20)
     private String telefono;
@@ -28,6 +35,7 @@ public class Cliente {
     private String direccion;
 
     // Getters and Setters
+
     public int getId() {
         return id;
     }
@@ -36,12 +44,28 @@ public class Cliente {
         this.id = id;
     }
 
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public String getTelefono() {
@@ -67,4 +91,5 @@ public class Cliente {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+    
 }

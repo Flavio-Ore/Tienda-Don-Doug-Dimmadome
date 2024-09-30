@@ -15,6 +15,7 @@ public class DetallePedidoProveedor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_detalle_pedido_proveedor")
     private int id;
 
     @Column(nullable = false)
@@ -35,6 +36,7 @@ public class DetallePedidoProveedor {
     private Producto producto;
 
     // Getters and Setters
+
     public int getId() {
         return id;
     }
@@ -82,4 +84,5 @@ public class DetallePedidoProveedor {
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
+    
 }

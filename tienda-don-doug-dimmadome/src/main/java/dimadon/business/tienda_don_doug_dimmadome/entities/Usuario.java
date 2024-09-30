@@ -17,10 +17,14 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private int id;
 
     @Column(nullable = false, length = 100)
     private String nombre;
+
+    @Column(nullable = false, length = 100)
+    private String apellidos;
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
@@ -28,7 +32,7 @@ public class Usuario {
     @Column(nullable = false, length = 100)
     private String contrasena;
 
-    @Column(name = "fecha_creacion", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "fecha_creacion", nullable = false, updatable = false, insertable = false)
     private Timestamp fechaCreacion;
 
     @ManyToOne
@@ -36,6 +40,7 @@ public class Usuario {
     private TipoUsuario tipoUsuario;
 
     // Getters and Setters
+
     public int getId() {
         return id;
     }
@@ -50,6 +55,14 @@ public class Usuario {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getEmail() {
@@ -83,4 +96,5 @@ public class Usuario {
     public void setTipoUsuario(TipoUsuario tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
+
 }

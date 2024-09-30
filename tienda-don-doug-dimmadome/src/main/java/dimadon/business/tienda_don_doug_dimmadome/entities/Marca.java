@@ -8,24 +8,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "categoria_producto")
-public class Categoria {
-
+@Table(name= "marca")
+public class Marca {
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_categoria" )
-    private int id;
-
-    @Column(nullable = false, length = 100)
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    private int id_marca;
+    
+    @Column(nullable = false)
     private String nombre;
 
-    // Getters and Setters
-    public int getId() {
-        return id;
+    //Getters and Setters
+
+
+    public int getId_marca() {
+        return id_marca;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId_marca(int id_marca) {
+        this.id_marca = id_marca;
     }
 
     public String getNombre() {
@@ -35,4 +36,7 @@ public class Categoria {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    
+
 }

@@ -17,6 +17,7 @@ public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_producto")
     private int id;
 
     @Column(nullable = false, length = 100)
@@ -31,17 +32,23 @@ public class Producto {
     @Column(name = "stock_actual", nullable = false)
     private int stockActual;
 
-    @Column(name="codigo_barra",length = 50)
-    private String codigoBarra;
-
-    @Column(name = "fecha_creacion", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "fecha_creacion", nullable = false, updatable = false, insertable = false, columnDefinition = "date default (curdate())")
     private Timestamp fechaCreacion;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
+    @ManyToOne
+    @JoinColumn(name = "id_fabricante")
+    private Fabricante fabricante;
+
+    @ManyToOne
+    @JoinColumn(name = "id_marca")
+    private Marca marca;
+
     // Getters and Setters
+
     public int getId() {
         return id;
     }
@@ -82,14 +89,6 @@ public class Producto {
         this.stockActual = stockActual;
     }
 
-    public String getCodigoBarra() {
-        return codigoBarra;
-    }
-
-    public void setCodigoBarra(String codigoBarra) {
-        this.codigoBarra = codigoBarra;
-    }
-
     public Timestamp getFechaCreacion() {
         return fechaCreacion;
     }
@@ -105,4 +104,21 @@ public class Producto {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
+
+    public Fabricante getFabricante() {
+        return fabricante;
+    }
+
+    public void setFabricante(Fabricante fabricante) {
+        this.fabricante = fabricante;
+    }
+
+    public Marca getMarca() {
+        return marca;
+    }
+
+    public void setMarca(Marca marca) {
+        this.marca = marca;
+    }
+   
 }

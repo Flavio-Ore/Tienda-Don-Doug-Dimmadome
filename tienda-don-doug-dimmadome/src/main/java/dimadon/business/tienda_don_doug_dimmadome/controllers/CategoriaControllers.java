@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dimadon.business.tienda_don_doug_dimmadome.entities.Usuario;
-import dimadon.business.tienda_don_doug_dimmadome.services.ServiceUsuario;
-
-
+import dimadon.business.tienda_don_doug_dimmadome.entities.Categoria;
+import dimadon.business.tienda_don_doug_dimmadome.services.ServiceCategoria;
 
 @RestController
-@RequestMapping("/api/usuarios")
-public class UsuarioController {
-
+@RequestMapping("/categoria")
+public class CategoriaControllers {
+    
     @Autowired
-    ServiceUsuario serviceUsuario;
+    ServiceCategoria serviceCategoria;
 
     @GetMapping()
-    public ArrayList<Usuario> obtenerUsuarios(){
-        return serviceUsuario.obtnerUsuario();
+    public ArrayList<Categoria> obtnerCategoria() {
+        return serviceCategoria.obtenerCAtegoria();
     }
 
     @PostMapping()
-    public Usuario guardarUsuarios( @RequestBody Usuario usuario){
-        return this.serviceUsuario.guardarUsuario(usuario);
+    public Categoria guardarCategoria(@RequestBody Categoria categoria) {
+
+        return this.serviceCategoria.GuardarCategoria(categoria);
     }
+
 }

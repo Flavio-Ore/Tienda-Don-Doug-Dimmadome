@@ -22,7 +22,7 @@ public class Devolucion {
     @Column(nullable = false)
     private int cantidad;
 
-    @Column(name = "fecha_devolucion", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "fecha_devolucion", nullable = false, updatable = false, insertable = false, columnDefinition = "date default (curdate())")
     private Timestamp fechaDevolucion;
 
     @Column(columnDefinition = "TEXT")

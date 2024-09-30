@@ -5,20 +5,21 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dimadon.business.tienda_don_doug_dimmadome.Repository.RepositoryUsuario;
 import dimadon.business.tienda_don_doug_dimmadome.entities.Usuario;
-import dimadon.business.tienda_don_doug_dimmadome.repositories.UsuarioRepository;
+        
 
 @Service
 public class ServiceUsuario {
     
     @Autowired
-    UsuarioRepository usuarioRepository;
+    RepositoryUsuario repositoryUsuario;
 
     public ArrayList<Usuario> obtnerUsuario(){
-        return (ArrayList<Usuario>) usuarioRepository.findAll();
+        return (ArrayList<Usuario>) repositoryUsuario.findAll();
     }
 
     public Usuario guardarUsuario(Usuario usuario){
-        return usuarioRepository.save(usuario);
+        return repositoryUsuario.save(usuario);
     }
 }

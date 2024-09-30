@@ -13,13 +13,11 @@ public class Proveedor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name =("id_proveedor"))
     private int id;
 
     @Column(nullable = false, length = 100)
     private String nombre;
-
-    @Column(length = 100)
-    private String contacto;
 
     @Column(length = 20)
     private String telefono;
@@ -45,14 +43,6 @@ public class Proveedor {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getContacto() {
-        return contacto;
-    }
-
-    public void setContacto(String contacto) {
-        this.contacto = contacto;
     }
 
     public String getTelefono() {

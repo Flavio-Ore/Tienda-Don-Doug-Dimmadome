@@ -8,23 +8,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "movimiento_entrada_salida")
-public class MovimientoEntradaSalida {
+@Table(name = "fabricante")
+public class Fabricante {
+    
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private int id_fabricante;
 
-    @Column(length = 50)
+    @Column(nullable = false,length = 100)
     private String nombre;
+    
+    //Getters and Stters
 
-    // Getters and Setters
-    public int getId() {
-        return id;
+    public int getId_fabricante() {
+        return id_fabricante;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId_fabricante(int id_fabricante) {
+        this.id_fabricante = id_fabricante;
     }
 
     public String getNombre() {
@@ -34,4 +36,6 @@ public class MovimientoEntradaSalida {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    
 }

@@ -1,7 +1,6 @@
 package dimadon.business.tienda_don_doug_dimmadome.controllers;
 
 import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,25 +8,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dimadon.business.tienda_don_doug_dimmadome.entities.Usuario;
-import dimadon.business.tienda_don_doug_dimmadome.services.ServiceUsuario;
-
-
+import dimadon.business.tienda_don_doug_dimmadome.entities.Fabricante;
+import dimadon.business.tienda_don_doug_dimmadome.services.ServiceFabricante;
 
 @RestController
-@RequestMapping("/api/usuarios")
-public class UsuarioController {
+@RequestMapping("/fabricante")
+public class FabricanteController {
+    
 
     @Autowired
-    ServiceUsuario serviceUsuario;
+    ServiceFabricante serviceFabricante;
+
 
     @GetMapping()
-    public ArrayList<Usuario> obtenerUsuarios(){
-        return serviceUsuario.obtnerUsuario();
+    public ArrayList<Fabricante> obtenerFabricante(){
+        return serviceFabricante.obtenerFabricante();
     }
 
     @PostMapping()
-    public Usuario guardarUsuarios( @RequestBody Usuario usuario){
-        return this.serviceUsuario.guardarUsuario(usuario);
+    public Fabricante guardarFabricante(@RequestBody Fabricante fabricante){
+        return this.serviceFabricante.insertarFabricante(fabricante);
     }
 }

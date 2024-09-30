@@ -17,10 +17,17 @@ public class Venta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_venta")
     private int id;
 
-    @Column(name = "fecha_venta", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "fecha_venta", nullable = false, updatable = false, insertable = false, columnDefinition = "date default (curdate())")
     private Timestamp fechaVenta;
+
+    @Column(nullable = false)
+    private double subtotal;
+
+    @Column(nullable = false)
+    private double igv;
 
     @Column(nullable = false)
     private double total;
@@ -38,6 +45,7 @@ public class Venta {
     private TipoPago tipoPago;
 
     // Getters and Setters
+
     public int getId() {
         return id;
     }
@@ -52,6 +60,22 @@ public class Venta {
 
     public void setFechaVenta(Timestamp fechaVenta) {
         this.fechaVenta = fechaVenta;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public double getIgv() {
+        return igv;
+    }
+
+    public void setIgv(double igv) {
+        this.igv = igv;
     }
 
     public double getTotal() {
@@ -85,4 +109,5 @@ public class Venta {
     public void setTipoPago(TipoPago tipoPago) {
         this.tipoPago = tipoPago;
     }
+    
 }

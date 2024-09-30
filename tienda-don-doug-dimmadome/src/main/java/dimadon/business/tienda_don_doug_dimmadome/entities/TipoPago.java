@@ -7,15 +7,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name = "tipo_pago")
 public class TipoPago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_tipo_pago")
     private int id;
 
-    @Column(name = "nombre_pago", nullable = false, length = 50)
+    @Column(name = "nombre_pago", length = 50)
     private String nombrePago;
 
     // Getters and Setters
@@ -35,3 +37,4 @@ public class TipoPago {
         this.nombrePago = nombrePago;
     }
 }
+

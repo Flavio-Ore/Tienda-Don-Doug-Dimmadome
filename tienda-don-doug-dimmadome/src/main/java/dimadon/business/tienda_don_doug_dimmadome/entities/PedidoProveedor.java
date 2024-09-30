@@ -1,6 +1,5 @@
 package dimadon.business.tienda_don_doug_dimmadome.entities;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
@@ -18,13 +17,20 @@ public class PedidoProveedor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_pedido_proveedor")
     private int id;
 
-    @Column(name = "fecha_pedido", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "fecha_pedido", nullable = false, updatable = false, insertable = false, columnDefinition = "date default (curdate())")
     private Timestamp fechaPedido;
 
-    @Column(name = "fecha_entrega")
-    private Date fechaEntrega;
+    @Column(name = "estado")
+    private Boolean estado;
+
+    @Column(nullable  = false)
+    private double subtotal;
+
+    @Column(nullable = false)
+    private double igv;
 
     @Column(nullable = false)
     private double total;
@@ -33,7 +39,10 @@ public class PedidoProveedor {
     @JoinColumn(name = "id_proveedor", nullable = false)
     private Proveedor proveedor;
 
-    // Getters and Setters
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Producto producto;
+
     public int getId() {
         return id;
     }
@@ -50,12 +59,28 @@ public class PedidoProveedor {
         this.fechaPedido = fechaPedido;
     }
 
-    public Date getFechaEntrega() {
-        return fechaEntrega;
+    public Boolean getEstado() {
+        return estado;
     }
 
-    public void setFechaEntrega(Date fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public double getIgv() {
+        return igv;
+    }
+
+    public void setIgv(double igv) {
+        this.igv = igv;
     }
 
     public double getTotal() {
@@ -73,4 +98,15 @@ public class PedidoProveedor {
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
     }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    // Getters and Setters
+    
 }
