@@ -1,11 +1,10 @@
-
 import ProductForm from '@/components/forms/ProductForm'
 
 const NewProduct = () => {
   return (
     <div className='common-container'>
       <ProductForm />
-      <div className='w-full'>
+      {/* <div className='w-full'>
         <h2 className='text-light-2 text-2xl'>Productos en Inventario</h2>
         <h4 className='text-light-3 body-bold'>
           A continuación se muestra una lista de los productos que se tienen
@@ -31,7 +30,7 @@ const NewProduct = () => {
             </span>
           </h4>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

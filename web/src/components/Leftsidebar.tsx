@@ -38,7 +38,9 @@ const Leftsidebar = () => {
                 className='stroke-blue-400'
                 strokeWidth={1}
               />
-              <span className='relative hidden xl:inline'>Productos Inventario</span>
+              <span className='relative hidden xl:inline'>
+                Kardexs de Inventario
+              </span>
             </NavLink>
           </li>
           <li
@@ -50,9 +52,7 @@ const Leftsidebar = () => {
               className='flex gap-x-2 justify-center xl:justify-start items-center py-4 xl:p-4'
             >
               <GoPackage size={24} className='fill-blue-300' />
-              <span className='relative hidden xl:inline'>
-                Agregar Producto
-              </span>
+              <span className='relative hidden xl:inline'>Crear Kardex</span>
             </NavLink>
           </li>
           {/* <li
@@ -109,7 +109,9 @@ const Leftsidebar = () => {
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
                 <AlertDialogAction onClick={handleLogout}>
                   <div className='flex-center gap-x-2'>
-                    <span className='focus-visible:text-light-1'>Cerrar Sesión</span>
+                    <span className='focus-visible:text-light-1'>
+                      Cerrar Sesión
+                    </span>
                     <ImExit
                       size={16}
                       className='fill-red-600 group-hover:stroke-red-700 focus-visible:stroke-red-800'

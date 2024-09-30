@@ -4,13 +4,16 @@ import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
 import { TbPackages } from 'react-icons/tb'
+
+type TipoComprobante = 'Factura' | 'Recibo por honorarios' |'Boleta de venta'
+type TipoOperacion = 'Compra' | 'Venta' | 'Devolución recibida' | 'Devolución entregada'
 type InventoryItem = {
   item: string
   fecha: string
-  tabla_tipo: string
+  tipo_comprobante: TipoComprobante
   serie: string
   numero: number
-  tipo_operacion: string
+  tipo_operacion: TipoOperacion
   cantidad: number
   costo_unitario: number
   costo_total: number
@@ -20,7 +23,7 @@ const inventory: InventoryItem[] = [
   {
     item: 'K-01',
     fecha: '2021-10-01',
-    tabla_tipo: 'Entrada',
+    tipo_comprobante: 'Factura',
     serie: 'A-01',
     numero: 1,
     tipo_operacion: 'Compra',
@@ -31,7 +34,7 @@ const inventory: InventoryItem[] = [
   {
     item: 'K-02',
     fecha: '2021-10-05',
-    tabla_tipo: 'Salida',
+    tipo_comprobante: 'Factura',
     serie: 'A-02',
     numero: 2,
     tipo_operacion: 'Venta',
@@ -42,7 +45,7 @@ const inventory: InventoryItem[] = [
   {
     item: 'K-03',
     fecha: '2021-10-10',
-    tabla_tipo: 'Entrada',
+    tipo_comprobante: 'Boleta de venta',
     serie: 'A-03',
     numero: 3,
     tipo_operacion: 'Compra',
@@ -53,29 +56,29 @@ const inventory: InventoryItem[] = [
   {
     item: 'K-04',
     fecha: '2021-10-15',
-    tabla_tipo: 'Salida',
+    tipo_comprobante: 'Factura',
     serie: 'A-04',
     numero: 4,
-    tipo_operacion: 'Devolución',
-    cantidad: 3,
+    tipo_operacion: 'Devolución entregada',
+    cantidad: -3,
     costo_unitario: 90,
     costo_total: 270
   },
   {
     item: 'K-05',
     fecha: '2021-10-20',
-    tabla_tipo: 'Entrada',
+    tipo_comprobante: 'Factura',
     serie: 'A-05',
     numero: 5,
-    tipo_operacion: 'Compra',
-    cantidad: 15,
+    tipo_operacion: 'Devolución entregada',
+    cantidad: -15,
     costo_unitario: 110,
     costo_total: 1650
   },
   {
     item: 'K-06',
     fecha: '2021-10-25',
-    tabla_tipo: 'Salida',
+    tipo_comprobante: 'Factura',
     serie: 'A-06',
     numero: 6,
     tipo_operacion: 'Venta',
@@ -108,8 +111,8 @@ const Inventory = () => {
             header: 'Fecha',
             cell: info => info.getValue()
           }),
-          columnHelper.accessor('tabla_tipo', {
-            header: 'Tabla Tipo',
+          columnHelper.accessor('tipo_comprobante', {
+            header: 'Tipo Comprobante',
             cell: info => info.getValue()
           }),
           columnHelper.accessor('serie', {
@@ -140,7 +143,7 @@ const Inventory = () => {
             id: 'cantidad_entradas',
             header: 'Cantidad',
             cell: info => {
-              if (info.row.original.tipo_operacion === 'Compra') {
+              if (info.row.original.tipo_operacion.includes('Compra')) {
                 return info.getValue()
               }
             }
@@ -149,7 +152,7 @@ const Inventory = () => {
             id: 'costo_unitario_entradas',
             header: 'Costo Unitario',
             cell: info => {
-              if (info.row.original.tipo_operacion === 'Compra') {
+              if (info.row.original.tipo_operacion.includes('Compra')) {
                 return info.getValue()
               }
             }
@@ -158,7 +161,7 @@ const Inventory = () => {
             id: 'costo_total_entradas',
             header: 'Costo Total',
             cell: info => {
-              if (info.row.original.tipo_operacion === 'Compra') {
+              if (info.row.original.tipo_operacion.includes('Compra')) {
                 return info.getValue()
               }
             }
@@ -173,7 +176,7 @@ const Inventory = () => {
             id: 'cantidad_salidas',
             header: 'Cantidad',
             cell: info => {
-              if (info.row.original.tipo_operacion === 'Venta') {
+              if (info.row.original.tipo_operacion.includes('Devolución')) {
                 return info.getValue()
               }
             }
@@ -182,7 +185,7 @@ const Inventory = () => {
             id: 'costo_unitario_salidas',
             header: 'Costo Unitario',
             cell: info => {
-              if (info.row.original.tipo_operacion === 'Venta') {
+              if (info.row.original.tipo_operacion.includes('Devolución')) {
                 return info.getValue()
               }
             }
@@ -191,7 +194,7 @@ const Inventory = () => {
             id: 'costo_total_salidas',
             header: 'Costo Total',
             cell: info => {
-              if (info.row.original.tipo_operacion === 'Venta') {
+              if (info.row.original.tipo_operacion.includes('Devolución')) {
                 return info.getValue()
               }
             }
@@ -218,7 +221,7 @@ const Inventory = () => {
             cell: info => info.getValue()
           })
         ]
-      })
+      })      
     ],
     []
   )
@@ -233,7 +236,7 @@ const Inventory = () => {
           strokeWidth={1}
         />{' '}
         <div>
-          <h3 className='text-light-2 text-2xl'>Productos en Inventario</h3>
+          <h3 className='text-light-2 text-2xl'>Kardexs de Inventario</h3>
           <p className='text-light-3 body-bold'>
             Tablas de Kardex de productos en inventario.
           </p>

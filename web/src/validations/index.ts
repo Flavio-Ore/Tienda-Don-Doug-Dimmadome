@@ -61,20 +61,40 @@ CREATE TABLE producto (
 ); 
  */
 
-export const productValidationSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: 'El nombre del producto debe tener al menos 2 caracteres'
-    })
-    .max(255),
-  description: z.string().max(255),
-  provider: z
-    .string()
-    .min(2, {
-      message: 'El nombre del proveedor debe tener al menos 2 caracteres'
-    })
-    .max(255)
+export const kardexValidationSchema = z.object({
+  typeExistence: z.enum([
+    'Mercadería',
+    'Producto terminado',
+    'Materias primas y auxiliares - Materiales',
+    'Envases y embalajes',
+    'Suministros diversos',
+  ]),
+  unitMeasure: z.enum([
+    'Unidad',
+    'Kilogramo',
+    'Litro',
+    'Metro',
+    'Metro cuadrado',
+    'Metro cúbico',
+    'Tonelada',
+    'Barril',
+    'Caja',
+    'Paquete',
+    'Saco',
+    'Cilindro'
+  ]),
+  RUC: z.string().length(11, {
+    message: 'El RUC debe tener 11 caracteres'
+  }),
+  socialReason: z.string().max(255, {
+    message: 'La razón social debe tener menos de 255 caracteres'
+  }),
+  period: z.string().max(255, {
+    message: 'El periodo debe tener menos de 255 caracteres'
+  }),
+  description: z.string().max(255, {
+    message: 'La descripción debe tener menos de 255 caracteres'
+  })
 })
 /*
 CREATE TABLE proveedor (
@@ -105,4 +125,19 @@ export const providerValidationSchema = z.object({
       message: 'La dirección del proveedor debe tener al menos 2 caracteres'
     })
     .max(255)
+})
+
+export const movementValidationSchema = z.object({
+  date: z.date(),
+  typeReceipt: z.enum(['Factura', 'Boleta de venta', 'Recibo por honorarios']),
+  operationType: z.enum([
+    'Compra',
+    'Venta',
+    'Devolución recibida',
+    'Devolución entregada'
+  ]),
+  quantity: z.number().int(),
+  unitCost: z.number().int().nonnegative(),
+  serial: z.string().max(255),
+  number: z.string().max(255)
 })
