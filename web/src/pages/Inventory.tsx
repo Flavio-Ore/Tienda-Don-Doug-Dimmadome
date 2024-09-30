@@ -221,6 +221,7 @@ const Inventory = () => {
             cell: info => info.getValue()
           })
         ]
+        
       })      
     ],
     []
