@@ -1,11 +1,16 @@
-import { Button } from '@shadcn/button'
-import { TbTableExport } from 'react-icons/tb'
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
 import { KardexFormSchema } from '@/validations/kardex.schema'
 import { MEASUREMENT_UNIT_VALUES, SUNAT_EXISTENCES_VALUES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@shadcn/button'
 import {
   Form,
   FormControl,
@@ -19,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { Textarea } from '@shadcn/textarea'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import { TbTableExport } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -223,17 +229,26 @@ const KardexForm = () => {
             <FormItem>
               <FormLabel className='shad-form_label'>Producto</FormLabel>
               <FormControl>
-                <select
-                  {...field}
-                  className='w-full p-2 border border-light-3 rounded-md bg-dark-1 text-light-1'
+                <Select
+                  onValueChange={value => field.onChange(Number(value))}
+                  defaultValue={String(field.value)}
                 >
-                  <option value=''>Selecciona un producto</option>
-                  {products.map(product => (
-                    <option key={product.id_producto} value={field.value}>
-                      {product.nombre_producto}
-                    </option>
-                  ))}
-                </select>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Elige un producto' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {products.map(product => (
+                      <SelectItem
+                        key={product.id_producto}
+                        value={String(product.id_producto)}
+                      >
+                        {product.nombre_producto}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage className='shad-form_message' />
             </FormItem>

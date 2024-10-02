@@ -5,7 +5,7 @@ import Root from '@layouts/Root'
 import ProductRegistration from '@/pages/create-product/ProductRegistration'
 import Providers from '@/pages/Providers'
 import RegisteredKardexs from '@/pages/registered-kardexs/RegisteredKardexs'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import CreateKardex from './pages/create-kardex/CreateKardex'
 import RegisteredProducts from './pages/registered-products/RegisteredProducts'
 
@@ -28,6 +28,7 @@ function App () {
             element={<RegisteredProducts />}
           />
           <Route path='/inventario/proveedores' element={<Providers />} />
+          <Route path='*' element={<Navigate to='/' />} />
         </Route>
       </Routes>
     </main>
