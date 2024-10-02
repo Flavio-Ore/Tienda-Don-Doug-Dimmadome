@@ -17,10 +17,7 @@ function App () {
           <Route index element={<SigninForm />} />
         </Route>
         <Route path='/inventario' element={<Root />}>
-          <Route
-            path='/inventario/kardex-registrados'
-            element={<RegisteredKardexs />}
-          />
+          <Route index element={<RegisteredKardexs />} />
           <Route path='/inventario/crear-kardex' element={<CreateKardex />} />
           <Route
             path='/inventario/registrar-producto'

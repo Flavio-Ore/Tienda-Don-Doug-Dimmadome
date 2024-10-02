@@ -1,4 +1,4 @@
-import { Bottombar } from '@/components/Bottombar'
+import Bottombar from '@/components/Bottombar'
 import Leftsidebar from '@/components/Leftsidebar'
 import Topsidebar from '@/components/Topsidebar'
 import useInventory from '@/states/inventory/hooks/useInventory'
@@ -13,7 +13,7 @@ const Root = () => {
       <Topsidebar />
       <div className='flex flex-1 w-full justify-center'>
         <Outlet />
-      </div> 
+      </div>
       <Bottombar />
     </div>
   ) : (

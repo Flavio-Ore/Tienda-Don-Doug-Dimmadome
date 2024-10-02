@@ -13,10 +13,13 @@ const InventoryContext = createContext<InventoryContext>({
   setProductStatus: () => {},
   removeProduct: () => {},
   addKardex: () => {},
+  signOut: () => {},
   addMovement: () => null,
   removeMovement: () => {},
   products: [],
-  kardexs: []
+  searchProducts: () => [],
+  searchKardex: () => [],
+  getAllKardexs: () => []
 })
 InventoryContext.displayName = 'KardexContext'
 

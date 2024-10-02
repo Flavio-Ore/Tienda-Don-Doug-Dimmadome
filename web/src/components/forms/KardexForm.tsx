@@ -1,10 +1,10 @@
 import { Button } from '@shadcn/button'
-import { GoPackageDependents } from 'react-icons/go'
+import { TbTableExport } from 'react-icons/tb'
 
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
 import { KardexFormSchema } from '@/validations/kardex.schema'
-import { EXISTENCES_TYPES, MEASUREMENT_UNIT_TYPES } from '@/values'
+import { MEASUREMENT_UNIT_VALUES, SUNAT_EXISTENCES_VALUES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Form,
@@ -23,26 +23,36 @@ import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const KardexForm = () => {
-  const {} = useInventory()
+  const { products, addKardex } = useInventory()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
 
   const productForm = useForm<z.infer<typeof KardexFormSchema>>({
     resolver: zodResolver(KardexFormSchema),
     defaultValues: {
+      productId: -1,
       description: '',
       period: '',
-      RUC: '',
+      ruc: '',
       socialReason: '',
-      typeExistence: 'Mercadería',
-      unitMeasure: 'Unidad'
+      sunatExistenceType: 'Mercadería',
+      unitMeasure: 'Unidades'
     }
   })
   const watchDescription = productForm.watch('description')
-  const onSubmit = async (value: z.infer<typeof KardexFormSchema>) => {
+  const onSubmit = (value: z.infer<typeof KardexFormSchema>) => {
     try {
       console.log(value)
-      navigate('/inventario/kardex-registrados')
+      addKardex({
+        productId: value.productId,
+        sunatExistenceType: value.sunatExistenceType,
+        measurementUnit: value.unitMeasure,
+        ruc: value.ruc,
+        socialReason: value.socialReason,
+        kardexPeriod: value.period,
+        description: value.description
+      })
+      navigate('/inventario')
     } catch (error) {
       console.error(error)
     }
@@ -85,7 +95,7 @@ const KardexForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='RUC'
+          name='ruc'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>RUC</FormLabel>
@@ -116,11 +126,11 @@ const KardexForm = () => {
 
         <FormField
           control={productForm.control}
-          name='typeExistence'
+          name='sunatExistenceType'
           render={({ field }) => (
             <FormItem className='inline-flex w-full items-center justify-between'>
               <FormLabel htmlFor={field.name}>
-                Tipo de Existencia del Producto
+                Tipo de Existencia del Producto según SUNAT
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -134,13 +144,15 @@ const KardexForm = () => {
                       )}
                     >
                       {field.value
-                        ? EXISTENCES_TYPES.find(type => type === field.value)
+                        ? SUNAT_EXISTENCES_VALUES.find(
+                            type => type === field.value
+                          )
                         : 'Elige un tipo de existencia'}
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className='w-[200px] p-0'>
-                  {EXISTENCES_TYPES.map(type => (
+                  {SUNAT_EXISTENCES_VALUES.map(type => (
                     <Button
                       key={type}
                       variant='ghost'
@@ -154,6 +166,7 @@ const KardexForm = () => {
                   ))}
                 </PopoverContent>
               </Popover>
+              <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
@@ -177,7 +190,7 @@ const KardexForm = () => {
                       )}
                     >
                       {field.value
-                        ? MEASUREMENT_UNIT_TYPES.find(
+                        ? MEASUREMENT_UNIT_VALUES.find(
                             type => type === field.value
                           )
                         : 'Elige un tipo de medida'}
@@ -185,7 +198,7 @@ const KardexForm = () => {
                   </FormControl>
                 </PopoverTrigger>
                 <PopoverContent className='w-[200px] p-0'>
-                  {MEASUREMENT_UNIT_TYPES.map(type => (
+                  {MEASUREMENT_UNIT_VALUES.map(type => (
                     <Button
                       key={type}
                       variant='ghost'
@@ -199,6 +212,30 @@ const KardexForm = () => {
                   ))}
                 </PopoverContent>
               </Popover>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={productForm.control}
+          name='productId'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>Producto</FormLabel>
+              <FormControl>
+                <select
+                  {...field}
+                  className='w-full p-2 border border-light-3 rounded-md bg-dark-1 text-light-1'
+                >
+                  <option value=''>Selecciona un producto</option>
+                  {products.map(product => (
+                    <option key={product.id_producto} value={field.value}>
+                      {product.nombre_producto}
+                    </option>
+                  ))}
+                </select>
+              </FormControl>
+              <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
@@ -235,10 +272,10 @@ const KardexForm = () => {
             type='submit'
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Agregar Producto
-            <GoPackageDependents
+            Crear Kardex
+            <TbTableExport
               size={20}
-              className='ml-2 fill-dark-1 group-focus:fill-light-1'
+              className='ml-2 stroke-dark-1 group-focus-visible:stroke-light-1'
             />
           </Button>
         </div>

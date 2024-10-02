@@ -79,7 +79,6 @@ const SigninForm = () => {
                 <FormLabel>Correo</FormLabel>
                 <FormControl>
                   <Input
-                    className='shad-input'
                     type='email'
                     placeholder='usuario@dominio.com'
                     autoComplete='email'
@@ -99,7 +98,6 @@ const SigninForm = () => {
                 <div className='relative inline-flex items-center w-full'>
                   <FormControl>
                     <Input
-                      className='shad-input'
                       type={showPassword ? 'text' : 'password'}
                       placeholder='Super secreto'
                       autoComplete='off'

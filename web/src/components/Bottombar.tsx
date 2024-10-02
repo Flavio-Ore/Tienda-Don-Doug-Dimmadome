@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger
 } from './ui/dropdown-menu'
 
-export const Bottombar = () => {
+const Bottombar = () => {
   const { pathname } = useLocation()
   return (
     <section className={cn('')}>
@@ -44,7 +44,7 @@ export const Bottombar = () => {
                   })}
                 >
                   <NavLink
-                    to={'/inventario/kardex-registrados'}
+                    to={'/inventario'}
                     className={cn(
                       'flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                     )}
@@ -128,3 +128,5 @@ export const Bottombar = () => {
     </section>
   )
 }
+
+export default Bottombar

@@ -1,8 +1,18 @@
-import { loadFromLocalStorage, saveToLocalStorage } from '@/lib/localStorage'
+import {
+  loadFromLocalStorage,
+  removeFromLocalStorage,
+  saveToLocalStorage
+} from '@/lib/local-storage'
 import data from '@/mocks/sql.mock.json'
 import InventoryContext from '@/states/inventory/contexts/InventoryContext'
-import { type Kardex, type MovimientoInventario } from '@/types'
-import { DOCUMENTOS, OPERACIONES } from '@/values'
+import {
+  AllowedMeasurementUnits,
+  AllowedSunatExistences,
+  Producto,
+  type Kardex,
+  type MovimientoInventario
+} from '@/types'
+import { DOCUMENT_TYPES, OPERATIONS_VALUES } from '@/values'
 import { useEffect, useState } from 'react'
 
 interface InventoryLogin {
@@ -17,7 +27,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     password: '',
     isLogged: false
   })
-  const [kardexs, setkardexs] = useState<Kardex[]>(data.kardex)
+  const [kardexs, setKardexs] = useState<Kardex[]>(data.kardex)
   const [movementsInventory, setMovementsInventory] = useState<
     MovimientoInventario[]
   >(data.movimiento_inventario)
@@ -29,7 +39,10 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
       setLogin(wasLogged)
     }
   }, [])
-
+  const signOut = () => {
+    removeFromLocalStorage('login_dimadon')
+    setLogin({ email: '', password: '', isLogged: false })
+  }
   const checkAuth = ({
     email,
     password
@@ -75,6 +88,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
       }
     ])
   }
+
   const setProductStock = ({
     productId,
     stock
@@ -124,42 +138,100 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
       ])
     }
   }
-
   const addKardex = ({
-    idProducto,
-    idTipoExistenciaSunat,
-    idUnidadMedida,
+    productId,
+    sunatExistenceType,
+    measurementUnit,
     ruc,
-    razonSocial,
-    periodoKardex,
-    descripcion
+    socialReason,
+    kardexPeriod,
+    description
   }: {
-    idProducto: number
-    idTipoExistenciaSunat: number
-    idUnidadMedida: number
+    productId: number
+    sunatExistenceType: AllowedSunatExistences
+    measurementUnit: AllowedMeasurementUnits
     ruc: string
-    razonSocial: string
-    periodoKardex: string
-    descripcion: string
+    socialReason: string
+    kardexPeriod: string
+    description: string
   }) => {
-    const productExists = products.find(p => p.id_producto === idProducto)
+    const productExists = products.find(p => p.id_producto === productId)
     if (!productExists) {
       throw new Error('No existe el producto')
     }
+    const unitMeasureExists = data.unidad_medida.find(
+      um => um.unidad === measurementUnit
+    )
 
-    setkardexs([
-      ...kardexs,
-      {
-        id_kardex: kardexs.length + 1,
-        id_producto: idProducto,
-        id_tipo_existencia_sunat: idTipoExistenciaSunat,
-        id_unidad_medida: idUnidadMedida,
-        ruc,
-        razon_social: razonSocial,
-        periodo_kardex: periodoKardex,
-        descripcion
+    if (!unitMeasureExists) {
+      throw new Error('No existe la unidad de medida')
+    }
+
+    const sunatExistenceTypeExists = data.tipo_existencia_sunat.find(
+      te => te.tipo_existencia === sunatExistenceType
+    )
+    if (!sunatExistenceTypeExists) {
+      throw new Error('Este tipo de existencia no está registrada por la SUNAT')
+    }
+    console.log({
+      productId,
+      sunatExistenceTypeExists,
+      unitMeasureExists,
+      ruc,
+      socialReason,
+      kardexPeriod,
+      description
+    })
+    setKardexs(prevKardexs => {
+      return [
+        ...prevKardexs,
+        {
+          id_kardex: kardexs.length + 1,
+          id_producto: productId,
+          id_tipo_existencia_sunat:
+            sunatExistenceTypeExists.id_tipo_existencia_sunat,
+          id_unidad_medida: unitMeasureExists.id_unidad_medida,
+          ruc,
+          razon_social: socialReason,
+          periodo_kardex: kardexPeriod,
+          descripcion: description
+        }
+      ]
+    })
+  }
+
+  const getAllKardexs = () => {
+    const completeKardexs: Array<
+      Kardex & {
+        producto: Producto
+        tipo_existencia_sunat: string
+        unidad_medida: string
       }
-    ])
+    > = kardexs.map(kardex => {
+      const product = products.find(p => p.id_producto === kardex.id_producto)
+      if (!product) {
+        throw new Error('No existe el producto')
+      }
+      const sunatExistence = data.tipo_existencia_sunat.find(
+        te => te.id_tipo_existencia_sunat === kardex.id_tipo_existencia_sunat
+      )
+      if (!sunatExistence) {
+        throw new Error('No existe el tipo de existencia en SUNAT')
+      }
+      const unitMeasure = data.unidad_medida.find(
+        um => um.id_unidad_medida === kardex.id_unidad_medida
+      )
+      if (!unitMeasure) {
+        throw new Error('No existe la unidad de medida')
+      }
+      return {
+        ...kardex,
+        producto: product,
+        tipo_existencia_sunat: sunatExistence.tipo_existencia,
+        unidad_medida: unitMeasure.unidad
+      }
+    })
+    return completeKardexs
   }
 
   const addMovement = ({
@@ -172,8 +244,8 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     orden
   }: {
     idKardex: number
-    tipoComprobante: keyof typeof DOCUMENTOS
-    tipoOperacion: keyof typeof OPERACIONES
+    tipoComprobante: keyof typeof DOCUMENT_TYPES
+    tipoOperacion: keyof typeof OPERATIONS_VALUES
     cantidadProductos: number
     costoUnitario: number
     entrada: boolean
@@ -212,7 +284,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
         ...prevKardex,
         periodo_kardex: new Date().toISOString()
       }
-      setkardexs([...kardexs.filter(k => k.id_kardex !== idKardex), newKardex])
+      setKardexs([...kardexs.filter(k => k.id_kardex !== idKardex), newKardex])
     } else {
       throw new Error('No existe el kardex')
     }
@@ -221,11 +293,53 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
   const getKardex = ({ id }: { id: number }) => {
     return kardexs.filter(k => k.id_kardex === id)
   }
+  const searchKardex = ({ searchTerm = '' }: { searchTerm: string }) => {
+    return kardexs
+      .filter(
+        k =>
+          k.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          k.periodo_kardex.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          k.razon_social.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          k.ruc.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .map(k => {
+        const product = products.find(p => p.id_producto === k.id_producto)
+        if (!product) {
+          throw new Error('No existe el producto')
+        }
+        const sunatExistence = data.tipo_existencia_sunat.find(
+          te => te.id_tipo_existencia_sunat === k.id_tipo_existencia_sunat
+        )
+        if (!sunatExistence) {
+          throw new Error('No existe el tipo de existencia en SUNAT')
+        }
+        const unitMeasure = data.unidad_medida.find(
+          um => um.id_unidad_medida === k.id_unidad_medida
+        )
+        if (!unitMeasure) {
+          throw new Error('No existe la unidad de medida')
+        }
+        return {
+          ...k,
+          producto: product,
+          tipo_existencia_sunat: sunatExistence.tipo_existencia,
+          unidad_medida: unitMeasure.unidad
+        }
+      })
+  }
+
   const getMovements = ({ id }: { id: number }) => {
     return movementsInventory.filter(m => m.id_kardex === id) ?? []
   }
   const getProduct = ({ id }: { id: number }) => {
     return products.find(p => p.id_producto === id) ?? null
+  }
+  const searchProducts = ({ searchTerm = '' }: { searchTerm: string }) => {
+    return products.filter(
+      p =>
+        p.nombre_producto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.precio_venta_producto.toString().includes(searchTerm)
+    )
   }
   const removeMovement = ({ idMovimiento }: { idMovimiento: number }) => {
     const movement = movementsInventory.find(
@@ -237,7 +351,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     setMovementsInventory(prevMovements =>
       prevMovements.filter(m => m.id_movimiento_inventario !== idMovimiento)
     )
-    setkardexs(prevKardex => {
+    setKardexs(prevKardex => {
       const kardex = prevKardex.find(k => k.id_kardex === movement.id_kardex)
       if (kardex) {
         return [...prevKardex.filter(k => k.id_kardex !== movement.id_kardex)]
@@ -250,11 +364,14 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     <InventoryContext.Provider
       value={{
         login,
+        signOut,
         setLogin,
         checkAuth,
         products,
-        kardexs,
+        searchProducts,
+        getAllKardexs,
         addKardex,
+        searchKardex,
         getProduct,
         addProduct,
         setProductStock,

@@ -1,18 +1,18 @@
-export const RECEIPTS_TYPES = [
+export const RECEIPTS_VALUES = [
   'Factura',
   'Boleta',
   'Nota de Crédito',
   'Nota de Débito'
 ] as const
 
-export const OPERATIONS_TYPES = [
+export const OPERATIONS_VALUES = [
   'Compra',
   'Venta',
   'Devolución recibida',
   'Devolución entregada'
 ] as const
 
-export const EXISTENCES_TYPES = [
+export const SUNAT_EXISTENCES_VALUES = [
   'Mercadería',
   'Producto terminado',
   'Materias primas y auxiliares - Materiales',
@@ -20,20 +20,25 @@ export const EXISTENCES_TYPES = [
   'Suministros diversos'
 ] as const
 
-export const MEASUREMENT_UNIT_TYPES = [
-  'Unidad',
-  'Kilogramo',
-  'Litro',
-  'Tonelada',
-  'Barril',
-  'Caja',
-  'Paquete',
-  'Saco',
-  'Cilindro'
+export const MEASUREMENT_UNIT_VALUES = [
+  'Kilogramos',
+  'Libras',
+  'Toneladas largas',
+  'Toneladas Métricas',
+  'Toneladas cortas',
+  'Gramos',
+  'Unidades',
+  'Litros',
+  'Galones',
+  'Barriles',
+  'Latas',
+  'Cajas',
+  'Millares',
+  'Metros cúbicos',
+  'Metros'
 ] as const
 
-// Enums for specific types
-export const DOCUMENTOS = {
+export const DOCUMENT_TYPES = {
   Factura: 'Factura',
   ReciboPorHonorarios: 'Recibo por Honorarios',
   BoletaDeVenta: 'Boleta de Venta',
@@ -96,7 +101,7 @@ export const DOCUMENTOS = {
   NotaDeDebitoNoDomiciliado: 'Nota de Débito - No Domiciliado'
 } as const
 
-export const OPERACIONES = {
+export const OPERATIONS_TYPES = {
   Venta: 'Venta',
   Compra: 'Compra',
   ConsignacionRecibida: 'Consignación recibida',
@@ -115,7 +120,7 @@ export const OPERACIONES = {
   SaldoInicial: 'Saldo inicial'
 } as const
 
-export const EXISTENCIAS_SUNAT = {
+export const SUNAT_EXISTENCES_TYPES = {
   Mercaderia: 'Mercadería',
   ProductoTerminado: 'Producto terminado',
   MateriasPrimasYAuxiliaresMateriales:
@@ -124,7 +129,7 @@ export const EXISTENCIAS_SUNAT = {
   SuministrosDiversos: 'Suministros diversos'
 } as const
 
-export const MEASUREMENT_UNITS = {
+export const MEASUREMENT_UNITS_TYPES = {
   Kilogramos: 'Kilogramos',
   Libras: 'Libras',
   ToneladasLargas: 'Toneladas largas',

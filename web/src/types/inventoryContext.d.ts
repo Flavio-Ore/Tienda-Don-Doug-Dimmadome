@@ -1,13 +1,19 @@
-import { DOCUMENTOS, OPERACIONES } from '@/values'
+import { DOCUMENT_TYPES, OPERATIONS_VALUES } from '@/values'
+import {
+  AllowedMeasurementUnits,
+  AllowedSunatExistences,
+  Kardex,
+  Producto
+} from '.'
 
 export interface InventoryContext {
   products: Producto[]
-  kardexs: Kardex[]
   login: {
     email: string
     password: string
     isLogged: boolean
-  }
+  },
+  signOut: () => void
   setLogin: (login: {
     email: string
     password: string
@@ -21,8 +27,17 @@ export interface InventoryContext {
     password: string
   }) => boolean
   getKardex: ({ id }: { id: number }) => Kardex[]
+  searchKardex: ({ searchTerm = '' }: { searchTerm: string }) => Kardex[]
   getMovements: ({ id }: { id: number }) => MovimientoInventario[]
   getProduct: ({ id }: { id: number }) => Producto | null | undefined
+  searchProducts: ({ searchTerm = '' }: { searchTerm: string }) => Producto[]
+  getAllKardexs: () => Array<
+    Kardex & {
+      producto: Producto
+      tipo_existencia_sunat: string
+      unidad_medida: string
+    }
+  >
   addProduct: (product: {
     nombreProducto: string
     precioVentaProducto: number
@@ -43,18 +58,18 @@ export interface InventoryContext {
     status: boolean
   }) => void
   addKardex: (kardex: {
-    idProducto: number
-    idTipoExistenciaSunat: number
-    idUnidadMedida: number
+    productId: number
+    sunatExistenceType: AllowedSunatExistences
+    measurementUnit: AllowedMeasurementUnits
     ruc: string
-    razonSocial: string
-    periodoKardex: string
-    descripcion: string
+    socialReason: string
+    kardexPeriod: string
+    description: string
   }) => void
   addMovement: (movement: {
     idKardex: number
-    tipoComprobante: keyof typeof DOCUMENTOS
-    tipoOperacion: keyof typeof OPERACIONES
+    tipoComprobante: keyof typeof DOCUMENT_TYPES
+    tipoOperacion: keyof typeof OPERATIONS_VALUES
     cantidadProductos: number
     costoUnitario: number
     entrada: boolean

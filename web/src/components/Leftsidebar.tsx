@@ -20,15 +20,10 @@ import {
 
 const Leftsidebar = () => {
   const { pathname } = useLocation()
-
-  const { setLogin } = useInventory()
+  const { signOut } = useInventory()
   const navigation = useNavigate()
   const handleLogout = () => {
-    setLogin({
-      email: '',
-      password: '',
-      isLogged: false
-    })
+    signOut()
     navigation('/')
   }
   return (
@@ -60,7 +55,7 @@ const Leftsidebar = () => {
             )}
           >
             <NavLink
-              to={'/inventario/kardex-registrados'}
+              to={'/inventario'}
               className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
             >
               <TbTable size={24} className='stroke-blue-400' />
@@ -163,11 +158,7 @@ const Leftsidebar = () => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => {
-                    handleLogout()
-                  }}
-                >
+                <AlertDialogAction onClick={handleLogout}>
                   <div className='flex-center gap-x-2'>
                     <span className='focus-visible:text-light-1'>
                       Cerrar Sesión
