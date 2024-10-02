@@ -1,16 +1,23 @@
+import { Bottombar } from '@/components/Bottombar'
 import Leftsidebar from '@/components/Leftsidebar'
 import Topsidebar from '@/components/Topsidebar'
-import { Outlet } from 'react-router-dom'
+import useInventory from '@/states/inventory/hooks/useInventory'
+import { Navigate, Outlet } from 'react-router-dom'
 
 const Root = () => {
-  return (
-    <div className='w-full md:flex bg-dark-2'>
+  const { login } = useInventory()
+
+  return login.isLogged ? (
+    <div className='relative w-full md:flex'>
       <Leftsidebar />
-      <div className='flex flex-col w-full'>
-        <Topsidebar />
+      <Topsidebar />
+      <div className='flex flex-1 w-full justify-center'>
         <Outlet />
-      </div>
+      </div> 
+      <Bottombar />
     </div>
+  ) : (
+    <Navigate to='/' />
   )
 }
 

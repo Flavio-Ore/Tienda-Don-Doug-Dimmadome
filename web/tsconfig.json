@@ -27,7 +27,10 @@
       ],
       "@shadcn/*": [
         "./src/components/ui/*"
-      ]
+      ],
+      "@api/*": [
+        "src/services/*"
+      ],
     },
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -38,7 +41,7 @@
     //! react-jsx was removed from the list of supported options
     "jsx": "preserve",
     /* Linting */
-    "strict": true,
+    "strict": true,    
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true

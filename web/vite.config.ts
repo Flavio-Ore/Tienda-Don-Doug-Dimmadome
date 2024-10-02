@@ -10,7 +10,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@components': path.resolve(__dirname, './src/components'),
       '@shadcn': path.resolve(__dirname, './src/components/ui'),
-      '@layouts': path.resolve(__dirname, './src/layouts')
+      '@layouts': path.resolve(__dirname, './src/layouts'),
+      '@api': path.resolve(__dirname, './src/api')
     }
   }
 })
