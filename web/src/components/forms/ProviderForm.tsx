@@ -45,7 +45,7 @@ const ProviderForm = () => {
           {' '}
           <FaTruckFast size={56} className='fill-red-600' />
           <div>
-            <h2 className='text-light-2 text-2xl'>Nuevo Proveedor</h2>
+            <h2 className='text-light-2 text-2xl font-ubuntu'>Nuevo Proveedor</h2>
             <p className='text-light-3 body-bold'>
               Al agregar un proveedor, podrá elegirlo en la lista de proveedores
               cuando realice un movimiento.

@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
 import { signInSchema } from '@/validations'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,7 +18,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-const SigninForm = () => {
+const SigninForm = ({ className }: { className?: string }) => {
   const [isAuth, setIsAuth] = useState({
     isLogged: false,
     tryings: 0,
@@ -57,13 +58,13 @@ const SigninForm = () => {
   }
   return (
     <Form {...form}>
-      <div className='flex flex-col sm:w-420 w-full p-5'>
+      <div className={cn('flex flex-col sm:w-420 w-full p-5', className)}>
         <img
           src='/Stock_Image_of_Doug_Dimmadome_logo.png'
           alt='Doug Dimmadome'
           className='block w-24 h-full mx-auto'
         />
-        <h2 className='h3-bold md:h2-bold pt-5 sm:pt-9'>Iniciar Sesión</h2>
+        <h2 className='h3-bold md:h2-bold pt-5 sm:pt-9 font-ubuntu'>Iniciar Sesión</h2>
         <p className='text-light-3 small-medium md:base-regular'>
           Bienvenido de vuelta, por favor inicia sesión.
         </p>
@@ -109,7 +110,7 @@ const SigninForm = () => {
                     type='button'
                     onClick={() => handleClickShowPassword()}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </Button>
                 </div>
                 <FormMessage />

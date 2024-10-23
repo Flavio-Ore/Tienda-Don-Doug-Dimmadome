@@ -7,7 +7,7 @@ const ProductRegistration = () => {
       <div className='common-container__title'>
         <TbCubePlus size={56} className='stroke-blue-400' strokeWidth={1.5} />
         <div>
-          <h2 className='text-light-2 text-2xl'>
+          <h2 className='text-light-2 text-2xl font-ubuntu'>
             Agrega un Producto al Inventario
           </h2>
           <p className='text-light-3 body-bold'>

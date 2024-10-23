@@ -12,12 +12,12 @@ export default {
     },
     extend: {
       colors: {
-        'destructive': '#7f1d1d',
-        'secure': '#1d4ed8',
-        'confirmation': '#047857',        
-        'navigating': '#FFB620',
-        'stone': '#78716c',
-        'off-white': '#D0DFFF',                                   
+        destructive: '#7f1d1d',
+        secure: '#1d4ed8',
+        confirmation: '#047857',
+        navigating: '#FFB620',
+        stone: '#78716c',
+        'off-white': '#D0DFFF',
         'dark-1': '#020202',
         'dark-2': '#09090A',
         'dark-3': '#101012',
@@ -36,8 +36,9 @@ export default {
         465: '465px'
       },
       fontFamily: {
+        inter: ['Inter Variable', 'Ubuntu', 'segoe ui', 'sans-serif'],
         ubuntu: ['Ubuntu', 'sans-serif']
-      },
+      }
       // borderRadius: {
       //   lg: 'var(--radius)',
       //   md: 'calc(var(--radius) - 2px)',

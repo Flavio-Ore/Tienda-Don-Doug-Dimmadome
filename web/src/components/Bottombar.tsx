@@ -4,14 +4,14 @@ import { TbCubePlus, TbPackages, TbTable, TbTablePlus } from 'react-icons/tb'
 import { NavLink, useLocation } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
-import { Button } from './ui/button'
+import { Button } from '@shadcn/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from './ui/dropdown-menu'
+} from '@shadcn/dropdown-menu'
 
 const Bottombar = () => {
   const { pathname } = useLocation()
@@ -33,7 +33,7 @@ const Bottombar = () => {
                 )}
               >
                 <PiPackage className='fill-navigating' size={24} />
-                <h3 className='text-light-1 text-sm'>Inventario</h3>
+                <h3 className='text-light-1 text-sm font-ubuntu'>Inventario</h3>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-56'>
@@ -89,7 +89,7 @@ const Bottombar = () => {
                   size={24}
                   strokeWidth={1.25}
                 />
-                <h3 className='text-light-1 text-sm'>Productos</h3>
+                <h3 className='text-light-1 text-sm font-ubuntu'>Productos</h3>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-56'>

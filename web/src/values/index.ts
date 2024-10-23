@@ -146,3 +146,18 @@ export const MEASUREMENT_UNITS_TYPES = {
   MetrosCubicos: 'Metros cúbicos',
   Metros: 'Metros'
 } as const
+
+export const PUBLIC_ROUTES = {
+  LOGIN: '/'
+} as const
+
+export const PRIVATE_ROUTES = {
+  INVENTORY: '/inventario',
+  CREATE_KARDEX: '/inventario/crear-kardex',
+  REGISTERED_PRODUCTS: '/inventario/productos-registrados',
+  REGISTER_PRODUCT: '/inventario/registrar-nuevo-producto',
+  PROVIDERS: '/inventario/proveedores',
+  BUY_PRODUCT: '/inventario/comprar-producto',
+  SELL_PRODUCT: '/inventario/vender-producto',
+  RETURN_PRODUCT: '/inventario/devolucion'
+}
