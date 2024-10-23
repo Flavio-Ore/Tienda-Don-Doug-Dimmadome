@@ -134,7 +134,7 @@ HTMLAttributes<HTMLParagraphElement>
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-xs xs:text-sm text-light-1', className)}
+      className={cn('text-xs xs:text-sm text-light-3', className)}
       {...props}
     />
   )

@@ -1,9 +1,10 @@
-import { Button } from '@shadcn/button'
-import { GoPackageDependents } from 'react-icons/go'
-
+import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
 import { ProductFormSchema } from '@/validations/product.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@shadcn/button'
+import { LuChevronsUpDown } from 'react-icons/lu'
+
 import {
   Form,
   FormControl,
@@ -14,11 +15,27 @@ import {
 } from '@shadcn/form'
 import { Input } from '@shadcn/input'
 import { Textarea } from '@shadcn/textarea'
+import { format } from 'date-fns'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import { FaRegCalendarAlt } from 'react-icons/fa'
+
+import { PRIVATE_ROUTES } from '@/values'
+import { Calendar } from '@shadcn/calendar'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@shadcn/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
+import { BsCheck } from 'react-icons/bs'
+import { GoPackageDependents } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-
+const categories = ['Harina', 'Aceite', 'Arroz', 'Frijoles', 'Azúcar'] as const
 const ProductForm = () => {
   const { addProduct } = useInventory()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -28,7 +45,10 @@ const ProductForm = () => {
     resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       name: '',
-      price: 1
+      price: 0,
+      initialInventory: 0,
+      expirationDate: new Date(),
+      category: undefined
     }
   })
   const watchName = productForm.watch('name')
@@ -39,7 +59,7 @@ const ProductForm = () => {
         nombreProducto: value.name,
         precioVentaProducto: value.price
       })
-      navigate('/inventario/registrar-producto')
+      navigate(PRIVATE_ROUTES.REGISTERED_PRODUCTS)
     } catch (error) {
       console.error(error)
     }
@@ -90,12 +110,141 @@ const ProductForm = () => {
                 <Input
                   type='number'
                   placeholder='Precio del producto'
+                  min={0}
                   {...field}
                   onChange={e => {
                     field.onChange(Number(e.target.value))
                   }}
                 />
               </FormControl>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={productForm.control}
+          name='initialInventory'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>
+                Inventario Inicial
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type='number'
+                  placeholder='Inventario Inicial'
+                  {...field}
+                  onChange={e => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={productForm.control}
+          name='expirationDate'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>
+                Fecha de Vencimiento
+              </FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant='ghost'
+                      className={cn(
+                        'w-full pl-3 outline outline-1 outline-light-3',
+                        !field.value && 'text-light-3'
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, 'PPP')
+                      ) : (
+                        <span>Elige una fecha</span>
+                      )}
+                      <FaRegCalendarAlt
+                        strokeWidth={1.25}
+                        className='ml-auto h-4 w-4 fill-light-1'
+                      />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className='w-auto p-0' align='start'>
+                  <Calendar
+                    mode='single'
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={date =>
+                      date > new Date() || date < new Date('1900-01-01')
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={productForm.control}
+          name='category'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>
+                Categoría del Producto
+              </FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant='ghost'
+                      role='combobox'
+                      className={cn(
+                        'w-full justify-between outline outline-1 outline-light-3',
+                        !field.value && 'text-light-3'
+                      )}
+                    >
+                      {field.value
+                        ? categories.find(
+                            category => category === field.value
+                          ) ?? 'Elige una categoría'
+                        : 'Elige una categoría'}
+                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className='w-full p-0' align='start'>
+                  <Command>
+                    <CommandInput placeholder='Busca una categoría...' />
+                    <CommandList>
+                      <CommandEmpty>Categoría no encontrada.</CommandEmpty>
+                      <CommandGroup>
+                        {categories.map(category => (
+                          <CommandItem
+                            value={category}
+                            key={category}
+                            onSelect={() => {
+                              productForm.setValue('category', category)
+                            }}
+                          >
+                            <BsCheck
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                category === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              )}
+                            />
+                            {category}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
