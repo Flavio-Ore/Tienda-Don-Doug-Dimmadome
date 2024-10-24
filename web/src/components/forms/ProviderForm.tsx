@@ -10,13 +10,25 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import { ProviderValidationSchema } from '@/validations/addProvider.schema'
-import { PRIVATE_ROUTES } from '@/values'
+import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PhoneInput } from '@shadcn/phone-input'
+import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { useForm } from 'react-hook-form'
+import { BsCheck } from 'react-icons/bs'
+import { LuChevronsUpDown } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '../ui/command'
 const ProviderForm = () => {
   const navigate = useNavigate()
 
@@ -112,6 +124,68 @@ const ProviderForm = () => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={providerForm.control}
+          name='category'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>
+                Categoría del Proveedor
+              </FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant='ghost'
+                      role='combobox'
+                      className={cn(
+                        'w-full justify-between outline outline-1 outline-light-3',
+                        !field.value && 'text-light-3'
+                      )}
+                    >
+                      {field.value
+                        ? PRODUCT_CATEGORIES_VALUES.find(
+                          category => category === field.value
+                        ) ?? 'Elige una categoría'
+                        : 'Elige una categoría'}
+                        <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className='w-full p-0' align='start'>
+                  <Command>
+                    <CommandInput placeholder='Busca una categoría...' />
+                    <CommandList>
+                      <CommandEmpty>Categoría no encontrada.</CommandEmpty>
+                      <CommandGroup>
+                        {PRODUCT_CATEGORIES_VALUES.map(category => (
+                          <CommandItem
+                            value={category}
+                            key={category}
+                            onSelect={() => {
+                              providerForm.setValue('category', category)
+                            }}
+                          >
+                            <BsCheck
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                category === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              )}
+                            />
+                            {category}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}

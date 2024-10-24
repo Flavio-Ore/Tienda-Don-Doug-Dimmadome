@@ -1,9 +1,12 @@
-import { BsCartDash, BsCartPlus } from 'react-icons/bs'
+import { FaUserTag } from "react-icons/fa"
+import { FaTruckArrowRight } from 'react-icons/fa6'
 import { ImExit } from 'react-icons/im'
 import { LuPackageOpen } from 'react-icons/lu'
 import { PiPackage } from 'react-icons/pi'
 import { RiRefund2Line } from 'react-icons/ri'
+import { TbMoneybag } from 'react-icons/tb'
 
+import { LuUsers } from "react-icons/lu"
 import {
   TbArrowsExchange,
   TbCubePlus,
@@ -27,6 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@shadcn/alert-dialog'
+import { FaUsersCog } from "react-icons/fa"
 import { FaTruckFast } from 'react-icons/fa6'
 
 const Leftsidebar = () => {
@@ -94,29 +98,10 @@ const Leftsidebar = () => {
                 className='stroke-blue-400'
                 strokeWidth={1.25}
               />
-              <span className='relative xl:text-sm text-xs'> Crear Kardex</span>
+              <span className='relative xl:text-sm text-xs'>Crear Kardex</span>
             </NavLink>
           </li>
-          <li
-            className={cn(
-              'leftsidebar-link relative group base-regular hover:bg-dark-4',
-              {
-                'bg-dark-4': pathname.includes(PRIVATE_ROUTES.PROVIDERS)
-              }
-            )}
-          >
-            <NavLink
-              to={PRIVATE_ROUTES.PROVIDERS}
-              className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
-            >
-              <FaTruckFast
-                size={24}
-                className='fill-red-600'
-                strokeWidth={1.25}
-              />
-              <span className='relative xl:text-sm text-xs'>Proveedores</span>
-            </NavLink>
-          </li>
+
           <hr className='w-full border-light-3 my-4' />
           <li className='inline-flex gap-x-2 items-center'>
             <LuPackageOpen
@@ -149,7 +134,7 @@ const Leftsidebar = () => {
                 className='stroke-blue-400'
               />
               <span className='relative xl:text-sm text-xs'>
-                Ver Productos Registrados
+                Productos Registrados
               </span>
             </NavLink>
           </li>
@@ -175,7 +160,86 @@ const Leftsidebar = () => {
               </span>
             </NavLink>
           </li>
+          <hr className='w-full border-light-3 my-4' />
+          <li className='inline-flex gap-x-2 items-center'>
+            <LuUsers 
+              className='stroke-navigating'
+              size={24}
+              strokeWidth={1.25}
+            />
 
+            <h3 className='text-light-1 text-sm relative xl:text-lg font-ubuntu'>
+              Usuarios
+            </h3>
+          </li>
+          <li
+            className={cn(
+              'leftsidebar-link relative group base-regular hover:bg-dark-4',
+              {
+                'bg-dark-4': pathname.includes(
+                  PRIVATE_ROUTES.REGISTERED_PRODUCTS
+                )
+              }
+            )}
+          >
+            <NavLink
+              to={PRIVATE_ROUTES.REGISTERED_PRODUCTS}
+              className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
+            >
+              <FaUserTag 
+                size={24}
+                strokeWidth={1.25}
+                className='fill-blue-400'
+              />
+              <span className='relative xl:text-sm text-xs'>
+                Clientes
+              </span>
+            </NavLink>
+          </li>
+          <li
+            className={cn(
+              'leftsidebar-link relative group base-regular hover:bg-dark-4',
+              {
+                'bg-dark-4': pathname.includes(
+                  PRIVATE_ROUTES.REGISTERED_PRODUCTS
+                )
+              }
+            )}
+          >
+            <NavLink
+              to={PRIVATE_ROUTES.REGISTERED_PRODUCTS}
+              className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
+            >
+              <FaUsersCog
+                size={24}
+                strokeWidth={1.25}
+                className='fill-blue-400'
+              />
+              <span className='relative xl:text-sm text-xs'>
+                Empleados
+              </span>
+            </NavLink>
+          </li>
+          <li
+            className={cn(
+              'leftsidebar-link relative group base-regular hover:bg-dark-4',
+              {
+                'bg-dark-4': pathname.includes(PRIVATE_ROUTES.PROVIDERS)
+              }
+            )}
+          >
+            <NavLink
+              to={PRIVATE_ROUTES.PROVIDERS}
+              className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
+            >
+              <FaTruckFast
+                size={24}
+                className='fill-blue-400'
+                strokeWidth={1.25}
+              />
+              <span className='relative xl:text-sm text-xs'>Proveedores</span>
+            </NavLink>
+          </li>
           <hr className='w-full border-light-3 my-4' />
           <li className='inline-flex gap-x-2 items-center'>
             <TbArrowsExchange
@@ -200,7 +264,11 @@ const Leftsidebar = () => {
               to={PRIVATE_ROUTES.BUY_PRODUCT}
               className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
             >
-              <BsCartPlus size={24} strokeWidth={0} className='fill-blue-400' />
+              <FaTruckArrowRight
+                size={24}
+                strokeWidth={1.25}
+                className='fill-blue-400'
+              />
               <span className='relative xl:text-sm text-xs'>
                 Comprar Producto
               </span>
@@ -218,7 +286,7 @@ const Leftsidebar = () => {
               to={PRIVATE_ROUTES.SELL_PRODUCT}
               className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
             >
-              <BsCartDash size={24} strokeWidth={0} className='fill-blue-400' />
+              <TbMoneybag size={24} className='fill-blue-400 stroke-blue-400' />
               <span className='relative xl:text-sm text-xs'>
                 Vender Producto
               </span>

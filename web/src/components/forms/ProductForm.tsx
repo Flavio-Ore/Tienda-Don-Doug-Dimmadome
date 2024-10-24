@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
-import { ProductFormSchema } from '@/validations/addProduct.schema'
+import { AddProductFormSchema } from '@/validations/addProduct.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
 import { LuChevronsUpDown } from 'react-icons/lu'
@@ -40,8 +40,8 @@ const ProductForm = () => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
 
-  const productForm = useForm<z.infer<typeof ProductFormSchema>>({
-    resolver: zodResolver(ProductFormSchema),
+  const productForm = useForm<z.infer<typeof AddProductFormSchema>>({
+    resolver: zodResolver(AddProductFormSchema),
     defaultValues: {
       name: '',
       price: 0,
@@ -51,7 +51,7 @@ const ProductForm = () => {
     }
   })
   const watchName = productForm.watch('name')
-  const onSubmit = async (value: z.infer<typeof ProductFormSchema>) => {
+  const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
       addProduct({
@@ -210,7 +210,7 @@ const ProductForm = () => {
                             category => category === field.value
                           ) ?? 'Elige una categoría'
                         : 'Elige una categoría'}
-                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>

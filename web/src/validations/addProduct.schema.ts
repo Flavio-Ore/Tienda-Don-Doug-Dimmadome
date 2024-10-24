@@ -1,7 +1,7 @@
 import { PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { z } from 'zod'
 
-export const ProductFormSchema = z.object({
+export const AddProductFormSchema = z.object({
   name: z.string().min(1, {
     message: 'El nombre es obligatorio'
   }),

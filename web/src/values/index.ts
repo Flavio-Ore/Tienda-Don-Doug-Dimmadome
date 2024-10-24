@@ -177,3 +177,22 @@ export const PRODUCT_CATEGORIES = {
   FRIJOLES: 'Frijoles',
   AZUCAR: 'Azúcar'
 } as const
+
+export const TYPE_RECEIPT_VALUES = [
+  'Factura',
+  'Boleta',
+  'Nota de Crédito',
+  'Nota de Débito'
+] as const
+
+export const TYPE_RECEIPT = {
+  FACTURA: 'Factura',
+  BOLETA: 'Boleta',
+  NOTA_CREDITO: 'Nota de Crédito',
+  NOTA_DEBITO: 'Nota de Débito'
+} as const
+
+export const TYPE_RETURNS_VALUES = [
+  'Devolución a proveedor',
+  'Devolución de cliente'
+] as const

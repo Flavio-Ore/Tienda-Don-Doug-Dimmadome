@@ -1,10 +1,8 @@
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
-import { ProductFormSchema } from '@/validations/addProduct.schema'
+import { AddProductFormSchema } from '@/validations/addProduct.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
-import { LuChevronsUpDown } from 'react-icons/lu'
-
 import {
   Form,
   FormControl,
@@ -19,8 +17,11 @@ import { format } from 'date-fns'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaRegCalendarAlt } from 'react-icons/fa'
+import { FaRegHandshake } from 'react-icons/fa6'
+import { LuChevronsUpDown } from 'react-icons/lu'
 
-import { PRIVATE_ROUTES } from '@/values'
+import { useToast } from '@/hooks/use-toast'
+import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { Calendar } from '@shadcn/calendar'
 import {
   Command,
@@ -32,17 +33,16 @@ import {
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
-import { GoPackageDependents } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-const categories = ['Harina', 'Aceite', 'Arroz', 'Frijoles', 'Azúcar'] as const
 const BuyProductForm = () => {
+  const { toast } = useToast()
   const { addProduct } = useInventory()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const navigate = useNavigate()
 
-  const productForm = useForm<z.infer<typeof ProductFormSchema>>({
-    resolver: zodResolver(ProductFormSchema),
+  const productForm = useForm<z.infer<typeof AddProductFormSchema>>({
+    resolver: zodResolver(AddProductFormSchema),
     defaultValues: {
       name: '',
       price: 0,
@@ -52,9 +52,13 @@ const BuyProductForm = () => {
     }
   })
   const watchName = productForm.watch('name')
-  const onSubmit = async (value: z.infer<typeof ProductFormSchema>) => {
+  const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
+      toast({
+        title: 'Producto registrado',
+        description: JSON.stringify(value),
+      })
       addProduct({
         nombreProducto: value.name,
         precioVentaProducto: value.price
@@ -207,7 +211,7 @@ const BuyProductForm = () => {
                       )}
                     >
                       {field.value
-                        ? categories.find(
+                        ? PRODUCT_CATEGORIES_VALUES.find(
                             category => category === field.value
                           ) ?? 'Elige una categoría'
                         : 'Elige una categoría'}
@@ -221,7 +225,7 @@ const BuyProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Categoría no encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {categories.map(category => (
+                        {PRODUCT_CATEGORIES_VALUES.map(category => (
                           <CommandItem
                             value={category}
                             key={category}
@@ -265,8 +269,8 @@ const BuyProductForm = () => {
             type='submit'
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Agregar Producto
-            <GoPackageDependents
+            Comprar
+            <FaRegHandshake
               size={20}
               className='ml-2 fill-dark-1 group-focus:fill-light-1'
             />
