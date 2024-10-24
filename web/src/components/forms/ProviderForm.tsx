@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { FaTruckArrowRight, FaTruckFast } from 'react-icons/fa6'
+import { FaTruckArrowRight } from 'react-icons/fa6'
 
 import {
   Form,
@@ -10,54 +10,47 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { providerValidationSchema } from '@/validations'
+import { ProviderValidationSchema } from '@/validations/addProvider.schema'
+import { PRIVATE_ROUTES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { PhoneInput } from '@shadcn/phone-input'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 const ProviderForm = () => {
   const navigate = useNavigate()
 
-  const productForm = useForm<z.infer<typeof providerValidationSchema>>({
-    resolver: zodResolver(providerValidationSchema),
+  const providerForm = useForm<z.infer<typeof ProviderValidationSchema>>({
+    resolver: zodResolver(ProviderValidationSchema),
     defaultValues: {
+      socialReason: '',
       address: '',
       email: '',
-      name: '',
-      phone: ''
+      phone: '',
+      category: undefined
     }
   })
 
-  const onSubmit = async (value: z.infer<typeof providerValidationSchema>) => {
+  const onSubmit = async (value: z.infer<typeof ProviderValidationSchema>) => {
+    console.log(value)
     try {
-      console.log(value)
+      navigate(PRIVATE_ROUTES.PROVIDERS)
     } catch (error) {
       console.error(error)
     }
   }
   return (
-    <Form {...productForm}>
+    <Form {...providerForm}>
       <form
-        onSubmit={productForm.handleSubmit(onSubmit)}
+        onSubmit={providerForm.handleSubmit(onSubmit)}
         className='flex flex-col gap-8 w-full max-w-5xl'
       >
-        <div className='inline-flex gap-x-2'>
-          {' '}
-          <FaTruckFast size={56} className='fill-red-600' />
-          <div>
-            <h2 className='text-light-2 text-2xl font-ubuntu'>Nuevo Proveedor</h2>
-            <p className='text-light-3 body-bold'>
-              Al agregar un proveedor, podrá elegirlo en la lista de proveedores
-              cuando realice un movimiento.
-            </p>
-          </div>
-        </div>
         <FormField
-          control={productForm.control}
-          name='name'
+          control={providerForm.control}
+          name='socialReason'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Nombre</FormLabel>
+              <FormLabel className='shad-form_label'>Razón Social</FormLabel>
               <FormControl>
                 <Input
                   type='text'
@@ -70,24 +63,25 @@ const ProviderForm = () => {
           )}
         />
         <FormField
-          control={productForm.control}
+          control={providerForm.control}
           name='phone'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Teléfono</FormLabel>
               <FormControl>
-                <Input
+                {/* <Input
                   type='text'
                   placeholder='Teléfono del proveedor'
                   {...field}
-                />
+                /> */}
+                <PhoneInput {...field} defaultCountry='PE' international />
               </FormControl>
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
         <FormField
-          control={productForm.control}
+          control={providerForm.control}
           name='email'
           render={({ field }) => (
             <FormItem>
@@ -106,7 +100,7 @@ const ProviderForm = () => {
           )}
         />
         <FormField
-          control={productForm.control}
+          control={providerForm.control}
           name='address'
           render={({ field }) => (
             <FormItem>
@@ -125,7 +119,7 @@ const ProviderForm = () => {
         <div className='flex gap-4 items-center justify-end'>
           <Button
             type='button'
-            variant='outline'
+            variant='ghost'
             className='shad-button_dark_4'
             onClick={() => {
               navigate(-1)
@@ -137,14 +131,11 @@ const ProviderForm = () => {
             variant='default'
             type='submit'
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
-            onClick={() => {
-              navigate('/inventario/proveedores')
-            }}
           >
             Agregar Proveedor
             <FaTruckArrowRight
               size={20}
-              className='ml-2 fill-dark-1 group-focus:fill-light-1'
+              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
             />
           </Button>
         </div>

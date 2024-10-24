@@ -161,3 +161,19 @@ export const PRIVATE_ROUTES = {
   SELL_PRODUCT: '/inventario/vender-producto',
   RETURN_PRODUCT: '/inventario/devolucion'
 }
+
+export const PRODUCT_CATEGORIES_VALUES = [
+  'Harina',
+  'Aceite',
+  'Arroz',
+  'Frijoles',
+  'Azúcar'
+] as const
+
+export const PRODUCT_CATEGORIES = {
+  HARINA: 'Harina',
+  ACEITE: 'Aceite',
+  ARROZ: 'Arroz',
+  FRIJOLES: 'Frijoles',
+  AZUCAR: 'Azúcar'
+} as const

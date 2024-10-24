@@ -27,6 +27,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@shadcn/alert-dialog'
+import { FaTruckFast } from 'react-icons/fa6'
 
 const Leftsidebar = () => {
   const { pathname } = useLocation()
@@ -68,7 +69,11 @@ const Leftsidebar = () => {
               to={PRIVATE_ROUTES.INVENTORY}
               className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
             >
-              <TbTable size={24} className='stroke-blue-400' strokeWidth={1.25} />
+              <TbTable
+                size={24}
+                className='stroke-blue-400'
+                strokeWidth={1.25}
+              />
               <span className='relative xl:text-sm text-xs'>Ver Kardexs</span>
             </NavLink>
           </li>
@@ -84,8 +89,32 @@ const Leftsidebar = () => {
               to={PRIVATE_ROUTES.CREATE_KARDEX}
               className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
             >
-              <TbTablePlus size={24} className='stroke-blue-400' strokeWidth={1.25}/>
+              <TbTablePlus
+                size={24}
+                className='stroke-blue-400'
+                strokeWidth={1.25}
+              />
               <span className='relative xl:text-sm text-xs'> Crear Kardex</span>
+            </NavLink>
+          </li>
+          <li
+            className={cn(
+              'leftsidebar-link relative group base-regular hover:bg-dark-4',
+              {
+                'bg-dark-4': pathname.includes(PRIVATE_ROUTES.PROVIDERS)
+              }
+            )}
+          >
+            <NavLink
+              to={PRIVATE_ROUTES.PROVIDERS}
+              className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
+            >
+              <FaTruckFast
+                size={24}
+                className='fill-red-600'
+                strokeWidth={1.25}
+              />
+              <span className='relative xl:text-sm text-xs'>Proveedores</span>
             </NavLink>
           </li>
           <hr className='w-full border-light-3 my-4' />
@@ -104,7 +133,9 @@ const Leftsidebar = () => {
             className={cn(
               'leftsidebar-link relative group base-regular hover:bg-dark-4',
               {
-                'bg-dark-4': pathname.includes(PRIVATE_ROUTES.REGISTERED_PRODUCTS)
+                'bg-dark-4': pathname.includes(
+                  PRIVATE_ROUTES.REGISTERED_PRODUCTS
+                )
               }
             )}
           >
@@ -134,7 +165,11 @@ const Leftsidebar = () => {
               to={PRIVATE_ROUTES.REGISTER_PRODUCT}
               className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
             >
-              <TbCubePlus size={24} strokeWidth={1.25} className='stroke-blue-400' />
+              <TbCubePlus
+                size={24}
+                strokeWidth={1.25}
+                className='stroke-blue-400'
+              />
               <span className='relative xl:text-sm text-xs'>
                 Registrar Producto
               </span>
@@ -201,14 +236,8 @@ const Leftsidebar = () => {
               to={PRIVATE_ROUTES.RETURN_PRODUCT}
               className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
             >
-              <RiRefund2Line
-                size={24}
-                
-                className='fill-blue-400'
-              />
-              <span className='relative xl:text-sm text-xs'>
-                Devolución
-              </span>
+              <RiRefund2Line size={24} className='fill-blue-400' />
+              <span className='relative xl:text-sm text-xs'>Devolución</span>
             </NavLink>
           </li>
         </ul>

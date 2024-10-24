@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
-import { ProductFormSchema } from '@/validations/product.schema'
+import { ProductFormSchema } from '@/validations/addProduct.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
 import { LuChevronsUpDown } from 'react-icons/lu'
@@ -20,7 +20,7 @@ import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 
-import { PRIVATE_ROUTES } from '@/values'
+import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { Calendar } from '@shadcn/calendar'
 import {
   Command,
@@ -35,7 +35,6 @@ import { BsCheck } from 'react-icons/bs'
 import { GoPackageDependents } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-const categories = ['Harina', 'Aceite', 'Arroz', 'Frijoles', 'Azúcar'] as const
 const ProductForm = () => {
   const { addProduct } = useInventory()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -207,7 +206,7 @@ const ProductForm = () => {
                       )}
                     >
                       {field.value
-                        ? categories.find(
+                        ? PRODUCT_CATEGORIES_VALUES.find(
                             category => category === field.value
                           ) ?? 'Elige una categoría'
                         : 'Elige una categoría'}
@@ -221,7 +220,7 @@ const ProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Categoría no encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {categories.map(category => (
+                        {PRODUCT_CATEGORIES_VALUES.map(category => (
                           <CommandItem
                             value={category}
                             key={category}
@@ -268,7 +267,7 @@ const ProductForm = () => {
             Agregar Producto
             <GoPackageDependents
               size={20}
-              className='ml-2 fill-dark-1 group-focus:fill-light-1'
+              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
             />
           </Button>
         </div>

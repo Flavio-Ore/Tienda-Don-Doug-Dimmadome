@@ -1,3 +1,4 @@
+import { PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { z } from 'zod'
 
 export const ProductFormSchema = z.object({
@@ -13,7 +14,7 @@ export const ProductFormSchema = z.object({
   expirationDate: z.date({
     required_error: 'La fecha de expiración es obligatoria'
   }),
-  category: z.enum(['Harina', 'Aceite', 'Arroz', 'Frijoles', 'Azúcar'], {
+  category: z.enum(PRODUCT_CATEGORIES_VALUES, {
    message: 'La categoría no es válida' 
   })
 })
