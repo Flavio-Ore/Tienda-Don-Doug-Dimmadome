@@ -155,9 +155,57 @@ export const PRIVATE_ROUTES = {
   INVENTORY: '/inventario',
   CREATE_KARDEX: '/inventario/crear-kardex',
   REGISTERED_PRODUCTS: '/inventario/productos-registrados',
-  REGISTER_PRODUCT: '/inventario/registrar-nuevo-producto',
+  ADD_PRODUCT: '/inventario/registrar-nuevo-producto',
   PROVIDERS: '/inventario/proveedores',
   BUY_PRODUCT: '/inventario/comprar-producto',
   SELL_PRODUCT: '/inventario/vender-producto',
-  RETURN_PRODUCT: '/inventario/devolucion'
+  RETURN_PRODUCT: '/inventario/devolucion',
+  CLIENTS: '/inventario/clientes',
+  USERS: '/inventario/usuarios'
 }
+
+export const PRODUCT_CATEGORIES_VALUES = [
+  'Harina',
+  'Aceite',
+  'Arroz',
+  'Frijoles',
+  'Azúcar'
+] as const
+
+export const PRODUCT_CATEGORIES = {
+  HARINA: 'Harina',
+  ACEITE: 'Aceite',
+  ARROZ: 'Arroz',
+  FRIJOLES: 'Frijoles',
+  AZUCAR: 'Azúcar'
+} as const
+
+export const TYPE_RECEIPT_VALUES = [
+  'Factura',
+  'Boleta',
+  'Nota de Crédito',
+  'Nota de Débito'
+] as const
+
+export const TYPE_RECEIPT = {
+  FACTURA: 'Factura',
+  BOLETA: 'Boleta',
+  NOTA_CREDITO: 'Nota de Crédito',
+  NOTA_DEBITO: 'Nota de Débito'
+} as const
+
+export const TYPE_RETURNS_VALUES = [
+  'Devolución a proveedor',
+  'Devolución de cliente'
+] as const
+
+export const TYPE_USERS_VALUES = [
+  'Administrador',
+  'Vendedor',
+  'Almacenero'
+] as const
+export const TYPE_USERS = {
+  ADMINISTRATOR: 'Administrador',
+  SELLER: 'Vendedor',
+  WAREHOUSEMAN: 'Almacenero'
+} as const

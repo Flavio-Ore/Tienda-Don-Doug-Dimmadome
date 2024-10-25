@@ -15,8 +15,8 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
-import { PRIVATE_ROUTES, TYPE_RETURNS_VALUES } from '@/values'
+import { CreateUserSchema } from '@/validations/addUser.schema'
+import { PRIVATE_ROUTES, TYPE_USERS_VALUES } from '@/values'
 import {
   Command,
   CommandEmpty,
@@ -26,59 +26,63 @@ import {
   CommandList
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
-import { Textarea } from '@shadcn/textarea'
+import { useState } from 'react'
 import { BsCheck } from 'react-icons/bs'
-import { GoPackageDependents } from 'react-icons/go'
+import { FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
-const ReturnProductForm = () => {
-  const navigate = useNavigate()
+const UserForm = () => {
+  const [showPassword, setShowPassword] = useState(false)
+
   const { toast } = useToast()
-  const returnProductForm = useForm<z.infer<typeof ReturnProductFormSchema>>({
-    resolver: zodResolver(ReturnProductFormSchema),
+  const navigate = useNavigate()
+
+  const userForm = useForm<z.infer<typeof CreateUserSchema>>({
+    resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      DNI: '',
-      product: '',
-      quantity: 1,
-      typeReturn: undefined,
-      description: ''
+      name: '',
+      email: '',
+      password: '',
+      role: undefined
     }
   })
-
-  const onSubmit = async (value: z.infer<typeof ReturnProductFormSchema>) => {
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword)
+  }
+  const onSubmit = async (value: z.infer<typeof CreateUserSchema>) => {
     try {
       console.log(value)
       toast({
-        title: 'Devolución de Producto exitoso',
+        title: 'Usuario creado exitosamente',
         description: (
           <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
             <code>{JSON.stringify(value, null, 2)}</code>
           </pre>
         )
       })
-      navigate(PRIVATE_ROUTES.RETURN_PRODUCT)
+      navigate(PRIVATE_ROUTES.USERS)
     } catch (error) {
       console.error(error)
     }
   }
 
   return (
-    <Form {...returnProductForm}>
+    <Form {...userForm}>
       <form
-        onSubmit={returnProductForm.handleSubmit(onSubmit)}
+        onSubmit={userForm.handleSubmit(onSubmit)}
         className='flex flex-col gap-8 w-full max-w-5xl'
       >
         <FormField
-          control={returnProductForm.control}
-          name='DNI'
+          control={userForm.control}
+          name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>DNI</FormLabel>
+              <FormLabel className='shad-form_label'>Nombre</FormLabel>
               <FormControl>
                 <Input
                   type='text'
-                  placeholder='DNI del cliente o proveedor'
+                  placeholder='Nombre del usuario'
                   {...field}
                 />
               </FormControl>
@@ -87,15 +91,15 @@ const ReturnProductForm = () => {
           )}
         />
         <FormField
-          control={returnProductForm.control}
-          name='product'
+          control={userForm.control}
+          name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Producto</FormLabel>
+              <FormLabel className='shad-form_label'>Correo</FormLabel>
               <FormControl>
                 <Input
-                  type='text'
-                  placeholder='Nombre del producto a devolver'
+                  type='email'
+                  placeholder='Correo del usuario'
                   {...field}
                 />
               </FormControl>
@@ -104,34 +108,38 @@ const ReturnProductForm = () => {
           )}
         />
         <FormField
-          control={returnProductForm.control}
-          name='quantity'
+          control={userForm.control}
+          name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Cantidad</FormLabel>
-              <FormControl>
-                <Input
-                  type='number'
-                  placeholder='Cantidad de productos a devolver'
-                  min={0}
-                  {...field}
-                  onChange={e => {
-                    field.onChange(Number(e.target.value))
-                  }}
-                />
-              </FormControl>
+              <FormLabel className='shad-form_label'>Contraseña</FormLabel>
+              <div className='relative inline-flex items-center w-full'>
+                <FormControl>
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder='Super secreto'
+                    autoComplete='off'
+                    {...field}
+                  />
+                </FormControl>
+                <Button
+                  variant='ghost'
+                  type='button'
+                  onClick={() => handleClickShowPassword()}
+                >
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </Button>
+              </div>
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
         <FormField
-          control={returnProductForm.control}
-          name='typeReturn'
+          control={userForm.control}
+          name='role'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>
-                Tipo de Devolución
-              </FormLabel>
+              <FormLabel className='shad-form_label'>Tipo de Usuario</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -144,10 +152,10 @@ const ReturnProductForm = () => {
                       )}
                     >
                       {field.value
-                        ? TYPE_RETURNS_VALUES.find(
+                        ? TYPE_USERS_VALUES.find(
                             returnType => returnType === field.value
-                          ) ?? 'Elige un tipo de devolución'
-                        : 'Elige un tipo de devolución'}
+                          ) ?? 'Elige un tipo de usuario'
+                        : 'Elige un tipo de usuario'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
                   </FormControl>
@@ -157,18 +165,15 @@ const ReturnProductForm = () => {
                     <CommandInput placeholder='Busca un tipo de devolución...' />
                     <CommandList>
                       <CommandEmpty>
-                        Tipo de devolución no encontrada.
+                        Tipo de usuario no encontrado.
                       </CommandEmpty>
                       <CommandGroup>
-                        {TYPE_RETURNS_VALUES.map(receiptType => (
+                        {TYPE_USERS_VALUES.map(receiptType => (
                           <CommandItem
                             value={receiptType}
                             key={receiptType}
                             onSelect={() => {
-                              returnProductForm.setValue(
-                                'typeReturn',
-                                receiptType
-                              )
+                              userForm.setValue('role', receiptType)
                             }}
                           >
                             <BsCheck
@@ -191,23 +196,6 @@ const ReturnProductForm = () => {
             </FormItem>
           )}
         />
-        <FormField
-          control={returnProductForm.control}
-          name='description'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>Descripción</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder='Descripción de la devolución'
-                  {...field}
-                  className='w-full h-40 resize-none bg-dark-1 text-light-1 p-3 rounded-md outline-none'
-                />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
         <div className='flex gap-4 items-center justify-end'>
           <Button
             type='button'
@@ -224,8 +212,8 @@ const ReturnProductForm = () => {
             type='submit'
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Devolver Producto
-            <GoPackageDependents
+            Crear Usuario
+            <FaUserPlus
               size={20}
               className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
             />
@@ -236,4 +224,4 @@ const ReturnProductForm = () => {
   )
 }
 
-export default ReturnProductForm
+export default UserForm

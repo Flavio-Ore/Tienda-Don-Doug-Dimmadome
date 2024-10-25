@@ -4,7 +4,7 @@ import useInventory from '@/states/inventory/hooks/useInventory'
 import { Input } from '@shadcn/input'
 import { useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
-import { TbPackages } from 'react-icons/tb'
+import { FaBoxOpen } from 'react-icons/fa'
 
 const RegisteredProducts = () => {
   const { products, searchProducts } = useInventory()
@@ -23,7 +23,7 @@ const RegisteredProducts = () => {
   return (
     <section className='common-container'>
       <div className='inline-flex gap-x-2'>
-        <TbPackages size={56} strokeWidth={1.25} className='stroke-blue-400' />
+        <FaBoxOpen size={56} strokeWidth={1.25} className='fill-violet-500' />
         <div>
           <h2 className='text-light-2 text-2xl font-ubuntu'>Productos Registrados</h2>
           <p className='text-light-3 body-bold'>

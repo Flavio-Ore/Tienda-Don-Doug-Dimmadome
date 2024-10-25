@@ -12,7 +12,7 @@ export interface InventoryContext {
     email: string
     password: string
     isLogged: boolean
-  },
+  }
   signOut: () => void
   setLogin: (login: {
     email: string

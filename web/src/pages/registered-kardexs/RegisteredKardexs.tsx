@@ -4,7 +4,7 @@ import useInventory from '@/states/inventory/hooks/useInventory'
 import { Button } from '@shadcn/button'
 import { useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
-import { TbTable } from 'react-icons/tb'
+import { FaTableCellsRowLock } from 'react-icons/fa6'
 
 const RegisteredKardexs = () => {
   const { getAllKardexs, searchKardex, products } = useInventory()
@@ -23,7 +23,7 @@ const RegisteredKardexs = () => {
   return (
     <div className='common-container'>
       <div className='common-container__title'>
-        <TbTable size={56} strokeWidth={1.25} className='stroke-blue-400' />
+        <FaTableCellsRowLock size={56} className='fill-blue-600' />
         <div>
           <h2 className='text-light-2 text-2xl font-ubuntu'>
             Lista de Kardex de Inventario

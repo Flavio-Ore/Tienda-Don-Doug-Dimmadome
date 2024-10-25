@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
-import { ProductFormSchema } from '@/validations/product.schema'
+import { AddProductFormSchema } from '@/validations/addProduct.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
 import { LuChevronsUpDown } from 'react-icons/lu'
@@ -16,11 +16,13 @@ import {
 import { Input } from '@shadcn/input'
 import { Textarea } from '@shadcn/textarea'
 import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 
-import { PRIVATE_ROUTES } from '@/values'
+import { useToast } from '@/hooks/use-toast'
+import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { Calendar } from '@shadcn/calendar'
 import {
   Command,
@@ -35,14 +37,14 @@ import { BsCheck } from 'react-icons/bs'
 import { GoPackageDependents } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-const categories = ['Harina', 'Aceite', 'Arroz', 'Frijoles', 'Azúcar'] as const
 const ProductForm = () => {
   const { addProduct } = useInventory()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const {toast} = useToast()
   const navigate = useNavigate()
 
-  const productForm = useForm<z.infer<typeof ProductFormSchema>>({
-    resolver: zodResolver(ProductFormSchema),
+  const productForm = useForm<z.infer<typeof AddProductFormSchema>>({
+    resolver: zodResolver(AddProductFormSchema),
     defaultValues: {
       name: '',
       price: 0,
@@ -52,13 +54,22 @@ const ProductForm = () => {
     }
   })
   const watchName = productForm.watch('name')
-  const onSubmit = async (value: z.infer<typeof ProductFormSchema>) => {
+  const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
       addProduct({
         nombreProducto: value.name,
         precioVentaProducto: value.price
       })
+      toast({
+        title: 'Producto agregado',
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
+            <code>{JSON.stringify(value, null, 2)}</code>
+          </pre>
+        )
+      })
+      
       navigate(PRIVATE_ROUTES.REGISTERED_PRODUCTS)
     } catch (error) {
       console.error(error)
@@ -105,12 +116,13 @@ const ProductForm = () => {
           name='price'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Precio de Venta</FormLabel>
+              <FormLabel className='shad-form_label'>Precio de venta</FormLabel>
               <FormControl>
                 <Input
                   type='number'
                   placeholder='Precio del producto'
                   min={0}
+                  step={0.01}
                   {...field}
                   onChange={e => {
                     field.onChange(Number(e.target.value))
@@ -127,7 +139,7 @@ const ProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
-                Inventario Inicial
+                Inventario inicial
               </FormLabel>
               <FormControl>
                 <Input
@@ -147,7 +159,7 @@ const ProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
-                Fecha de Vencimiento
+                Fecha de vencimiento
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -160,7 +172,9 @@ const ProductForm = () => {
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PPP')
+                        format(field.value, 'PPP', {
+                          locale: es
+                        })
                       ) : (
                         <span>Elige una fecha</span>
                       )}
@@ -176,6 +190,7 @@ const ProductForm = () => {
                     mode='single'
                     selected={field.value}
                     onSelect={field.onChange}
+                    locale={es}
                     disabled={date =>
                       date > new Date() || date < new Date('1900-01-01')
                     }
@@ -193,7 +208,7 @@ const ProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
-                Categoría del Producto
+                Categoría del producto
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -207,11 +222,11 @@ const ProductForm = () => {
                       )}
                     >
                       {field.value
-                        ? categories.find(
+                        ? PRODUCT_CATEGORIES_VALUES.find(
                             category => category === field.value
                           ) ?? 'Elige una categoría'
                         : 'Elige una categoría'}
-                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -221,7 +236,7 @@ const ProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Categoría no encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {categories.map(category => (
+                        {PRODUCT_CATEGORIES_VALUES.map(category => (
                           <CommandItem
                             value={category}
                             key={category}
@@ -268,7 +283,7 @@ const ProductForm = () => {
             Agregar Producto
             <GoPackageDependents
               size={20}
-              className='ml-2 fill-dark-1 group-focus:fill-light-1'
+              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
             />
           </Button>
         </div>
