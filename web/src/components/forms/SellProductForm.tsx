@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@shadcn/button';
-import { FaRegHandshake } from "react-icons/fa6";
-import { LuChevronsUpDown } from 'react-icons/lu';
+import { cn } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@shadcn/button'
+import { FaRegHandshake } from 'react-icons/fa6'
+import { LuChevronsUpDown } from 'react-icons/lu'
 
 import {
   Form,
@@ -11,13 +11,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@shadcn/form';
-import { Input } from '@shadcn/input';
-import { useForm } from 'react-hook-form';
+} from '@shadcn/form'
+import { Input } from '@shadcn/input'
+import { useForm } from 'react-hook-form'
 
-import { useToast } from '@/hooks/use-toast';
-import { SellProductFormSchema } from '@/validations/sellProduct.schema';
-import { PRIVATE_ROUTES, TYPE_RECEIPT, TYPE_RECEIPT_VALUES } from '@/values';
+import { useToast } from '@/hooks/use-toast'
+import { SellProductFormSchema } from '@/validations/sellProduct.schema'
+import { PRIVATE_ROUTES, TYPE_RECEIPT, TYPE_RECEIPT_VALUES } from '@/values'
 import {
   Command,
   CommandEmpty,
@@ -25,11 +25,11 @@ import {
   CommandInput,
   CommandItem,
   CommandList
-} from '@shadcn/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover';
-import { BsCheck } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
+} from '@shadcn/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
+import { BsCheck } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
+import { z } from 'zod'
 
 const SellProductForm = () => {
   const { toast } = useToast()
@@ -44,15 +44,20 @@ const SellProductForm = () => {
     }
   })
 
-  const onSubmit = async (value: z.infer<typeof SellProductFormSchema>) => {
-    console.log(value)
+  const handleSellProductSubmit = async (
+    value: z.infer<typeof SellProductFormSchema>
+  ) => {    
     try {
+      console.log(value)
       toast({
-        title: 'Venta exitosa',
-        description: JSON.stringify(value),
+        title: 'Producto vendido',
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
+            <code>{JSON.stringify(value, null, 2)}</code>
+          </pre>
+        )
       })
       navigate(PRIVATE_ROUTES.SELL_PRODUCT)
-      
     } catch (error) {
       console.error(error)
     }
@@ -61,7 +66,7 @@ const SellProductForm = () => {
   return (
     <Form {...sellProductForm}>
       <form
-        onSubmit={sellProductForm.handleSubmit(onSubmit)}
+        onSubmit={sellProductForm.handleSubmit(handleSellProductSubmit)}
         className='flex flex-col gap-8 w-full max-w-5xl'
       >
         <FormField

@@ -12,5 +12,7 @@ export const ReturnProductFormSchema = z.object({
   quantity: z.number().positive().min(1, {
     message: 'La cantidad debe ser mayor o igual a 1'
   }),
-  description: z.string().trim()
+  description: z.string().trim().max(255, {
+    message: 'La descripción no puede tener más de 255 caracteres'
+  })
 })

@@ -16,10 +16,12 @@ import {
 import { Input } from '@shadcn/input'
 import { Textarea } from '@shadcn/textarea'
 import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 
+import { useToast } from '@/hooks/use-toast'
 import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { Calendar } from '@shadcn/calendar'
 import {
@@ -38,6 +40,7 @@ import { z } from 'zod'
 const ProductForm = () => {
   const { addProduct } = useInventory()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const {toast} = useToast()
   const navigate = useNavigate()
 
   const productForm = useForm<z.infer<typeof AddProductFormSchema>>({
@@ -58,6 +61,15 @@ const ProductForm = () => {
         nombreProducto: value.name,
         precioVentaProducto: value.price
       })
+      toast({
+        title: 'Producto agregado',
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
+            <code>{JSON.stringify(value, null, 2)}</code>
+          </pre>
+        )
+      })
+      
       navigate(PRIVATE_ROUTES.REGISTERED_PRODUCTS)
     } catch (error) {
       console.error(error)
@@ -104,12 +116,13 @@ const ProductForm = () => {
           name='price'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Precio de Venta</FormLabel>
+              <FormLabel className='shad-form_label'>Precio de venta</FormLabel>
               <FormControl>
                 <Input
                   type='number'
                   placeholder='Precio del producto'
                   min={0}
+                  step={0.01}
                   {...field}
                   onChange={e => {
                     field.onChange(Number(e.target.value))
@@ -126,7 +139,7 @@ const ProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
-                Inventario Inicial
+                Inventario inicial
               </FormLabel>
               <FormControl>
                 <Input
@@ -146,7 +159,7 @@ const ProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
-                Fecha de Vencimiento
+                Fecha de vencimiento
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -159,7 +172,9 @@ const ProductForm = () => {
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PPP')
+                        format(field.value, 'PPP', {
+                          locale: es
+                        })
                       ) : (
                         <span>Elige una fecha</span>
                       )}
@@ -175,6 +190,7 @@ const ProductForm = () => {
                     mode='single'
                     selected={field.value}
                     onSelect={field.onChange}
+                    locale={es}
                     disabled={date =>
                       date > new Date() || date < new Date('1900-01-01')
                     }
@@ -192,7 +208,7 @@ const ProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
-                Categoría del Producto
+                Categoría del producto
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>

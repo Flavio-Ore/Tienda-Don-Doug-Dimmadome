@@ -10,17 +10,11 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { ProviderValidationSchema } from '@/validations/addProvider.schema'
 import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { PhoneInput } from '@shadcn/phone-input'
-import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
-import { useForm } from 'react-hook-form'
-import { BsCheck } from 'react-icons/bs'
-import { LuChevronsUpDown } from 'react-icons/lu'
-import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
 import {
   Command,
   CommandEmpty,
@@ -28,10 +22,18 @@ import {
   CommandInput,
   CommandItem,
   CommandList
-} from '../ui/command'
+} from '@shadcn/command'
+import { PhoneInput } from '@shadcn/phone-input'
+import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
+import { useForm } from 'react-hook-form'
+import { BsCheck } from 'react-icons/bs'
+import { LuChevronsUpDown } from 'react-icons/lu'
+import { useNavigate } from 'react-router-dom'
+import { z } from 'zod'
+
 const ProviderForm = () => {
   const navigate = useNavigate()
-
+  const { toast } = useToast()
   const providerForm = useForm<z.infer<typeof ProviderValidationSchema>>({
     resolver: zodResolver(ProviderValidationSchema),
     defaultValues: {
@@ -44,8 +46,16 @@ const ProviderForm = () => {
   })
 
   const onSubmit = async (value: z.infer<typeof ProviderValidationSchema>) => {
-    console.log(value)
     try {
+      console.log(value)
+      toast({
+        title: 'Producto comprado',
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
+            <code>{JSON.stringify(value, null, 2)}</code>
+          </pre>
+        )
+      })
       navigate(PRIVATE_ROUTES.PROVIDERS)
     } catch (error) {
       console.error(error)
@@ -149,10 +159,10 @@ const ProviderForm = () => {
                     >
                       {field.value
                         ? PRODUCT_CATEGORIES_VALUES.find(
-                          category => category === field.value
-                        ) ?? 'Elige una categoría'
+                            category => category === field.value
+                          ) ?? 'Elige una categoría'
                         : 'Elige una categoría'}
-                        <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
+                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>

@@ -155,11 +155,13 @@ export const PRIVATE_ROUTES = {
   INVENTORY: '/inventario',
   CREATE_KARDEX: '/inventario/crear-kardex',
   REGISTERED_PRODUCTS: '/inventario/productos-registrados',
-  REGISTER_PRODUCT: '/inventario/registrar-nuevo-producto',
+  ADD_PRODUCT: '/inventario/registrar-nuevo-producto',
   PROVIDERS: '/inventario/proveedores',
   BUY_PRODUCT: '/inventario/comprar-producto',
   SELL_PRODUCT: '/inventario/vender-producto',
-  RETURN_PRODUCT: '/inventario/devolucion'
+  RETURN_PRODUCT: '/inventario/devolucion',
+  CLIENTS: '/inventario/clientes',
+  USERS: '/inventario/usuarios'
 }
 
 export const PRODUCT_CATEGORIES_VALUES = [
@@ -196,3 +198,14 @@ export const TYPE_RETURNS_VALUES = [
   'Devolución a proveedor',
   'Devolución de cliente'
 ] as const
+
+export const TYPE_USERS_VALUES = [
+  'Administrador',
+  'Vendedor',
+  'Almacenero'
+] as const
+export const TYPE_USERS = {
+  ADMINISTRATOR: 'Administrador',
+  SELLER: 'Vendedor',
+  WAREHOUSEMAN: 'Almacenero'
+} as const

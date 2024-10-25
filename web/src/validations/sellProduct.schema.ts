@@ -2,14 +2,9 @@ import { TYPE_RECEIPT_VALUES } from '@/values'
 import { z } from 'zod'
 
 export const SellProductFormSchema = z.object({
-  DNI: z
-    .string()
-    .min(8, {
-      message: 'El DNI debe tener al menos 8 caracteres'
-    })
-    .max(8, {
-      message: 'El DNI debe tener como máximo 8 caracteres'
-    }),
+  DNI: z.string().length(8, {
+    message: 'El DNI del cliente debe tener 8 caracteres'
+  }),
   typeReceipt: z.enum(
     TYPE_RECEIPT_VALUES.filter(
       typeReceipt =>

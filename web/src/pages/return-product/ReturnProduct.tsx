@@ -1,11 +1,11 @@
 import ReturnProductForm from '@/components/forms/ReturnProductForm'
-import { RiRefund2Line } from 'react-icons/ri'
+import { FaHandHoldingDollar } from 'react-icons/fa6'
 
 const ReturnProduct = () => {
   return (
     <div className='common-container'>
       <div className='common-container__title'>
-        <RiRefund2Line size={56} className='min-w-14 fill-blue-400' />
+        <FaHandHoldingDollar size={56} className='min-w-14 fill-lime-500' />
         <div>
           <h2 className='text-light-2 text-2xl font-ubuntu'>
             Devolución de Producto

@@ -1,11 +1,11 @@
 import KardexForm from '@/components/forms/KardexForm'
-import { TbTablePlus } from 'react-icons/tb'
+import { FaTable } from 'react-icons/fa'
 
 const CreateKardex = () => {
   return (
     <section className='common-container'>
       <div className='common-container__title'>
-        <TbTablePlus size={56} strokeWidth={1.25} className='stroke-blue-400' />
+        <FaTable  size={56} className='fill-blue-600' />
         <div>
           <h2 className='text-light-2 text-2xl font-ubuntu'>Crear Nuevo Kardex</h2>
           <p className='text-light-3 body-bold'>
