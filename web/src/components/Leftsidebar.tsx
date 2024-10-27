@@ -1,21 +1,21 @@
 import {
-  FaBox,
-  FaBoxes,
-  FaBoxOpen,
-  FaParachuteBox,
-  FaStar,
-  FaTable,
-  FaUsers,
-  FaUserTag
+    FaBox,
+    FaBoxes,
+    FaBoxOpen,
+    FaParachuteBox,
+    FaStar,
+    FaTable,
+    FaUserTag
 } from 'react-icons/fa'
 import {
-  FaGears,
-  FaHandHoldingDollar,
-  FaMoneyBillTransfer,
-  FaSackDollar,
-  FaTableCellsRowLock,
-  FaTruckPlane,
-  FaTruckRampBox
+    FaGears,
+    FaHandHoldingDollar,
+    FaMoneyBillTransfer,
+    FaSackDollar,
+    FaTableCellsRowLock,
+    FaTruckPlane,
+    FaTruckRampBox,
+    FaUsersViewfinder
 } from 'react-icons/fa6'
 
 import { NavLink, useLocation } from 'react-router-dom'
@@ -112,13 +112,13 @@ const Leftsidebar = () => {
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
                     'bg-dark-4': pathname.includes(
-                      PRIVATE_ROUTES.REGISTERED_PRODUCTS
+                      PRIVATE_ROUTES.PRODUCTS
                     )
                   }
                 )}
               >
                 <NavLink
-                  to={PRIVATE_ROUTES.REGISTERED_PRODUCTS}
+                  to={PRIVATE_ROUTES.PRODUCTS}
                   className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                 >
                   <FaBoxOpen
@@ -240,7 +240,7 @@ const Leftsidebar = () => {
           <hr className='w-full border-light-3 my-4' />
           <li className='flex flex-col justify-start'>
             <div className='inline-flex gap-x-2 items-center'>
-              <FaUsers className='fill-teal-500' size={24} strokeWidth={1.25} />
+              <FaUsersViewfinder className='fill-teal-500' size={24} strokeWidth={1.25} />
               <h3 className='text-light-1 text-sm relative xl:text-lg font-ubuntu'>
                 Usuarios
               </h3>

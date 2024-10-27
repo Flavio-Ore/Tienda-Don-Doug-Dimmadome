@@ -1,0 +1,38 @@
+[
+  {
+    "idProducto": 1,
+    "nombre": "Alverja partida",
+    "precioUnitario": 15.0,
+    "stock": 20,
+    "fechaVencimiento": "2024-10-24",
+    "categoria": {
+      "idCategoria": 1,
+      "nombre": "Menestras"
+    },
+    "estado": "activo"
+  },
+  {
+    "idProducto": 2,
+    "nombre": "Leche evaporada",
+    "precioUnitario": 15.0,
+    "stock": 20,
+    "fechaVencimiento": "2024-10-24",
+    "categoria": {
+      "idCategoria": 2,
+      "nombre": "Lacteos"
+    },
+    "estado": "activo"
+  },
+  {
+    "idProducto": 3,
+    "nombre": "Leche",
+    "precioUnitario": 10.0,
+    "stock": 20,
+    "fechaVencimiento": "2024-10-24",
+    "categoria": {
+      "idCategoria": 2,
+      "nombre": "Lacteos"
+    },
+    "estado": "inactivo"
+  }
+]

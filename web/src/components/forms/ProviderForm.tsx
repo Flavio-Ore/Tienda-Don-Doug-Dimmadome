@@ -1,20 +1,9 @@
-import { Button } from '@/components/ui/button'
-import { FaTruckArrowRight } from 'react-icons/fa6'
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
-import { ProviderValidationSchema } from '@/validations/addProvider.schema'
+import { ProviderValidationSchema } from '@/validations/forms/addProvider.schema'
 import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@shadcn/button'
 import {
   Command,
   CommandEmpty,
@@ -23,10 +12,20 @@ import {
   CommandItem,
   CommandList
 } from '@shadcn/command'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@shadcn/form'
+import { Input } from '@shadcn/input'
 import { PhoneInput } from '@shadcn/phone-input'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { useForm } from 'react-hook-form'
 import { BsCheck } from 'react-icons/bs'
+import { FaTruckArrowRight } from 'react-icons/fa6'
 import { LuChevronsUpDown } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -37,11 +36,10 @@ const ProviderForm = () => {
   const providerForm = useForm<z.infer<typeof ProviderValidationSchema>>({
     resolver: zodResolver(ProviderValidationSchema),
     defaultValues: {
-      socialReason: '',
-      address: '',
-      email: '',
-      phone: '',
-      category: undefined
+      nombre: '',
+      direccion: '',
+      contacto: '',
+      categoria: undefined
     }
   })
 
@@ -49,7 +47,7 @@ const ProviderForm = () => {
     try {
       console.log(value)
       toast({
-        title: 'Producto comprado',
+        title: 'Proveedor agregado exitosamente',
         description: (
           <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
             <code>{JSON.stringify(value, null, 2)}</code>
@@ -69,7 +67,7 @@ const ProviderForm = () => {
       >
         <FormField
           control={providerForm.control}
-          name='socialReason'
+          name='nombre'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Razón Social</FormLabel>
@@ -86,35 +84,16 @@ const ProviderForm = () => {
         />
         <FormField
           control={providerForm.control}
-          name='phone'
+          name='contacto'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Teléfono</FormLabel>
               <FormControl>
-                {/* <Input
-                  type='text'
-                  placeholder='Teléfono del proveedor'
+                <PhoneInput
                   {...field}
-                /> */}
-                <PhoneInput {...field} defaultCountry='PE' international />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={providerForm.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>
-                Correo Electrónico
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type='email'
-                  placeholder='Correo del proveedor'
-                  {...field}
+                  defaultCountry='PE'
+                  international
+                  className='focus-visible:border focus-visible:border-light-1'
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
@@ -123,7 +102,7 @@ const ProviderForm = () => {
         />
         <FormField
           control={providerForm.control}
-          name='address'
+          name='direccion'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Dirección</FormLabel>
@@ -140,11 +119,11 @@ const ProviderForm = () => {
         />
         <FormField
           control={providerForm.control}
-          name='category'
+          name='categoria'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
-                Categoría del Proveedor
+                Categoría del proveedor
               </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -157,10 +136,11 @@ const ProviderForm = () => {
                         !field.value && 'text-light-3'
                       )}
                     >
-                      {field.value
+                      {field.value?.nombre
                         ? PRODUCT_CATEGORIES_VALUES.find(
-                            category => category === field.value
-                          ) ?? 'Elige una categoría'
+                            category =>
+                              category?.idCategoria === field.value?.idCategoria
+                          )?.nombre ?? 'Elige una categoría'
                         : 'Elige una categoría'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
@@ -174,21 +154,23 @@ const ProviderForm = () => {
                       <CommandGroup>
                         {PRODUCT_CATEGORIES_VALUES.map(category => (
                           <CommandItem
-                            value={category}
-                            key={category}
+                            value={category.nombre}
+                            key={category.idCategoria}
                             onSelect={() => {
-                              providerForm.setValue('category', category)
+                              providerForm.setValue('categoria', category)
                             }}
                           >
                             <BsCheck
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                category === field.value
+                                category.nombre === field.value?.nombre &&
+                                  category.idCategoria ===
+                                    field.value?.idCategoria
                                   ? 'opacity-100'
                                   : 'opacity-0'
                               )}
                             />
-                            {category}
+                            {category.nombre}
                           </CommandItem>
                         ))}
                       </CommandGroup>

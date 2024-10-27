@@ -8,7 +8,7 @@ import InventoryContext from '@/states/inventory/contexts/InventoryContext'
 import {
   AllowedMeasurementUnits,
   AllowedSunatExistences,
-  Producto,
+  IProducto,
   type Kardex,
   type MovimientoInventario
 } from '@/types'
@@ -203,7 +203,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
   const getAllKardexs = () => {
     const completeKardexs: Array<
       Kardex & {
-        producto: Producto
+        producto: IProducto
         tipo_existencia_sunat: string
         unidad_medida: string
       }

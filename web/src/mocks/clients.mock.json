@@ -1,0 +1,22 @@
+[
+  {
+    "success": true,
+    "data": {
+      "numero": "74928466",
+      "nombre_completo": "ORE CHAVEZ, FLAVIO GONZALO",  
+      "nombres": "FLAVIO GONZALO",
+      "apellido_paterno": "ORE",
+      "apellido_materno": "CHAVEZ",
+      "codigo_verificacion": 3,
+      "ubigeo_sunat": "",
+      "ubigeo": [
+        null,
+        null,
+        null
+      ],
+      "direccion": ""
+    },
+    "time": 0.06379079818725586,
+    "source": "apiperu.dev"
+  }
+]
