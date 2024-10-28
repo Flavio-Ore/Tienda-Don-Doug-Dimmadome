@@ -1,21 +1,20 @@
 import {
-    FaBox,
-    FaBoxes,
-    FaBoxOpen,
-    FaParachuteBox,
-    FaStar,
-    FaTable,
-    FaUserTag
+  FaBox,
+  FaBoxes,
+  FaBoxOpen,
+  FaParachuteBox,
+  FaStar,
+  FaUserTag
 } from 'react-icons/fa'
 import {
-    FaGears,
-    FaHandHoldingDollar,
-    FaMoneyBillTransfer,
-    FaSackDollar,
-    FaTableCellsRowLock,
-    FaTruckPlane,
-    FaTruckRampBox,
-    FaUsersViewfinder
+  FaGears,
+  FaHandHoldingDollar,
+  FaMoneyBillTransfer,
+  FaSackDollar,
+  FaTableCellsRowLock,
+  FaTruckPlane,
+  FaTruckRampBox,
+  FaUsersViewfinder
 } from 'react-icons/fa6'
 
 import { NavLink, useLocation } from 'react-router-dom'
@@ -55,7 +54,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname === PRIVATE_ROUTES.INVENTORY
+                    'bg-dark-3': pathname === PRIVATE_ROUTES.INVENTORY
                   }
                 )}
               >
@@ -73,11 +72,11 @@ const Leftsidebar = () => {
                   </span>
                 </NavLink>
               </li>
-              <li
+              {/* <li
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.CREATE_KARDEX)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.CREATE_KARDEX)
                   }
                 )}
               >
@@ -94,7 +93,7 @@ const Leftsidebar = () => {
                     Crear Kardex
                   </span>
                 </NavLink>
-              </li>
+              </li> */}
             </ul>
           </li>
           <hr className='w-full border-light-3 my-4' />
@@ -111,7 +110,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(
+                    'bg-dark-3': pathname.includes(
                       PRIVATE_ROUTES.PRODUCTS
                     )
                   }
@@ -135,7 +134,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.ADD_PRODUCT)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.ADD_PRODUCT)
                   }
                 )}
               >
@@ -174,7 +173,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.BUY_PRODUCT)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.BUY_PRODUCT)
                   }
                 )}
               >
@@ -196,7 +195,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.SELL_PRODUCT)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.SELL_PRODUCT)
                   }
                 )}
               >
@@ -214,7 +213,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(
+                    'bg-dark-3': pathname.includes(
                       PRIVATE_ROUTES.RETURN_PRODUCT
                     )
                   }
@@ -250,7 +249,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.PROVIDERS)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.PROVIDERS)
                   }
                 )}
               >
@@ -272,7 +271,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.CLIENTS)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.CLIENTS)
                   }
                 )}
               >
@@ -304,7 +303,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.USERS)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.USERS)
                   }
                 )}
               >

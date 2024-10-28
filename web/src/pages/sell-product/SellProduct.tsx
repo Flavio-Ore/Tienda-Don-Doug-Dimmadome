@@ -10,14 +10,14 @@ import {
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { IProducto } from '@/types'
-import { FaSackDollar } from 'react-icons/fa6'
+import { FaMoneyBillTrendUp, FaSackDollar } from 'react-icons/fa6'
 
+import { useToast } from '@/hooks/use-toast'
 import { useDebounce } from '@/hooks/useDebounce'
 import PRODUCTS_JSON from '@/mocks/product.mock.json'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
-import { FaBoxOpen } from 'react-icons/fa'
 
 const productsData: IProducto[] = PRODUCTS_JSON
 
@@ -28,7 +28,7 @@ const SellProduct = () => {
       cantidad: number
     }>
   >([])
-
+  const { toast } = useToast()
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
   const isTyping = searchValue !== ''
@@ -50,56 +50,7 @@ const SellProduct = () => {
     const { value } = e.target
     setSearchValue(value)
   }
-  const handleAddProduct = (productId: number) => {
-    const existingProduct = selectedProducts.find(
-      p => p.producto.idProducto === productId
-    )
-    if (existingProduct) {
-      setSelectedProducts(
-        selectedProducts.map(p =>
-          p.producto.idProducto === productId
-            ? { ...p, cantidad: p.cantidad + 1 }
-            : p
-        )
-      )
-      return;
-    }
-    const product = productsData.find(p => p.idProducto === productId)
-    if (product == null) {
-      return
-    }
-    setSelectedProducts(prevProducts => [
-      ...prevProducts,
-      {
-        producto: product,
-        cantidad: 1
-      }
-    ])
-  }
 
-  const handleRemoveProduct = (productId: number) => {
-    const existingProduct = selectedProducts.find(
-      p => p.producto.idProducto === productId
-    )
-
-    if (existingProduct == null) {
-      return
-    }
-
-    if (existingProduct.cantidad > 1) {
-      setSelectedProducts(
-        prevProducts => prevProducts.map(p =>
-          p.producto.idProducto === productId
-            ? { ...p, cantidad: p.cantidad - 1 }
-            : p
-        )
-      )
-    } else {
-      setSelectedProducts(
-        selectedProducts.filter(p => p.producto.idProducto !== productId)
-      )
-    }
-  }
   return (
     <div className='common-container'>
       <div className='inline-flex gap-x-2'>
@@ -111,23 +62,22 @@ const SellProduct = () => {
           </p>
         </div>
       </div>
-      <SellProductForm selectedProducts={selectedProducts}/>
+      <SellProductForm />
       <div className='inline-flex gap-x-2'>
-        <FaBoxOpen size={56} className='fill-lime-500' />
+        <FaMoneyBillTrendUp size={56} className='fill-lime-500' />
         <div>
           <h2 className='text-light-2 text-2xl font-ubuntu'>
-            Lista de productos en stock para venta
+            Productos vendidos
           </h2>
           <p className='text-light-3 body-bold'>
-            Aquí puedes ver la lista de productos en stock. Puedes agregarlos a
-            la venta.
+            Seguimiento de productos vendidos en el sistema
           </p>
         </div>
       </div>
       <div className='flex flex-col items-center w-full max-w-5xl gap-y-2 my-2'>
         <div className='flex items-center w-full max-w-5xl gap-y-6'>
           <h3 className='text-light-2 body-bold font-ubuntu'>
-            Búsqueda global de productos
+            Lista de ventas
           </h3>
         </div>
         <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-1'>
@@ -155,7 +105,7 @@ const SellProduct = () => {
         {isTyping &&
           searchedProductsData.length > 0 &&
           searchedProductsData.map(product => (
-            <Card>
+            <Card key={product.idProducto}>
               <CardHeader>
                 <CardTitle>{product.nombre}</CardTitle>
                 <CardDescription></CardDescription>
@@ -217,14 +167,14 @@ const SellProduct = () => {
                 <Button
                   variant='secondary'
                   size='sm'
-                  onClick={() => handleAddProduct(product.idProducto)}
+                  // onClick={() => handleAddProduct(product.idProducto)}
                 >
                   Agregar a la venta
                 </Button>
                 <Button
                   variant='destructive'
                   size='sm'
-                  onClick={() => handleRemoveProduct(product.idProducto)}
+                  // onClick={() => handleRemoveProduct(product.idProducto)}
                 >
                   Eliminar Producto
                 </Button>
@@ -297,14 +247,14 @@ const SellProduct = () => {
                 <Button
                   variant='secondary'
                   size='sm'
-                  onClick={() => handleAddProduct(product.idProducto)}
+                  // onClick={() => handleAddProduct(product.idProducto)}
                 >
                   Agregar a la venta
                 </Button>
                 <Button
                   variant='destructive'
                   size='sm'
-                  onClick={() => handleRemoveProduct(product.idProducto)}
+                  // onClick={() => handleRemoveProduct(product.idProducto)}
                 >
                   Eliminar Producto
                 </Button>

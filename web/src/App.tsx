@@ -4,7 +4,6 @@ import Root from '@layouts/Root'
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/values'
 import BuyProduct from '@pages/buy-product/BuyProduct'
 import Clients from '@pages/clients/Clients'
-import CreateKardex from '@pages/create-kardex/CreateKardex'
 import ProductRegistration from '@pages/create-product/ProductRegistration'
 import Login from '@pages/Login'
 import Products from '@pages/products/Products'
@@ -26,10 +25,10 @@ function App () {
         </Route>
         <Route path={PRIVATE_ROUTES.INVENTORY} element={<Root />}>
           <Route index element={<RegisteredKardexs />} />
-          <Route
+          {/* <Route
             path={PRIVATE_ROUTES.CREATE_KARDEX}
             element={<CreateKardex />}
-          />
+          /> */}
           <Route
             path={PRIVATE_ROUTES.PRODUCTS}
             element={<Products />}

@@ -21,9 +21,12 @@ export const AddProductFormSchema = z.object({
   stock: z.number().nonnegative({
     message: 'El inventario inicial no puede ser negativo'
   }),
-  fecha_expiracion: z.date({
-    required_error: 'La fecha de expiración es obligatoria'
-  }),
+  fechaExpiracion: z
+    .string({
+      // message: 'La fecha de expiración es obligatoria',
+      required_error: 'La fecha de expiración es obligatoria'
+    })
+    .date('Se espera una fecha válida'),
   categoria: z.object(
     {
       idCategoria: z.number().nonnegative({

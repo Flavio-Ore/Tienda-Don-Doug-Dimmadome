@@ -11,9 +11,11 @@ const ProductsToSell = z.object({
 })
 
 export const SellProductFormSchema = z.object({
-  dni_cliente: z.number().int().positive().max(99999999, {
-    message: 'El DNI no puede tener más de 8 dígitos'
-  }),
+  dni_cliente: z
+    .number()
+    .int({
+      message: 'El DNI debe ser un número entero'
+    }),
   tipo_pago: z.enum(['Efectivo', 'Yape', 'Plin'], {
     message: 'El tipo de pago no es válido'
   }),

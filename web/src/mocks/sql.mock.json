@@ -402,30 +402,23 @@
   "producto": [
     {
       "id_producto": 1,
-      "nombre_producto": "Camisa",
+      "nombre_producto": "Alverja partida",
       "precio_venta_producto": 19.99,
       "stock_actual_producto": 100,
       "estado_producto": true
     },
     {
       "id_producto": 2,
-      "nombre_producto": "Pantalón",
+      "nombre_producto": "Leche evaporada",
       "precio_venta_producto": 49.99,
       "stock_actual_producto": 80,
       "estado_producto": true
     },
     {
       "id_producto": 3,
-      "nombre_producto": "Zapatillas deportivas",
+      "nombre_producto": "Leche",
       "precio_venta_producto": 79.99,
       "stock_actual_producto": 150,
-      "estado_producto": true
-    },
-    {
-      "id_producto": 4,
-      "nombre_producto": "Paquete Lata Leche Gloria",
-      "precio_venta_producto": 81.99,
-      "stock_actual_producto": 10,
       "estado_producto": true
     }
   ],
@@ -438,7 +431,7 @@
       "ruc": "20400000101",
       "razon_social": "Tienda de Ropa Online",
       "periodo_kardex": "2024-01",
-      "descripcion": "Camisas blancas"
+      "descripcion": "Alverja partida"
     },
     {
       "id_kardex": 2,
@@ -448,7 +441,7 @@
       "ruc": "20400000101",
       "razon_social": "Tienda de Ropa Online",
       "periodo_kardex": "2024-01",
-      "descripcion": "Pantalones negros"
+      "descripcion": "Leche evaporada"
     },
     {
       "id_kardex": 3,
@@ -458,17 +451,7 @@
       "ruc": "20400000101",
       "razon_social": "Tienda de Ropa Online",
       "periodo_kardex": "2024-01",
-      "descripcion": "Zapatillas deportivas"
-    },
-    {
-      "id_kardex": 4,
-      "id_producto": 4,
-      "id_tipo_existencia_sunat": 1,
-      "id_unidad_medida": 1,
-      "ruc": "20400000101",
-      "razon_social": "Tienda de Ropa Online",
-      "periodo_kardex": "2024-01",
-      "descripcion": "Leche Gloria"
+      "descripcion": "Leche"
     }
   ],
   "movimiento_inventario": [

@@ -1,11 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
@@ -25,7 +17,8 @@ import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
 import CLIENTS_JSON from '@/mocks/clients.mock.json'
-import { ICliente } from '@/types'
+import PRODUCTS_JSON from '@/mocks/product.mock.json'
+import { ICliente, IProducto } from '@/types'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { PRIVATE_ROUTES, TYPE_PAYMENT_VALUES } from '@/values'
 import {
@@ -37,27 +30,29 @@ import {
   CommandList
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
+import { useEffect, useState } from 'react'
 import { BsCheck } from 'react-icons/bs'
+import { FaCartArrowDown, FaCartPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '../ui/card'
 
 const clientData: ICliente[] = CLIENTS_JSON.map(client => client.data)
+const productsData: IProducto[] = PRODUCTS_JSON
 
-const SellProductForm = ({
-  selectedProducts
-}: {
-  selectedProducts: Array<{
-    id_producto: number
-    cantidad: number
-  }>
-}) => {
-  // const [products, setProducts] = useState<
-  //   Array<{
-  //     id_producto: number
-  //     cantidad: number
-  //   }>
-  // >(selectedProducts)
-
+const SellProductForm = () => {
+  const [selectedProducts, setSelectedProducts] = useState<
+    Array<{
+      producto: IProducto
+      cantidad: number
+    }>
+  >([])
   const { toast } = useToast()
   const navigate = useNavigate()
 
@@ -70,6 +65,77 @@ const SellProductForm = ({
       productos: []
     }
   })
+
+  const handleAddProduct = (productId: number) => {
+    const existingProduct = selectedProducts.find(
+      p => p.producto.idProducto === productId
+    )
+    if (existingProduct != null) {
+      setSelectedProducts(
+        selectedProducts.map(p =>
+          p.producto.idProducto === productId
+            ? { ...p, cantidad: p.cantidad + 1 }
+            : p
+        )
+      )
+      toast({
+        title: 'Producto agregado',
+        description: `Se ha agregado una unidad de ${existingProduct.producto.nombre} a la venta`,
+        variant: 'confirmation'
+      })
+      return
+    }
+    const product = productsData.find(p => p.idProducto === productId)
+    if (product == null) {
+      return
+    }
+    setSelectedProducts(prevProducts => [
+      ...prevProducts,
+      {
+        producto: product,
+        cantidad: 1
+      }
+    ])
+    toast({
+      title: 'Producto agregado',
+      description: `Se ha agregado ${product.nombre} a la venta`,
+      variant: 'accepted'
+    })
+  }
+
+  const handleRemoveProduct = (productId: number) => {
+    const existingProduct = selectedProducts.find(
+      p => p.producto.idProducto === productId
+    )
+
+    if (existingProduct == null) {
+      return
+    }
+
+    if (existingProduct.cantidad > 1) {
+      setSelectedProducts(prevProducts =>
+        prevProducts.map(p =>
+          p.producto.idProducto === productId
+            ? { ...p, cantidad: p.cantidad - 1 }
+            : p
+        )
+      )
+      toast({
+        title: 'Producto eliminado',
+        description: `Se ha eliminado una unidad de ${existingProduct.producto.nombre} de la venta`,
+        variant: 'action'
+      })
+    } else {
+      setSelectedProducts(prevState =>
+        prevState.filter(p => p.producto.idProducto !== productId)
+      )
+      toast({
+        title: 'Producto eliminado',
+        description: `No hay más unidades de ${existingProduct.producto.nombre} en la venta`,
+        variant: 'destructive'
+      })
+    }
+  }
 
   const handleSellProductSubmit = async (
     value: z.infer<typeof SellProductFormSchema>
@@ -90,14 +156,14 @@ const SellProductForm = ({
     }
   }
 
-  // useEffect(() => {
-  //   sellProductForm.setValue(
-  //     'cantidad_total',
-  //     Number(
-  //       sellProductForm.watch('cantidad') * sellProductForm.watch('cantidad')
-  //     )
-  //   )
-  // }, [sellProductForm.watch('cantidad')])
+  useEffect(() => {
+    const total = selectedProducts.reduce(
+      (acc, product) =>
+        acc + product.cantidad * product.producto.precioUnitario,
+      0
+    )
+    sellProductForm.setValue('cantidad_total', total)
+  }, [selectedProducts])
 
   return (
     <Form {...sellProductForm}>
@@ -297,83 +363,199 @@ const SellProductForm = ({
             </FormItem>
           )}
         /> */}
-        <div>
-          <FormLabel className='shad-form_label'>Productos</FormLabel>
-          <ul className='grid gap-2'>
-            {products.map(product => (
-              <li key={product.id_producto} className='flex items-center gap-2'>
-                <Card>
+        <FormField
+          control={sellProductForm.control}
+          name='productos'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>Productos</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant='ghost'
+                      role='combobox'
+                      className={cn(
+                        'w-full justify-between outline outline-1 outline-light-3',
+                        !field.value && 'text-light-3'
+                      )}
+                    >
+                      Elige un producto
+                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className='w-[700px]' align='start'>
+                  <Command className='w-full max-w-3xl'>
+                    <CommandInput placeholder='Busca un producto...' />
+                    <CommandList className='w-full max-w-3xl max-h-[900px]'>
+                      <CommandEmpty>Producto no encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        {productsData.map(product => (
+                          <CommandItem
+                            className='w-full'
+                            value={product.nombre}
+                            key={product.idProducto}
+                            onSelect={() => {
+                              sellProductForm.setValue(
+                                'productos',
+                                selectedProducts.map(p => ({
+                                  id_producto: p.producto.idProducto,
+                                  cantidad: p.cantidad
+                                }))
+                              )
+                            }}
+                          >
+                            <Card>
+                              <CardHeader>
+                                <CardTitle>{product.nombre}</CardTitle>
+                              </CardHeader>
+                              <CardContent>
+                                <ul className='flex gap-x-2 gap-y-2 items-center'>
+                                  <li className='w-full inline-flex justify-between items-center'>
+                                    <span className='text-sm text-light-3'>
+                                      Precio de venta:
+                                    </span>
+                                    <span
+                                      className={cn(
+                                        'bg-dark-1 px-2 py-1 text-sm',
+                                        {
+                                          'text-yellow-400':
+                                            product.precioUnitario > 0
+                                        }
+                                      )}
+                                    >
+                                      S/{product.precioUnitario}
+                                    </span>
+                                  </li>
+                                  <li className='w-full inline-flex justify-between items-center'>
+                                    <span className='text-sm text-light-3'>
+                                      Stock:
+                                    </span>
+                                    <span
+                                      className={cn(
+                                        'bg-dark-1 px-2 py-1 text-sm',
+                                        {
+                                          'text-blue-400': product.stock > 0,
+                                          'text-red-700': product.stock <= 0
+                                        }
+                                      )}
+                                    >
+                                      {product.stock} unidades
+                                    </span>
+                                  </li>
+                                </ul>
+                              </CardContent>
+                              <CardFooter className='flex w-full justify-between items-center'>
+                                <Button
+                                  variant='secondary'
+                                  size='sm'
+                                  onClick={() =>
+                                    handleAddProduct(product.idProducto)
+                                  }
+                                >
+                                  Agregar a la venta
+                                </Button>
+                                <Button
+                                  variant='destructive'
+                                  size='sm'
+                                  onClick={() =>
+                                    handleRemoveProduct(product.idProducto)
+                                  }
+                                >
+                                  Eliminar Producto
+                                </Button>
+                              </CardFooter>
+                            </Card>
+                            <BsCheck
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                field.value.find(
+                                  v => v.id_producto === product.idProducto
+                                )
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              )}
+                            />
+                            {product.nombre}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
+          {selectedProducts.map(product => {
+            const selectedProduct = productsData.find(
+              selectedData =>
+                selectedData.idProducto === product.producto.idProducto
+            )
+            if (selectedProduct != null) {
+              return (
+                <Card key={selectedProduct.idProducto}>
                   <CardHeader>
-                    <CardTitle>{product.nombre}</CardTitle>
-                    <CardDescription></CardDescription>
+                    <CardTitle className='inline-flex justify-between align-center font-normal'>
+                      <span className='text-lg'>{selectedProduct.nombre}</span>
+                      <span className='text-lg'>{product.cantidad}</span>
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className='flex flex-col gap-y-2 items-center'>
                       <li className='w-full inline-flex justify-between items-center'>
                         <span className='text-sm text-light-3'>
-                          Precio unitario:{' '}
+                          Precio de venta:
                         </span>
                         <span
                           className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                            'text-yellow-400': product. > 0
+                            'text-yellow-400':
+                              selectedProduct.precioUnitario > 0
                           })}
                         >
-                          S/{product.precioUnitario}
+                          S/{selectedProduct.precioUnitario}
                         </span>
                       </li>
                       <li className='w-full inline-flex justify-between items-center'>
                         <span className='text-sm text-light-3'>Stock:</span>
                         <span
                           className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                            'text-blue-400': product.stock > 0,
-                            'text-red-700': product.stock <= 0
+                            'text-blue-400': selectedProduct.stock > 0,
+                            'text-red-700': selectedProduct.stock <= 0
                           })}
                         >
-                          {product.stock} unidades
-                        </span>
-                      </li>
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>Estado:</span>
-                        <span
-                          className={cn(
-                            'bg-dark-1 px-2 py-1 rounded-md text-sm',
-                            {
-                              'text-green-400': product.estado === 'activo',
-                              'text-red-400': product.estado === 'inactivo'
-                            }
-                          )}
-                        >
-                          {product.estado}
-                        </span>
-                      </li>
-
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>Categoría:</span>
-                        <span className='bg-dark-1 px-2 py-1 rounded-md text-sm'>
-                          {product.categoria.nombre}
-                        </span>
-                      </li>
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>
-                          Fecha de vencimiento:
-                        </span>
-                        <span className='bg-dark-1 px-2 py-1 rounded-md text-sm'>
-                          {
-                            product.fechaVencimiento
-                              .toLocaleString()
-                              .split('T')[0]
-                          }
+                          {selectedProduct.stock} unidades
                         </span>
                       </li>
                     </ul>
                   </CardContent>
-                  <CardFooter className='flex justify-center items-center'>
-                    <Button variant='default'>Eliminar Producto</Button>
+                  <CardFooter className='flex w-full justify-around items-center'>
+                    <Button
+                      variant='secondary'
+                      size='sm'
+                      onClick={() =>
+                        handleAddProduct(product.producto.idProducto)
+                      }
+                    >
+                      <FaCartPlus size={20} className='fill-light-1' />
+                    </Button>
+                    <Button
+                      variant='destructive'
+                      size='sm'
+                      onClick={() =>
+                        handleRemoveProduct(product.producto.idProducto)
+                      }
+                    >
+                      <FaCartArrowDown size={20} className='fill-light-1' />
+                    </Button>
                   </CardFooter>
                 </Card>
-              </li>
-            ))}
-          </ul>
+              )
+            }
+          })}
         </div>
         <FormField
           control={sellProductForm.control}

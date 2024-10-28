@@ -47,7 +47,7 @@ const ProductForm = () => {
       nombre: '',
       precio_unitario: 0,
       stock: 0,
-      fecha_expiracion: new Date(),
+      fechaExpiracion: undefined,
       categoria: undefined
     }
   })
@@ -153,7 +153,7 @@ const ProductForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='fecha_expiracion'
+          name='fechaExpiracion'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
@@ -166,7 +166,9 @@ const ProductForm = () => {
                       variant='ghost'
                       className={cn(
                         'w-full pl-3 outline outline-1 outline-light-3',
-                        !field.value && 'text-light-3'
+                        {
+                          'text-light-3': !field.value
+                        }
                       )}
                     >
                       {field.value ? (
@@ -186,12 +188,25 @@ const ProductForm = () => {
                 <PopoverContent className='w-auto p-0' align='start'>
                   <Calendar
                     mode='single'
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    locale={es}
-                    disabled={date =>
-                      date > new Date() || date < new Date('1900-01-01')
+                    selected={
+                      field.value == null ? undefined : new Date(field.value)
                     }
+                    onSelect={date => {
+                      if (date == null) field.onChange(undefined)
+                      else {
+                        const fixedDate = date.setDate(date.getDate() + 1)
+                        field.onChange(
+                          date == null
+                            ? undefined
+                            : format(fixedDate, 'yyyy-MM-dd')
+                        )
+                      }
+                    }}
+                    // onSelect={date => {
+                    //   productForm.setValue('fechaExpiracion', date == null ? undefined : format(date, 'yyyy-MM-dd'))
+                    // }}
+                    disabled={date => date < new Date()}
+                    locale={es}
                     initialFocus
                   />
                 </PopoverContent>
@@ -282,7 +297,7 @@ const ProductForm = () => {
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1'
           >
             Agregar Producto
-            <FaParachuteBox 
+            <FaParachuteBox
               size={20}
               className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
             />
