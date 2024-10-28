@@ -34,7 +34,6 @@ import { z } from 'zod'
 
 const UserForm = () => {
   const [showPassword, setShowPassword] = useState(false)
-
   const { toast } = useToast()
   const navigate = useNavigate()
 

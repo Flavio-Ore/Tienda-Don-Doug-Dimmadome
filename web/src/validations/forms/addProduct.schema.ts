@@ -15,13 +15,13 @@ export const AddProductFormSchema = z.object({
     .max(100, {
       message: 'El nombre no puede tener más de 100 caracteres'
     }),
-  precio_unitario: z.number().positive({
+  precioUnitario: z.number().positive({
     message: 'El precio no puede ser negativo'
   }),
   stock: z.number().nonnegative({
     message: 'El inventario inicial no puede ser negativo'
   }),
-  fechaExpiracion: z
+  fechaVencimiento: z
     .string({
       // message: 'La fecha de expiración es obligatoria',
       required_error: 'La fecha de expiración es obligatoria'

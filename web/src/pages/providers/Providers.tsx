@@ -1,6 +1,6 @@
 import ProviderForm from '@/components/forms/ProviderForm'
 import { useDebounce } from '@/hooks/useDebounce'
-import PROVIDERS_JSON from '@/mocks/providers.mock.json'
+import useInventory from '@/states/inventory/hooks/useInventory'
 import ProviderCard from '@pages/providers/components/ProviderCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
@@ -8,23 +8,18 @@ import { CiSearch } from 'react-icons/ci'
 import { FaPeopleCarry } from 'react-icons/fa'
 import { FaTruckPlane } from 'react-icons/fa6'
 
-const providersData = PROVIDERS_JSON
-
 const Providers = () => {
   const [searchValue, setSearchValue] = useState('')
+  const { providers, searchProviders } = useInventory()
   const debouncedValue = useDebounce(searchValue, 500)
   const isTyping = searchValue !== ''
-  const searchedClientsData = useMemo(() => {
-    return providersData.filter(provider => {
-      const upperCaseValue = debouncedValue.toUpperCase()
-      const { nombre, direccion, contacto } = provider
-      return (
-        nombre.includes(upperCaseValue) ||
-        direccion.includes(upperCaseValue) ||
-        contacto.includes(upperCaseValue)
-      )
-    })
-  }, [debouncedValue])
+  const searchedProviders = useMemo(
+    () =>
+      searchProviders({
+        searchTerm: debouncedValue
+      }),
+    [debouncedValue]
+  )
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     setSearchValue(value)
@@ -71,26 +66,26 @@ const Providers = () => {
           />
         </div>
       </div>
-      {isTyping && searchedClientsData.length <= 0 && (
+      {isTyping && searchedProviders.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No se encontraron clientes
         </p>
       )}
-      {!isTyping && providersData.length <= 0 && (
+      {!isTyping && providers.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No hay clientes registrados
         </p>
       )}
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
         {isTyping &&
-          searchedClientsData.length > 0 &&
-          searchedClientsData.map(provider => (
+          searchedProviders.length > 0 &&
+          searchedProviders.map(provider => (
             <ProviderCard key={provider.nombre} provider={provider} />
           ))}
 
         {!isTyping &&
-          providersData.length > 0 &&
-          providersData.map(provider => (
+          providers.length > 0 &&
+          providers.map(provider => (
             <ProviderCard key={provider.nombre} provider={provider} />
           ))}
       </div>

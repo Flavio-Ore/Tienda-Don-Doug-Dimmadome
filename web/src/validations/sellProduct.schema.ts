@@ -1,21 +1,10 @@
 // import clientData from '@/mocks/clients.mock.json'
 import { z } from 'zod'
 
-// const clientNames = clientData.map(client => client.data.nombre_completo)
-
-const ProductsToSell = z.object({
-  id_producto: z.number().int().positive(),
-  cantidad: z.number().nonnegative().min(1, {
-    message: 'La cantidad debe ser mayor o igual a 1'
-  })
-})
-
 export const SellProductFormSchema = z.object({
-  dni_cliente: z
-    .number()
-    .int({
-      message: 'El DNI debe ser un número entero'
-    }),
+  idCliente: z.number().int().positive({
+    message: 'El cliente no es válido'
+  }),
   tipo_pago: z.enum(['Efectivo', 'Yape', 'Plin'], {
     message: 'El tipo de pago no es válido'
   }),
@@ -28,8 +17,16 @@ export const SellProductFormSchema = z.object({
   //     message: 'El tipo de comprobante no es válido'
   //   }
   // ),
-  productos: z.array(ProductsToSell, {
-    message: 'Los productos no son válidos'
+  // productos: z.array(ProductsToSell, {
+  //   message: 'Los productos no son válidos'
+  // }),
+  cantidad: z.number().nonnegative().min(1, {
+    message: 'La cantidad debe ser mayor o igual a 1'
   }),
-  cantidad_total: z.number().nonnegative()
+  // costo_unitario: z.number().nonnegative({
+  //   message: 'El costo unitario no es válido'
+  // }),
+  idProducto: z.number().int().positive(),
+  costo_total: z.number().nonnegative(),
+  total: z.number().nonnegative()
 })

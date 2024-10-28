@@ -26,8 +26,7 @@ const ClientForm = () => {
   const addClientForm = useForm<z.infer<typeof ClientFormSchema>>({
     resolver: zodResolver(ClientFormSchema),
     defaultValues: {
-      numero_documento: '',
-      nombre_cliente: '',
+      numeroDocumento: '',
       direccion: ''
     }
   })
@@ -57,29 +56,12 @@ const ClientForm = () => {
       >
         <FormField
           control={addClientForm.control}
-          name='numero_documento'
+          name='numeroDocumento'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>DNI</FormLabel>
               <FormControl>
                 <Input type='text' placeholder='DNI del cliente' {...field} />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={addClientForm.control}
-          name='nombre_cliente'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>Nombre completo</FormLabel>
-              <FormControl>
-                <Input
-                  type='text'
-                  placeholder='Nombre completo del cliente'
-                  {...field}
-                />
               </FormControl>
               <FormMessage className='shad-form_message' />
             </FormItem>

@@ -1,22 +1,10 @@
 [
   {
-    "success": true,
-    "data": {
-      "numero": "74928466",
-      "nombre_completo": "ORE CHAVEZ, FLAVIO GONZALO",  
-      "nombres": "FLAVIO GONZALO",
-      "apellido_paterno": "ORE",
-      "apellido_materno": "CHAVEZ",
-      "codigo_verificacion": 3,
-      "ubigeo_sunat": "",
-      "ubigeo": [
-        null,
-        null,
-        null
-      ],
-      "direccion": ""
-    },
-    "time": 0.06379079818725586,
-    "source": "apiperu.dev"
+    "idCliente": 3,
+    "numeroDocumento": "74928466",
+    "nombreCliente": "ORE CHAVEZ, FLAVIO GONZALO",
+    "direccion": "Av. Ejemplo 123, Lima",
+    "fechaRegistro": "2024-10-27",
+    "estado": "activo"
   }
 ]

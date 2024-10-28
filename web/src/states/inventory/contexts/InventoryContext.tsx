@@ -1,25 +1,29 @@
-import { type InventoryContext } from '@/types/inventoryContext'
+import { IInventoryContext } from '@/types'
 import { createContext } from 'react'
 
-const InventoryContext = createContext<InventoryContext>({
+const InventoryContext = createContext<IInventoryContext>({
   login: { isLogged: false, password: '', email: '' },
+  kardexs: [],
+  getKardexsByProducts: () => [],
+  products: [],
+  inactivateProduct: () => {},
+  activateProduct: () => {},
+  setProductStock: () => {},
+  clients: [],
+  providers: [],
+  searchProviders: () => [],
+  users: [],
   setLogin: () => {},
   checkAuth: () => false,
-  getKardex: () => [],
-  getMovements: () => [],
+  getKardexById: () => [],
   getProduct: () => null,
   addProduct: () => {},
-  setProductStock: () => {},
   setProductStatus: () => {},
   removeProduct: () => {},
-  addKardex: () => {},
   signOut: () => {},
-  addMovement: () => null,
-  removeMovement: () => {},
-  products: [],
   searchProducts: () => [],
   searchKardex: () => [],
-  getAllKardexs: () => []
+  searchClients: () => []
 })
 InventoryContext.displayName = 'KardexContext'
 

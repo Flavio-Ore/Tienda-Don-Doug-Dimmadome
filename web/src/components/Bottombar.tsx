@@ -15,7 +15,6 @@ import {
   FaBoxes,
   FaBoxOpen,
   FaParachuteBox,
-  FaTable,
   FaUsers,
   FaUserTag
 } from 'react-icons/fa'
@@ -66,7 +65,7 @@ const Bottombar = () => {
                     <span className='text-sm'>Ver Kardexs</span>
                   </NavLink>
                 </DropdownMenuItem>
-                <DropdownMenuItem
+                {/* <DropdownMenuItem
                   className={cn('cursor-pointer', {
                     'bg-dark-4': pathname.includes(PRIVATE_ROUTES.CREATE_KARDEX)
                   })}
@@ -78,7 +77,7 @@ const Bottombar = () => {
                     <FaTable size={24} className='fill-blue-600' />
                     <span className='text-sm'>Crear Kardex</span>
                   </NavLink>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
