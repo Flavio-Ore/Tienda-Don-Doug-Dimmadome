@@ -4,8 +4,6 @@ import {
   FaBoxOpen,
   FaParachuteBox,
   FaStar,
-  FaTable,
-  FaUsers,
   FaUserTag
 } from 'react-icons/fa'
 import {
@@ -15,7 +13,8 @@ import {
   FaSackDollar,
   FaTableCellsRowLock,
   FaTruckPlane,
-  FaTruckRampBox
+  FaTruckRampBox,
+  FaUsersViewfinder
 } from 'react-icons/fa6'
 
 import { NavLink, useLocation } from 'react-router-dom'
@@ -55,7 +54,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname === PRIVATE_ROUTES.INVENTORY
+                    'bg-dark-3': pathname === PRIVATE_ROUTES.INVENTORY
                   }
                 )}
               >
@@ -73,11 +72,11 @@ const Leftsidebar = () => {
                   </span>
                 </NavLink>
               </li>
-              <li
+              {/* <li
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.CREATE_KARDEX)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.CREATE_KARDEX)
                   }
                 )}
               >
@@ -94,7 +93,7 @@ const Leftsidebar = () => {
                     Crear Kardex
                   </span>
                 </NavLink>
-              </li>
+              </li> */}
             </ul>
           </li>
           <hr className='w-full border-light-3 my-4' />
@@ -111,14 +110,14 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(
-                      PRIVATE_ROUTES.REGISTERED_PRODUCTS
+                    'bg-dark-3': pathname.includes(
+                      PRIVATE_ROUTES.PRODUCTS
                     )
                   }
                 )}
               >
                 <NavLink
-                  to={PRIVATE_ROUTES.REGISTERED_PRODUCTS}
+                  to={PRIVATE_ROUTES.PRODUCTS}
                   className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                 >
                   <FaBoxOpen
@@ -135,7 +134,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.ADD_PRODUCT)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.ADD_PRODUCT)
                   }
                 )}
               >
@@ -174,7 +173,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.BUY_PRODUCT)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.BUY_PRODUCT)
                   }
                 )}
               >
@@ -196,7 +195,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.SELL_PRODUCT)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.SELL_PRODUCT)
                   }
                 )}
               >
@@ -214,7 +213,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(
+                    'bg-dark-3': pathname.includes(
                       PRIVATE_ROUTES.RETURN_PRODUCT
                     )
                   }
@@ -240,7 +239,7 @@ const Leftsidebar = () => {
           <hr className='w-full border-light-3 my-4' />
           <li className='flex flex-col justify-start'>
             <div className='inline-flex gap-x-2 items-center'>
-              <FaUsers className='fill-teal-500' size={24} strokeWidth={1.25} />
+              <FaUsersViewfinder className='fill-teal-500' size={24} strokeWidth={1.25} />
               <h3 className='text-light-1 text-sm relative xl:text-lg font-ubuntu'>
                 Usuarios
               </h3>
@@ -250,7 +249,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.PROVIDERS)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.PROVIDERS)
                   }
                 )}
               >
@@ -272,7 +271,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.CLIENTS)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.CLIENTS)
                   }
                 )}
               >
@@ -304,7 +303,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-4': pathname.includes(PRIVATE_ROUTES.USERS)
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.USERS)
                   }
                 )}
               >

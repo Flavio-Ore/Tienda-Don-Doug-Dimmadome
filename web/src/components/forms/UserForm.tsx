@@ -41,10 +41,10 @@ const UserForm = () => {
   const userForm = useForm<z.infer<typeof CreateUserSchema>>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      name: '',
+      nombre: '',
       email: '',
-      password: '',
-      role: undefined
+      contrasena: '',
+      tipo_usuario: undefined
     }
   })
   const handleClickShowPassword = () => {
@@ -75,7 +75,7 @@ const UserForm = () => {
       >
         <FormField
           control={userForm.control}
-          name='name'
+          name='nombre'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Nombre</FormLabel>
@@ -109,7 +109,7 @@ const UserForm = () => {
         />
         <FormField
           control={userForm.control}
-          name='password'
+          name='contrasena'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Contraseña</FormLabel>
@@ -136,7 +136,7 @@ const UserForm = () => {
         />
         <FormField
           control={userForm.control}
-          name='role'
+          name='tipo_usuario'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Tipo de Usuario</FormLabel>
@@ -173,7 +173,7 @@ const UserForm = () => {
                             value={receiptType}
                             key={receiptType}
                             onSelect={() => {
-                              userForm.setValue('role', receiptType)
+                              userForm.setValue('tipo_usuario', receiptType)
                             }}
                           >
                             <BsCheck

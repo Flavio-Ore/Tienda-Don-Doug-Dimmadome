@@ -5,13 +5,13 @@ export interface InventarioDimadon {
   tipo_operacion: TipoOperacion[]
   tipo_usuario: TipoUsuario[]
   usuario: Usuario[]
-  producto: Producto[]
+  producto: IProducto[]
   kardex: Kardex[]
   movimiento_inventario: MovimientoInventario[]
   detalle_movimiento_inventario: DetalleMovimientoInventario[]
   tipo_devolucion: TipoDevolucion[]
   tipo_pedido: TipoPedido[]
-  pedido_producto: PedidoProducto[]
+  pedido_producto: IPedidoProducto[]
   devolucion_producto: DevolucionProducto[]
 }
 
@@ -52,7 +52,7 @@ export interface MovimientoInventario {
   orden: number
 }
 
-export interface PedidoProducto {
+export interface IPedidoProducto {
   id_pedido_producto: number
   id_tipo_pedido: number
   fecha_factura: Date
@@ -61,14 +61,37 @@ export interface PedidoProducto {
   total: number
 }
 
-export interface Producto {
-  id_producto: number
-  nombre_producto: string
-  precio_venta_producto: number
-  stock_actual_producto: number
-  estado_producto: boolean
+export interface ICategoriaProducto {
+  idCategoria: number
+  nombre: string
+}
+export interface IProducto {
+  idProducto: number
+  nombre: string
+  precioUnitario: number
+  stock: number
+  fechaVencimiento: Date | string
+  categoria: ICategoriaProducto
+  estado: string
+}
+export interface ICliente {
+  numero: string
+  nombre_completo: string
+  nombres: string
+  apellido_paterno: string
+  apellido_materno: string
+  codigo_verificacion: number
+  ubigeo_sunat: string
+  ubigeo: null[]
+  direccion: string
 }
 
+export interface IProvider {
+  nombre: string
+  contacto: string
+  direccion: string
+  categoria: ICategoriaProducto
+}
 export interface TipoComprobante {
   id_tipo_comprobante: number
   documento: string

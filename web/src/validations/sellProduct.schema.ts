@@ -1,20 +1,35 @@
-import { TYPE_RECEIPT_VALUES } from '@/values'
+// import clientData from '@/mocks/clients.mock.json'
 import { z } from 'zod'
 
-export const SellProductFormSchema = z.object({
-  DNI: z.string().length(8, {
-    message: 'El DNI del cliente debe tener 8 caracteres'
-  }),
-  typeReceipt: z.enum(
-    TYPE_RECEIPT_VALUES.filter(
-      typeReceipt =>
-        typeReceipt !== 'Nota de Crédito' && typeReceipt !== 'Nota de Débito'
-    ) as ['Boleta', 'Factura'],
-    {
-      message: 'El tipo de comprobante no es válido'
-    }
-  ),
-  quantity: z.number().nonnegative().min(1, {
+// const clientNames = clientData.map(client => client.data.nombre_completo)
+
+const ProductsToSell = z.object({
+  id_producto: z.number().int().positive(),
+  cantidad: z.number().nonnegative().min(1, {
     message: 'La cantidad debe ser mayor o igual a 1'
   })
+})
+
+export const SellProductFormSchema = z.object({
+  dni_cliente: z
+    .number()
+    .int({
+      message: 'El DNI debe ser un número entero'
+    }),
+  tipo_pago: z.enum(['Efectivo', 'Yape', 'Plin'], {
+    message: 'El tipo de pago no es válido'
+  }),
+  // tipo_comprobante: z.enum(
+  //   TYPE_RECEIPT_VALUES.filter(
+  //     typeReceipt =>
+  //       typeReceipt !== 'Nota de Crédito' && typeReceipt !== 'Nota de Débito'
+  //   ) as ['Boleta', 'Factura'],
+  //   {
+  //     message: 'El tipo de comprobante no es válido'
+  //   }
+  // ),
+  productos: z.array(ProductsToSell, {
+    message: 'Los productos no son válidos'
+  }),
+  cantidad_total: z.number().nonnegative()
 })

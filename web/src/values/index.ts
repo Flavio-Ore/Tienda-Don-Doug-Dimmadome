@@ -154,7 +154,7 @@ export const PUBLIC_ROUTES = {
 export const PRIVATE_ROUTES = {
   INVENTORY: '/inventario',
   CREATE_KARDEX: '/inventario/crear-kardex',
-  REGISTERED_PRODUCTS: '/inventario/productos-registrados',
+  PRODUCTS: '/inventario/productos-registrados',
   ADD_PRODUCT: '/inventario/registrar-nuevo-producto',
   PROVIDERS: '/inventario/proveedores',
   BUY_PRODUCT: '/inventario/comprar-producto',
@@ -164,20 +164,74 @@ export const PRIVATE_ROUTES = {
   USERS: '/inventario/usuarios'
 }
 
-export const PRODUCT_CATEGORIES_VALUES = [
-  'Harina',
-  'Aceite',
-  'Arroz',
-  'Frijoles',
-  'Azúcar'
-] as const
+type TProductCategoryNames =
+  | 'Menestras'
+  | 'Lacteos'
+  | 'Carnes'
+  | 'Verduras'
+  | 'Frutas'
+  | 'Bebidas'
+  | 'Abarrotes'
+  | 'Limpieza'
+  | 'Cuidado Personal'
+  | 'Otros'
 
+export const PRODUCT_CATEGORIES_VALUES: {
+  idCategoria: number
+  nombre: TProductCategoryNames
+}[] = [
+  {
+    idCategoria: 1,
+    nombre: 'Menestras'
+  },
+  {
+    idCategoria: 2,
+    nombre: 'Lacteos'
+  },
+  {
+    idCategoria: 3,
+    nombre: 'Carnes'
+  },
+  {
+    idCategoria: 4,
+    nombre: 'Verduras'
+  },
+  {
+    idCategoria: 5,
+    nombre: 'Frutas'
+  },
+  {
+    idCategoria: 6,
+    nombre: 'Bebidas'
+  },
+  {
+    idCategoria: 7,
+    nombre: 'Abarrotes'
+  },
+  {
+    idCategoria: 8,
+    nombre: 'Limpieza'
+  },
+  {
+    idCategoria: 9,
+    nombre: 'Cuidado Personal'
+  },
+  {
+    idCategoria: 10,
+    nombre: 'Otros'
+  }
+]
 export const PRODUCT_CATEGORIES = {
-  HARINA: 'Harina',
-  ACEITE: 'Aceite',
-  ARROZ: 'Arroz',
-  FRIJOLES: 'Frijoles',
-  AZUCAR: 'Azúcar'
+  MENESTRAS: 'Menestras',
+  LACTEOS: 'Lacteos',
+  CARNES: 'Carnes',
+  VERDURAS: 'Verduras',
+  FRUTAS: 'Frutas',
+  BEBIDAS: 'Bebidas',
+  ABARROTES: 'Abarrotes',
+  LIMPIEZA: 'Limpieza',
+  CUIDADO_PERSONAL: 'Cuidado Personal',
+  OTROS: 'Otros'
 } as const
 
 export const TYPE_RECEIPT_VALUES = [
@@ -204,6 +258,9 @@ export const TYPE_USERS_VALUES = [
   'Vendedor',
   'Almacenero'
 ] as const
+
+export const TYPE_PAYMENT_VALUES = ['Efectivo', 'Yape', 'Plin'] as const
+
 export const TYPE_USERS = {
   ADMINISTRATOR: 'Administrador',
   SELLER: 'Vendedor',

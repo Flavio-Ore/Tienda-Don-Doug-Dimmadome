@@ -2,7 +2,7 @@ import { TYPE_USERS_VALUES } from '@/values'
 import { z } from 'zod'
 
 export const CreateUserSchema = z.object({
-  name: z
+  nombre: z
     .string()
     .min(3, {
       message: 'El nombre no puede ser menor a 3 caracteres'
@@ -19,7 +19,7 @@ export const CreateUserSchema = z.object({
     .max(100, {
       message: 'El email no puede ser mayor a 100 caracteres'
     }),
-  password: z
+  contrasena: z
     .string()
     .min(6, {
       message: 'La contraseña no puede ser menor a 6 caracteres'
@@ -27,5 +27,5 @@ export const CreateUserSchema = z.object({
     .max(255, {
       message: 'La contraseña no puede ser mayor a 255 caracteres'
     }),
-  role: z.enum(TYPE_USERS_VALUES, { message: 'El rol no es válido' })
+  tipo_usuario: z.enum(TYPE_USERS_VALUES, { message: 'El rol no es válido' })
 })

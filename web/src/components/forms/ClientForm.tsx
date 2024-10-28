@@ -13,7 +13,7 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import { ClientFormSchema } from '@/validations/addClient.schema'
+import { ClientFormSchema } from '@/validations/forms/addClient.schema'
 import { PRIVATE_ROUTES } from '@/values'
 import { FaUserPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
@@ -26,9 +26,9 @@ const ClientForm = () => {
   const addClientForm = useForm<z.infer<typeof ClientFormSchema>>({
     resolver: zodResolver(ClientFormSchema),
     defaultValues: {
-      DNI: '',
-      name: '',
-      address: ''
+      numero_documento: '',
+      nombre_cliente: '',
+      direccion: ''
     }
   })
 
@@ -36,7 +36,7 @@ const ClientForm = () => {
     try {
       console.log(value)
       toast({
-        title: 'Producto registrado',
+        title: 'Cliente registrado exitosamente',
         description: (
           <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
             <code>{JSON.stringify(value, null, 2)}</code>
@@ -57,7 +57,7 @@ const ClientForm = () => {
       >
         <FormField
           control={addClientForm.control}
-          name='DNI'
+          name='numero_documento'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>DNI</FormLabel>
@@ -70,10 +70,10 @@ const ClientForm = () => {
         />
         <FormField
           control={addClientForm.control}
-          name='name'
+          name='nombre_cliente'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Nombre Completo</FormLabel>
+              <FormLabel className='shad-form_label'>Nombre completo</FormLabel>
               <FormControl>
                 <Input
                   type='text'
@@ -87,7 +87,7 @@ const ClientForm = () => {
         />
         <FormField
           control={addClientForm.control}
-          name='address'
+          name='direccion'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Dirección</FormLabel>

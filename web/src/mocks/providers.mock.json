@@ -1,0 +1,11 @@
+[
+  {
+    "nombre": "Distribuidora 1",
+    "direccion": "Av. 1",
+    "contacto": "123456789",
+    "categoria": {
+      "idCategoria": 1,
+      "nombre": "Menestras"
+    }
+  }
+]
