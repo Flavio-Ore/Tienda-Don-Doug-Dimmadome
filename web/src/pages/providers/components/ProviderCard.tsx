@@ -1,9 +1,8 @@
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
@@ -19,29 +18,23 @@ const ProviderCard = ({ provider }: { provider: IProvider }) => {
       <CardContent>
         <ul className='flex flex-col gap-y-2 items-center'>
           <li className='w-full inline-flex justify-between'>
-            <span className='text-sm text-light-3'>DNI:</span>
-            <span className='bg-dark-1 px-2 py-1 text-sm'>
-              {provider.direccion}
-            </span>
+            <span className='text-sm text-light-3'>Razón Social:</span>
+            <Badge variant='important'>{provider.nombre}</Badge>
           </li>
           <li className='w-full inline-flex justify-between'>
-            <span className='text-sm text-light-3'>Nombre completo:</span>
-            <span className='bg-dark-1 px-2 py-1 text-sm'>
-              {provider.contacto}
-            </span>
+            <span className='text-sm text-light-3'>Contacto:</span>
+            <Badge variant='accept'>{provider.contacto}</Badge>
           </li>
-
           <li className='w-full inline-flex justify-between'>
-            <span className='text-sm text-light-3'>Apellido paterno:</span>
-            <span className='bg-dark-1 px-2 py-1 text-sm'>
-              {provider.categoria.nombre}
-            </span>
+            <span className='text-sm text-light-3'>Dirección:</span>
+            <Badge variant='default'>{provider.direccion}</Badge>
+          </li>
+          <li className='w-full inline-flex justify-between'>
+            <span className='text-sm text-light-3'>Categoría:</span>
+            <Badge variant='default'>{provider.categoria.nombre}</Badge>
           </li>
         </ul>
       </CardContent>
-      <CardFooter className='flex justify-center items-center'>
-        <Button variant='default'>Editar</Button>
-      </CardFooter>
     </Card>
   )
 }

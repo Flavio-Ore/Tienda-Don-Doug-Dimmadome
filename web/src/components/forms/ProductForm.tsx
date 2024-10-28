@@ -45,9 +45,9 @@ const ProductForm = () => {
     resolver: zodResolver(AddProductFormSchema),
     defaultValues: {
       nombre: '',
-      precio_unitario: 0,
+      precioUnitario: 0,
       stock: 0,
-      fechaExpiracion: undefined,
+      fechaVencimiento: undefined,
       categoria: undefined
     }
   })
@@ -55,10 +55,6 @@ const ProductForm = () => {
   const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
-      addProduct({
-        nombreProducto: value.nombre,
-        precioVentaProducto: value.precio_unitario
-      })
       toast({
         title: 'Producto agregado',
         description: (
@@ -66,6 +62,13 @@ const ProductForm = () => {
             <code>{JSON.stringify(value, null, 2)}</code>
           </pre>
         )
+      })
+      addProduct({
+        nombre: value.nombre,
+        precioUnitario: value.precioUnitario,
+        stock: value.stock,
+        fechaVencimiento: value.fechaVencimiento,
+        categoria: value.categoria
       })
 
       navigate(PRIVATE_ROUTES.PRODUCTS)
@@ -111,7 +114,7 @@ const ProductForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='precio_unitario'
+          name='precioUnitario'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Precio de venta</FormLabel>
@@ -153,7 +156,7 @@ const ProductForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='fechaExpiracion'
+          name='fechaVencimiento'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>

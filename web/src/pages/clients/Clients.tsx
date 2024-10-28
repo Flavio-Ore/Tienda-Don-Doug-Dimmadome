@@ -1,31 +1,21 @@
 import ClientForm from '@/components/forms/ClientForm'
 import { useDebounce } from '@/hooks/useDebounce'
-import CLIENTS_JSON from '@/mocks/clients.mock.json'
 import ClientCard from '@/pages/clients/components/ClientCard'
+import useInventory from '@/states/inventory/hooks/useInventory'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
 import { FaUsers, FaUserTag } from 'react-icons/fa'
 
-const clientsData = CLIENTS_JSON
-
 const Clients = () => {
+  const { clients, searchClients } = useInventory()
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
   const isTyping = searchValue !== ''
-  const searchedClientsData = useMemo(() => {
-    return clientsData.filter(client => {
-      const upperCaseValue = debouncedValue.toUpperCase()
-      const { nombre_completo, numero, apellido_paterno, apellido_materno } =
-        client.data
-      return (
-        nombre_completo.includes(upperCaseValue) ||
-        numero.includes(upperCaseValue) ||
-        apellido_paterno.includes(upperCaseValue) ||
-        apellido_materno.includes(upperCaseValue)
-      )
-    })
-  }, [debouncedValue])
+  const searchedClientsData = useMemo(
+    () => searchClients({ searchTerm: debouncedValue }),
+    [debouncedValue, searchClients]
+  )
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     setSearchValue(value)
@@ -76,7 +66,7 @@ const Clients = () => {
           No se encontraron clientes
         </p>
       )}
-      {!isTyping && clientsData.length <= 0 && (
+      {!isTyping && clients.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No hay clientes registrados
         </p>
@@ -85,13 +75,13 @@ const Clients = () => {
         {isTyping &&
           searchedClientsData.length > 0 &&
           searchedClientsData.map(client => (
-            <ClientCard key={client.data.numero} client={client.data} />
+            <ClientCard key={client.idCliente} client={client} />
           ))}
 
         {!isTyping &&
-          clientsData.length > 0 &&
-          clientsData.map(client => (
-            <ClientCard key={client.data.numero} client={client.data} />
+          clients.length > 0 &&
+          clients.map(client => (
+            <ClientCard key={client.idCliente} client={client} />
           ))}
       </div>
     </div>

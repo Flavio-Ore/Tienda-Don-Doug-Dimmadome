@@ -16,9 +16,7 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import CLIENTS_JSON from '@/mocks/clients.mock.json'
-import PRODUCTS_JSON from '@/mocks/product.mock.json'
-import { ICliente, IProducto } from '@/types'
+import useInventory from '@/states/inventory/hooks/useInventory'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { PRIVATE_ROUTES, TYPE_PAYMENT_VALUES } from '@/values'
 import {
@@ -30,112 +28,27 @@ import {
   CommandList
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { BsCheck } from 'react-icons/bs'
-import { FaCartArrowDown, FaCartPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '../ui/card'
-
-const clientData: ICliente[] = CLIENTS_JSON.map(client => client.data)
-const productsData: IProducto[] = PRODUCTS_JSON
 
 const SellProductForm = () => {
-  const [selectedProducts, setSelectedProducts] = useState<
-    Array<{
-      producto: IProducto
-      cantidad: number
-    }>
-  >([])
+  const { clients, products } = useInventory()
   const { toast } = useToast()
   const navigate = useNavigate()
 
   const sellProductForm = useForm<z.infer<typeof SellProductFormSchema>>({
     resolver: zodResolver(SellProductFormSchema),
     defaultValues: {
-      dni_cliente: 0,
-      cantidad_total: 0,
+      idCliente: 0,
       tipo_pago: undefined,
-      productos: []
+      cantidad: 1,
+      idProducto: 0,
+      costo_total: 0,
+      total: 0
     }
   })
-
-  const handleAddProduct = (productId: number) => {
-    const existingProduct = selectedProducts.find(
-      p => p.producto.idProducto === productId
-    )
-    if (existingProduct != null) {
-      setSelectedProducts(
-        selectedProducts.map(p =>
-          p.producto.idProducto === productId
-            ? { ...p, cantidad: p.cantidad + 1 }
-            : p
-        )
-      )
-      toast({
-        title: 'Producto agregado',
-        description: `Se ha agregado una unidad de ${existingProduct.producto.nombre} a la venta`,
-        variant: 'confirmation'
-      })
-      return
-    }
-    const product = productsData.find(p => p.idProducto === productId)
-    if (product == null) {
-      return
-    }
-    setSelectedProducts(prevProducts => [
-      ...prevProducts,
-      {
-        producto: product,
-        cantidad: 1
-      }
-    ])
-    toast({
-      title: 'Producto agregado',
-      description: `Se ha agregado ${product.nombre} a la venta`,
-      variant: 'accepted'
-    })
-  }
-
-  const handleRemoveProduct = (productId: number) => {
-    const existingProduct = selectedProducts.find(
-      p => p.producto.idProducto === productId
-    )
-
-    if (existingProduct == null) {
-      return
-    }
-
-    if (existingProduct.cantidad > 1) {
-      setSelectedProducts(prevProducts =>
-        prevProducts.map(p =>
-          p.producto.idProducto === productId
-            ? { ...p, cantidad: p.cantidad - 1 }
-            : p
-        )
-      )
-      toast({
-        title: 'Producto eliminado',
-        description: `Se ha eliminado una unidad de ${existingProduct.producto.nombre} de la venta`,
-        variant: 'action'
-      })
-    } else {
-      setSelectedProducts(prevState =>
-        prevState.filter(p => p.producto.idProducto !== productId)
-      )
-      toast({
-        title: 'Producto eliminado',
-        description: `No hay más unidades de ${existingProduct.producto.nombre} en la venta`,
-        variant: 'destructive'
-      })
-    }
-  }
 
   const handleSellProductSubmit = async (
     value: z.infer<typeof SellProductFormSchema>
@@ -156,14 +69,23 @@ const SellProductForm = () => {
     }
   }
 
+  const watchCantidad = sellProductForm.watch('cantidad')
+  const watchIdProducto = sellProductForm.watch('idProducto')
   useEffect(() => {
-    const total = selectedProducts.reduce(
-      (acc, product) =>
-        acc + product.cantidad * product.producto.precioUnitario,
-      0
+    const selectedProduct = products.find(
+      product => product.idProducto === sellProductForm.getValues('idProducto')
     )
-    sellProductForm.setValue('cantidad_total', total)
-  }, [selectedProducts])
+    if (selectedProduct != null) {
+      sellProductForm.setValue(
+        'costo_total',
+        selectedProduct.precioUnitario * watchCantidad
+      )
+      sellProductForm.setValue(
+        'total',
+        selectedProduct.precioUnitario * watchCantidad
+      )
+    }
+  }, [watchCantidad, watchIdProducto])
 
   return (
     <Form {...sellProductForm}>
@@ -173,7 +95,7 @@ const SellProductForm = () => {
       >
         <FormField
           control={sellProductForm.control}
-          name='dni_cliente'
+          name='idCliente'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Cliente</FormLabel>
@@ -189,9 +111,9 @@ const SellProductForm = () => {
                       )}
                     >
                       {field.value
-                        ? clientData.find(
-                            client => client.numero === field.value.toString()
-                          )?.numero ?? 'Elige un cliente'
+                        ? clients.find(
+                            client => client.idCliente === field.value
+                          )?.numeroDocumento ?? 'Elige un cliente'
                         : 'Elige un cliente'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
@@ -203,26 +125,26 @@ const SellProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Cliente no encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {clientData.map(client => (
+                        {clients.map(client => (
                           <CommandItem
-                            value={client.numero}
-                            key={client.numero}
+                            value={client.idCliente.toString()}
+                            key={client.idCliente}
                             onSelect={() => {
                               sellProductForm.setValue(
-                                'dni_cliente',
-                                Number(client.numero)
+                                'idCliente',
+                                client.idCliente
                               )
                             }}
                           >
                             <BsCheck
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                Number(client.numero) === field.value
+                                client.idCliente === field.value
                                   ? 'opacity-100'
                                   : 'opacity-0'
                               )}
                             />
-                            {client.nombre_completo}
+                            {client.nombreCliente}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -365,10 +287,10 @@ const SellProductForm = () => {
         /> */}
         <FormField
           control={sellProductForm.control}
-          name='productos'
+          name='idProducto'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Productos</FormLabel>
+              <FormLabel className='shad-form_label'>Producto</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -380,106 +302,43 @@ const SellProductForm = () => {
                         !field.value && 'text-light-3'
                       )}
                     >
-                      Elige un producto
+                      {products.find(
+                        product => product.idProducto === field.value
+                      )?.nombre ?? 'Elige un producto'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className='w-[700px]' align='start'>
-                  <Command className='w-full max-w-3xl'>
-                    <CommandInput placeholder='Busca un producto...' />
-                    <CommandList className='w-full max-w-3xl max-h-[900px]'>
+                <PopoverContent className='w-full p-0' align='start'>
+                  <Command>
+                    <CommandInput placeholder='Busca un cliente...' />
+                    <CommandList>
                       <CommandEmpty>Producto no encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {productsData.map(product => (
-                          <CommandItem
-                            className='w-full'
-                            value={product.nombre}
-                            key={product.idProducto}
-                            onSelect={() => {
-                              sellProductForm.setValue(
-                                'productos',
-                                selectedProducts.map(p => ({
-                                  id_producto: p.producto.idProducto,
-                                  cantidad: p.cantidad
-                                }))
-                              )
-                            }}
-                          >
-                            <Card>
-                              <CardHeader>
-                                <CardTitle>{product.nombre}</CardTitle>
-                              </CardHeader>
-                              <CardContent>
-                                <ul className='flex gap-x-2 gap-y-2 items-center'>
-                                  <li className='w-full inline-flex justify-between items-center'>
-                                    <span className='text-sm text-light-3'>
-                                      Precio de venta:
-                                    </span>
-                                    <span
-                                      className={cn(
-                                        'bg-dark-1 px-2 py-1 text-sm',
-                                        {
-                                          'text-yellow-400':
-                                            product.precioUnitario > 0
-                                        }
-                                      )}
-                                    >
-                                      S/{product.precioUnitario}
-                                    </span>
-                                  </li>
-                                  <li className='w-full inline-flex justify-between items-center'>
-                                    <span className='text-sm text-light-3'>
-                                      Stock:
-                                    </span>
-                                    <span
-                                      className={cn(
-                                        'bg-dark-1 px-2 py-1 text-sm',
-                                        {
-                                          'text-blue-400': product.stock > 0,
-                                          'text-red-700': product.stock <= 0
-                                        }
-                                      )}
-                                    >
-                                      {product.stock} unidades
-                                    </span>
-                                  </li>
-                                </ul>
-                              </CardContent>
-                              <CardFooter className='flex w-full justify-between items-center'>
-                                <Button
-                                  variant='secondary'
-                                  size='sm'
-                                  onClick={() =>
-                                    handleAddProduct(product.idProducto)
-                                  }
-                                >
-                                  Agregar a la venta
-                                </Button>
-                                <Button
-                                  variant='destructive'
-                                  size='sm'
-                                  onClick={() =>
-                                    handleRemoveProduct(product.idProducto)
-                                  }
-                                >
-                                  Eliminar Producto
-                                </Button>
-                              </CardFooter>
-                            </Card>
-                            <BsCheck
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                field.value.find(
-                                  v => v.id_producto === product.idProducto
+                        {products.map(product => {
+                          return (
+                            <CommandItem
+                              value={product.idProducto.toString()}
+                              key={product.idProducto}
+                              onSelect={() => {
+                                sellProductForm.setValue(
+                                  'idProducto',
+                                  Number(product.idProducto)
                                 )
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {product.nombre}
-                          </CommandItem>
-                        ))}
+                              }}
+                            >
+                              <BsCheck
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  product.idProducto === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {product.nombre}
+                            </CommandItem>
+                          )
+                        })}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -489,77 +348,52 @@ const SellProductForm = () => {
             </FormItem>
           )}
         />
-        <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
-          {selectedProducts.map(product => {
-            const selectedProduct = productsData.find(
-              selectedData =>
-                selectedData.idProducto === product.producto.idProducto
-            )
-            if (selectedProduct != null) {
-              return (
-                <Card key={selectedProduct.idProducto}>
-                  <CardHeader>
-                    <CardTitle className='inline-flex justify-between align-center font-normal'>
-                      <span className='text-lg'>{selectedProduct.nombre}</span>
-                      <span className='text-lg'>{product.cantidad}</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className='flex flex-col gap-y-2 items-center'>
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>
-                          Precio de venta:
-                        </span>
-                        <span
-                          className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                            'text-yellow-400':
-                              selectedProduct.precioUnitario > 0
-                          })}
-                        >
-                          S/{selectedProduct.precioUnitario}
-                        </span>
-                      </li>
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>Stock:</span>
-                        <span
-                          className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                            'text-blue-400': selectedProduct.stock > 0,
-                            'text-red-700': selectedProduct.stock <= 0
-                          })}
-                        >
-                          {selectedProduct.stock} unidades
-                        </span>
-                      </li>
-                    </ul>
-                  </CardContent>
-                  <CardFooter className='flex w-full justify-around items-center'>
-                    <Button
-                      variant='secondary'
-                      size='sm'
-                      onClick={() =>
-                        handleAddProduct(product.producto.idProducto)
-                      }
-                    >
-                      <FaCartPlus size={20} className='fill-light-1' />
-                    </Button>
-                    <Button
-                      variant='destructive'
-                      size='sm'
-                      onClick={() =>
-                        handleRemoveProduct(product.producto.idProducto)
-                      }
-                    >
-                      <FaCartArrowDown size={20} className='fill-light-1' />
-                    </Button>
-                  </CardFooter>
-                </Card>
-              )
-            }
-          })}
-        </div>
         <FormField
           control={sellProductForm.control}
-          name='cantidad_total'
+          name='cantidad'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>Cantidad</FormLabel>
+              <FormControl>
+                <Input
+                  type='number'
+                  disabled={sellProductForm.getValues('idProducto') <= 0}
+                  placeholder='Cantidad de productos'
+                  {...field}
+                  onChange={e => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={sellProductForm.control}
+          name='total'
+          render={({ field }) => (
+            <FormItem className='hidden'>
+              <FormLabel className='shad-form_label'>Total</FormLabel>
+              <FormControl>
+                <Input
+                  type='number'
+                  readOnly
+                  placeholder='Precio total de los productos a vender'
+                  max={999_999}
+                  min={0}
+                  {...field}
+                  onChange={e => {
+                    field.onChange(Number(e.target.value))
+                  }}
+                />
+              </FormControl>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={sellProductForm.control}
+          name='costo_total'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Precio total</FormLabel>
@@ -567,7 +401,7 @@ const SellProductForm = () => {
                 <Input
                   type='number'
                   readOnly
-                  placeholder='Cantidad total de productos a vender'
+                  placeholder='Precio total de los productos a vender'
                   min={0}
                   {...field}
                   onChange={e => {

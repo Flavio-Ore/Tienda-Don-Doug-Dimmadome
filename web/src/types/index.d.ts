@@ -1,3 +1,6 @@
+import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import { z } from 'zod'
+
 export interface InventarioDimadon {
   tipo_comprobante: TipoComprobante[]
   unidad_medida: UnidadMedida[]
@@ -14,42 +17,62 @@ export interface InventarioDimadon {
   pedido_producto: IPedidoProducto[]
   devolucion_producto: DevolucionProducto[]
 }
-
-export interface DetalleMovimientoInventario {
-  id_detalle_movimiento_inventario: number
-  id_movimiento_inventario: number
-  id_producto: number
-}
-
-export interface DevolucionProducto {
-  id_devolucion_producto: number
-  id_tipo_devolucion: number
-  fecha_factura: Date
-  subtotal: number
-  igv: number
-  total: number
-}
-
-export interface Kardex {
-  id_kardex: number
-  id_producto: number
-  id_tipo_existencia_sunat: number
-  id_unidad_medida: number
-  ruc: string
-  razon_social: string
-  periodo_kardex: string
-  descripcion: string
-}
-
-export interface MovimientoInventario {
-  id_movimiento_inventario: number
-  id_kardex: number
-  id_tipo_comprobante: number
-  id_tipo_operacion: number
-  cantidad_productos: number
-  costo_unitario: number
-  entrada: boolean
-  orden: number
+export interface IInventoryContext {
+  products: IProducto[]
+  activateProduct: ({ productId }: { productId: number }) => void
+  inactivateProduct: ({ productId }: { productId: number }) => void
+  setProductStock: ({
+    productId,
+    stock
+  }: {
+    productId: number
+    stock: number
+  }) => void
+  clients: ICliente[]
+  providers: IProvider[]
+  searchProviders: ({ searchTerm = '' }: { searchTerm: string }) => IProvider[]
+  users: IUsers[]
+  kardexs: IKardex[]
+  getKardexsByProducts: ({ productId }: { productId: number }) => IKardex[]
+  login: {
+    email: string
+    password: string
+    isLogged: boolean
+  }
+  signOut: () => void
+  setLogin: (login: {
+    email: string
+    password: string
+    isLogged: boolean
+  }) => void
+  checkAuth: ({
+    email,
+    password
+  }: {
+    email: string
+    password: string
+  }) => boolean
+  searchKardex: ({ searchTerm = '' }: { searchTerm: string }) => IKardex[]
+  getProduct: ({ id }: { id: number }) => IProducto | null | undefined
+  searchProducts: ({ searchTerm = '' }: { searchTerm: string }) => IProducto[]
+  searchClients: ({ searchTerm = '' }: { searchTerm: string }) => ICliente[]
+  addProduct: (product: z.infer<typeof AddProductFormSchema>) => void
+  removeProduct: ({ productId }: { productId: number }) => void
+  setProductStock: ({
+    productId,
+    stock
+  }: {
+    productId: number
+    stock: number
+  }) => void
+  setProductStatus: ({
+    productId,
+    status
+  }: {
+    productId: number
+    status: boolean
+  }) => void
+  getKardexById: ({ id }: { id: number }) => IKardex[]
 }
 
 export interface IPedidoProducto {
@@ -75,23 +98,65 @@ export interface IProducto {
   estado: string
 }
 export interface ICliente {
-  numero: string
-  nombre_completo: string
-  nombres: string
-  apellido_paterno: string
-  apellido_materno: string
-  codigo_verificacion: number
-  ubigeo_sunat: string
-  ubigeo: null[]
+  idCliente: number
+  numeroDocumento: string
+  nombreCliente: string
   direccion: string
+  fechaRegistro: Date | string
+  estado: string
 }
 
 export interface IProvider {
+  id: number
   nombre: string
   contacto: string
   direccion: string
   categoria: ICategoriaProducto
 }
+
+export interface IKardex {
+  idKardex: number
+  producto: IProducto
+  nombreProducto: string
+  fecha: string
+  tipoOperacion: string
+  empresa: string
+  cantidadEntrada: number
+  costoUnitarioEntrada: number
+  costoTotalEntrada: number
+  cantidadSalida: number
+  costoUnitarioSalida: number
+  costoTotalSalida: number
+  cantidadSaldo: number
+  costoUnitarioSaldo: number
+  costoTotalSaldo: number
+}
+
+export interface IUsers {
+  idUsuario: number
+  nombre: string
+  email: string
+  contrasena: string
+  tipoUsuario: ITipoUsuario
+  fechaCreacion: string
+  estado: string
+}
+
+export interface Producto {
+  idProducto: number
+  nombre: string
+  precioUnitario: number
+  stock: number
+  fechaVencimiento: Date
+  categoria: Categoria
+  estado: string
+}
+
+export interface Categoria {
+  idCategoria: number
+  nombre: string
+}
+
 export interface TipoComprobante {
   id_tipo_comprobante: number
   documento: string
@@ -125,15 +190,6 @@ export interface TipoUsuario {
 export interface UnidadMedida {
   id_unidad_medida: number
   unidad: string
-}
-
-export interface Usuario {
-  id_usuario: number
-  id_tipo_usuario: number
-  nombre: string
-  apellidos: string
-  email: string
-  contrasena: string
 }
 
 export type AllowedDocuments =

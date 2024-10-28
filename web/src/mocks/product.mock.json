@@ -34,5 +34,53 @@
       "nombre": "Lacteos"
     },
     "estado": "inactivo"
+  },
+  {
+    "idProducto": 4,
+    "nombre": "Frijoles negros",
+    "precioUnitario": 12.0,
+    "stock": 25,
+    "fechaVencimiento": "2024-11-10",
+    "categoria": {
+      "idCategoria": 1,
+      "nombre": "Menestras"
+    },
+    "estado": "activo"
+  },
+  {
+    "idProducto": 5,
+    "nombre": "Yogur natural",
+    "precioUnitario": 8.0,
+    "stock": 15,
+    "fechaVencimiento": "2024-10-30",
+    "categoria": {
+      "idCategoria": 2,
+      "nombre": "Lacteos"
+    },
+    "estado": "activo"
+  },
+  {
+    "idProducto": 6,
+    "nombre": "Mantequilla",
+    "precioUnitario": 20.0,
+    "stock": 10,
+    "fechaVencimiento": "2024-12-15",
+    "categoria": {
+      "idCategoria": 2,
+      "nombre": "Lacteos"
+    },
+    "estado": "activo"
+  },
+  {
+    "idProducto": 7,
+    "nombre": "Garbanzos",
+    "precioUnitario": 14.0,
+    "stock": 30,
+    "fechaVencimiento": "2024-11-20",
+    "categoria": {
+      "idCategoria": 1,
+      "nombre": "Menestras"
+    },
+    "estado": "activo"
   }
 ]

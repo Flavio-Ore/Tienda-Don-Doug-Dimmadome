@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -13,33 +14,26 @@ const ClientCard = ({ client }: { client: ICliente }) => {
   return (
     <Card className=''>
       <CardHeader>
-        <CardTitle>{client.nombre_completo}</CardTitle>
-        <CardDescription></CardDescription>
+        <CardTitle>Cliente N°{client.idCliente}</CardTitle>
+        <CardDescription>
+          <Badge variant={client.estado === 'activo' ? 'on' : 'off'}>
+            {client.estado}
+          </Badge>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ul className='flex flex-col gap-y-2 items-center'>
-          <li className='w-full inline-flex justify-between'>
+          <li className='w-full inline-flex justify-between items-center'>
             <span className='text-sm text-light-3'>DNI:</span>
-            <span className='bg-dark-1 px-2 py-1 text-sm'>{client.numero}</span>
+            <Badge variant='important'>{client.numeroDocumento}</Badge>
           </li>
           <li className='w-full inline-flex justify-between'>
             <span className='text-sm text-light-3'>Nombre completo:</span>
-            <span className='bg-dark-1 px-2 py-1 text-sm'>
-              {client.nombre_completo}
-            </span>
-          </li>
-
-          <li className='w-full inline-flex justify-between'>
-            <span className='text-sm text-light-3'>Apellido paterno:</span>
-            <span className='bg-dark-1 px-2 py-1 text-sm'>
-              {client.apellido_paterno}
-            </span>
+            <Badge variant='premium'>{client.nombreCliente}</Badge>
           </li>
           <li className='w-full inline-flex justify-between'>
-            <span className='text-sm text-light-3'>Apellido materno:</span>
-            <span className='bg-dark-1 px-2 py-1 text-sm'>
-              {client.apellido_materno}
-            </span>
+            <span className='text-sm text-light-3'>Dirección:</span>
+            <Badge variant='default'>{client.direccion}</Badge>
           </li>
         </ul>
       </CardContent>

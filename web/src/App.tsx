@@ -8,12 +8,12 @@ import ProductRegistration from '@pages/create-product/ProductRegistration'
 import Login from '@pages/Login'
 import Products from '@pages/products/Products'
 import Providers from '@pages/providers/Providers'
-import RegisteredKardexs from '@pages/registered-kardexs/RegisteredKardexs'
 import ReturnProduct from '@pages/return-product/ReturnProduct'
 import SellProduct from '@pages/sell-product/SellProduct'
 import Users from '@pages/users/Users'
 import { Toaster } from '@shadcn/toaster'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import Kardex from './pages/kardex/Kardex'
 
 function App () {
   return (
@@ -24,15 +24,12 @@ function App () {
           <Route index element={<Login />} />
         </Route>
         <Route path={PRIVATE_ROUTES.INVENTORY} element={<Root />}>
-          <Route index element={<RegisteredKardexs />} />
+          <Route index element={<Kardex />} />
           {/* <Route
             path={PRIVATE_ROUTES.CREATE_KARDEX}
             element={<CreateKardex />}
           /> */}
-          <Route
-            path={PRIVATE_ROUTES.PRODUCTS}
-            element={<Products />}
-          />
+          <Route path={PRIVATE_ROUTES.PRODUCTS} element={<Products />} />
           <Route
             path={PRIVATE_ROUTES.ADD_PRODUCT}
             element={<ProductRegistration />}

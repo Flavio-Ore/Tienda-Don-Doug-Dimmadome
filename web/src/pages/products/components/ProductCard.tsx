@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -7,67 +8,63 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import useInventory from '@/states/inventory/hooks/useInventory'
 import { IProducto } from '@/types'
+import { format } from 'date-fns'
 
 const ProductCard = ({ product }: { product: IProducto }) => {
+  const { activateProduct, inactivateProduct } = useInventory()
   return (
     <Card>
       <CardHeader>
         <CardTitle>{product.nombre}</CardTitle>
-        <CardDescription></CardDescription>
+        <CardDescription>
+          <Badge variant={product.estado.toLowerCase() === 'activo' ? 'on' : 'off'}>
+            {product.estado}
+          </Badge>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ul className='flex flex-col gap-y-2 items-center'>
           <li className='w-full inline-flex justify-between items-center'>
             <span className='text-sm text-light-3'>Precio unitario: </span>
-            <span
-              className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                'text-yellow-400': product.precioUnitario > 0
-              })}
-            >
-              S/{product.precioUnitario}
-            </span>
+            <Badge variant='important'>S/.{product.precioUnitario}</Badge>
+          </li>
+          <li className='w-full inline-flex justify-between items-center'>
+            <span className='text-sm text-light-3'>F.V:</span>
+            <Badge variant='important'>
+              {format(new Date(product.fechaVencimiento), 'dd/MM/yyyy')}
+            </Badge>
           </li>
           <li className='w-full inline-flex justify-between items-center'>
             <span className='text-sm text-light-3'>Stock:</span>
-            <span
-              className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                'text-blue-400': product.stock > 0,
-                'text-red-700': product.stock <= 0
-              })}
-            >
-              {product.stock} unidades
-            </span>
-          </li>
-          <li className='w-full inline-flex justify-between items-center'>
-            <span className='text-sm text-light-3'>Estado:</span>
-            <span
-              className={cn('bg-dark-1 px-2 py-1 rounded-md text-sm', {
-                'text-green-400': product.estado === 'activo',
-                'text-red-400': product.estado === 'inactivo'
-              })}
-            >
-              {product.estado}
-            </span>
+            <Badge variant='accept'>{product.stock} unidades</Badge>
           </li>
 
           <li className='w-full inline-flex justify-between items-center'>
             <span className='text-sm text-light-3'>Categoría:</span>
-            <span className='bg-dark-1 px-2 py-1 rounded-md text-sm'>
-              {product.categoria.nombre}
-            </span>
-          </li>
-          <li className='w-full inline-flex justify-between items-center'>
-            <span className='text-sm text-light-3'>Fecha de vencimiento:</span>
-            <span className='bg-dark-1 px-2 py-1 rounded-md text-sm'>
-              {product.fechaVencimiento.toLocaleString().split('T')[0]}
-            </span>
+            <Badge variant='default'>{product.categoria.nombre}</Badge>
           </li>
         </ul>
       </CardContent>
       <CardFooter className='flex justify-center items-center'>
-        <Button variant='default'>Eliminar Producto</Button>
+        {product.estado === 'activo' ? (
+          <Button
+            variant='outline'
+            className='bg-red-900/10 hover:bg-red-900 hover:text-light-1'
+            onClick={() => inactivateProduct({ productId: product.idProducto })}
+          >
+            Desactivar Producto
+          </Button>
+        ) : (
+          <Button
+            variant='outline'
+            className='bg-green-900/10 hover:bg-green-900 hover:text-light-1'
+            onClick={() => activateProduct({ productId: product.idProducto })}
+          >
+            Activar Producto
+          </Button>
+        )}
       </CardFooter>
     </Card>
   )
