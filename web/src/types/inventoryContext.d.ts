@@ -2,12 +2,12 @@ import { DOCUMENT_TYPES, OPERATIONS_VALUES } from '@/values'
 import {
   AllowedMeasurementUnits,
   AllowedSunatExistences,
-  Kardex,
-  Producto
+  IProducto,
+  Kardex
 } from '.'
 
 export interface InventoryContext {
-  products: Producto[]
+  products: IProducto[]
   login: {
     email: string
     password: string
@@ -29,11 +29,11 @@ export interface InventoryContext {
   getKardex: ({ id }: { id: number }) => Kardex[]
   searchKardex: ({ searchTerm = '' }: { searchTerm: string }) => Kardex[]
   getMovements: ({ id }: { id: number }) => MovimientoInventario[]
-  getProduct: ({ id }: { id: number }) => Producto | null | undefined
-  searchProducts: ({ searchTerm = '' }: { searchTerm: string }) => Producto[]
+  getProduct: ({ id }: { id: number }) => IProducto | null | undefined
+  searchProducts: ({ searchTerm = '' }: { searchTerm: string }) => IProducto[]
   getAllKardexs: () => Array<
     Kardex & {
-      producto: Producto
+      producto: IProducto
       tipo_existencia_sunat: string
       unidad_medida: string
     }

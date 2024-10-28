@@ -92,7 +92,7 @@ const Bottombar = () => {
                   'inline-flex gap-x-2 items-center px-4 py-6 rounded-lg',
                   {
                     'bg-dark-4':
-                      pathname.includes(PRIVATE_ROUTES.REGISTERED_PRODUCTS) ||
+                      pathname.includes(PRIVATE_ROUTES.PRODUCTS) ||
                       pathname.includes(PRIVATE_ROUTES.ADD_PRODUCT)
                   }
                 )}
@@ -123,12 +123,12 @@ const Bottombar = () => {
                 <DropdownMenuItem
                   className={cn('cursor-pointer', {
                     'bg-dark-4': pathname.includes(
-                      PRIVATE_ROUTES.REGISTERED_PRODUCTS
+                      PRIVATE_ROUTES.PRODUCTS
                     )
                   })}
                 >
                   <NavLink
-                    to={PRIVATE_ROUTES.REGISTERED_PRODUCTS}
+                    to={PRIVATE_ROUTES.PRODUCTS}
                     className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                   >
                     <FaBoxOpen size={24} className='fill-violet-500' />

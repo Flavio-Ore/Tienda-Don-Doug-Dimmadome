@@ -4,12 +4,11 @@ import Root from '@layouts/Root'
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/values'
 import BuyProduct from '@pages/buy-product/BuyProduct'
 import Clients from '@pages/clients/Clients'
-import CreateKardex from '@pages/create-kardex/CreateKardex'
 import ProductRegistration from '@pages/create-product/ProductRegistration'
 import Login from '@pages/Login'
+import Products from '@pages/products/Products'
 import Providers from '@pages/providers/Providers'
 import RegisteredKardexs from '@pages/registered-kardexs/RegisteredKardexs'
-import RegisteredProducts from '@pages/registered-products/RegisteredProducts'
 import ReturnProduct from '@pages/return-product/ReturnProduct'
 import SellProduct from '@pages/sell-product/SellProduct'
 import Users from '@pages/users/Users'
@@ -26,13 +25,13 @@ function App () {
         </Route>
         <Route path={PRIVATE_ROUTES.INVENTORY} element={<Root />}>
           <Route index element={<RegisteredKardexs />} />
-          <Route
+          {/* <Route
             path={PRIVATE_ROUTES.CREATE_KARDEX}
             element={<CreateKardex />}
-          />
+          /> */}
           <Route
-            path={PRIVATE_ROUTES.REGISTERED_PRODUCTS}
-            element={<RegisteredProducts />}
+            path={PRIVATE_ROUTES.PRODUCTS}
+            element={<Products />}
           />
           <Route
             path={PRIVATE_ROUTES.ADD_PRODUCT}

@@ -1,0 +1,42 @@
+[
+  {
+    "idCategoria": 1,
+    "nombre": "Menestras"
+  },
+  {
+    "idCategoria": 2,
+    "nombre": "Lacteos"
+  },
+  {
+    "idCategoria": 3,
+    "nombre": "Carnes"
+  },
+  {
+    "idCategoria": 4,
+    "nombre": "Verduras"
+  },
+  {
+    "idCategoria": 5,
+    "nombre": "Frutas"
+  },
+  {
+    "idCategoria": 6,
+    "nombre": "Bebidas"
+  },
+  {
+    "idCategoria": 7,
+    "nombre": "Abarrotes"
+  },
+  {
+    "idCategoria": 8,
+    "nombre": "Limpieza"
+  },
+  {
+    "idCategoria": 9,
+    "nombre": "Cuidado Personal"
+  },
+  {
+    "idCategoria": 10,
+    "nombre": "Otros"
+  }
+]

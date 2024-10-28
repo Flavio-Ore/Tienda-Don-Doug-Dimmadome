@@ -27,12 +27,12 @@ const BuyProductForm = () => {
   const buyProductForm = useForm<z.infer<typeof BuyProductSchema>>({
     resolver: zodResolver(BuyProductSchema),
     defaultValues: {
-      product: '',
-      user: '1',
-      provider: '1',
-      quantity: 1,
-      unitPrice: 0,
-      totalPrice: 0
+      is_producto: undefined,
+      id_usuario: undefined,
+      id_proveedor: undefined,
+      cantidad: 1,
+      costo_unitario: 0,
+      total: 0
     }
   })
 
@@ -55,12 +55,12 @@ const BuyProductForm = () => {
 
   useEffect(() => {
     buyProductForm.setValue(
-      'totalPrice',
+      'total',
       Number(
-        buyProductForm.watch('quantity') * buyProductForm.watch('unitPrice')
+        buyProductForm.watch('cantidad') * buyProductForm.watch('costo_unitario')
       )
     )
-  }, [buyProductForm.watch('quantity'), buyProductForm.watch('unitPrice')])
+  }, [buyProductForm.watch('cantidad'), buyProductForm.watch('costo_unitario')])
 
   return (
     <Form {...buyProductForm}>
@@ -70,7 +70,7 @@ const BuyProductForm = () => {
       >
         <FormField
           control={buyProductForm.control}
-          name='product'
+          name='is_producto'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Producto</FormLabel>
@@ -87,7 +87,7 @@ const BuyProductForm = () => {
         />
         <FormField
           control={buyProductForm.control}
-          name='provider'
+          name='id_proveedor'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Proveedor</FormLabel>
@@ -104,7 +104,7 @@ const BuyProductForm = () => {
         />
         <FormField
           control={buyProductForm.control}
-          name='quantity'
+          name='cantidad'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Cantidad</FormLabel>
@@ -122,7 +122,7 @@ const BuyProductForm = () => {
         />
         <FormField
           control={buyProductForm.control}
-          name='unitPrice'
+          name='costo_unitario'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Precio unitario</FormLabel>
@@ -140,7 +140,7 @@ const BuyProductForm = () => {
         />
         <FormField
           control={buyProductForm.control}
-          name='totalPrice'
+          name='total'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Precio total</FormLabel>

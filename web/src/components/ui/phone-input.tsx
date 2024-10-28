@@ -98,7 +98,7 @@ const CountrySelect = ({
         <Button
           type="button"
           variant={"ghost"}
-          className={cn("flex gap-1 rounded-e-none rounded-s-lg px-3 outline outline-1 outline-light-3")}
+          className='flex gap-1 rounded-e-none rounded-s-lg px-3 outline outline-1 outline-light-3 focus-visible:border focus-visible:border-light-1'
           disabled={disabled}
         >
           <FlagComponent country={value} countryName={value} />
@@ -112,7 +112,7 @@ const CountrySelect = ({
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
         <Command>
-          <CommandList className="custom-scrollbar">            
+          <CommandList>
               <CommandInput placeholder="Buscar país..." />
               <CommandEmpty>País no encontrado.</CommandEmpty>
               <CommandGroup>

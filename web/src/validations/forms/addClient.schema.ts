@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const ClientFormSchema = z.object({
-  name: z
+  nombre_cliente: z
     .string()
     .min(2, {
       message: 'El nombre del cliente debe tener al menos 2 carácteres'
@@ -9,10 +9,15 @@ export const ClientFormSchema = z.object({
     .max(200, {
       message: 'El nombre del cliente no puede tener más de 200 carácteres'
     }),
-  DNI: z.string().length(8, {
-    message: 'El DNI del cliente debe tener 8 carácteres'
-  }),
-  address: z
+  numero_documento: z
+    .string()
+    .min(8, {
+      message: 'El DNI del cliente debe tener 8 carácteres'
+    })
+    .max(9, {
+      message: 'Máximo 9 carácteres'
+    }),
+  direccion: z
     .string()
     .min(2, {
       message: 'La dirección del cliente debe tener al menos 2 carácteres'

@@ -1,10 +1,8 @@
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
-import { AddProductFormSchema } from '@/validations/addProduct.schema'
+import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
-import { LuChevronsUpDown } from 'react-icons/lu'
-
 import {
   Form,
   FormControl,
@@ -19,7 +17,8 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { FaRegCalendarAlt } from 'react-icons/fa'
+import { FaParachuteBox, FaRegCalendarAlt } from 'react-icons/fa'
+import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { useToast } from '@/hooks/use-toast'
 import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
@@ -34,32 +33,31 @@ import {
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
-import { GoPackageDependents } from 'react-icons/go'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 const ProductForm = () => {
   const { addProduct } = useInventory()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
-  const {toast} = useToast()
+  const { toast } = useToast()
   const navigate = useNavigate()
 
   const productForm = useForm<z.infer<typeof AddProductFormSchema>>({
     resolver: zodResolver(AddProductFormSchema),
     defaultValues: {
-      name: '',
-      price: 0,
-      initialInventory: 0,
-      expirationDate: new Date(),
-      category: undefined
+      nombre: '',
+      precio_unitario: 0,
+      stock: 0,
+      fechaExpiracion: undefined,
+      categoria: undefined
     }
   })
-  const watchName = productForm.watch('name')
+  const watchName = productForm.watch('nombre')
   const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
       addProduct({
-        nombreProducto: value.name,
-        precioVentaProducto: value.price
+        nombreProducto: value.nombre,
+        precioVentaProducto: value.precio_unitario
       })
       toast({
         title: 'Producto agregado',
@@ -69,8 +67,8 @@ const ProductForm = () => {
           </pre>
         )
       })
-      
-      navigate(PRIVATE_ROUTES.REGISTERED_PRODUCTS)
+
+      navigate(PRIVATE_ROUTES.PRODUCTS)
     } catch (error) {
       console.error(error)
     }
@@ -96,7 +94,7 @@ const ProductForm = () => {
       >
         <FormField
           control={productForm.control}
-          name='name'
+          name='nombre'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Nombre</FormLabel>
@@ -113,7 +111,7 @@ const ProductForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='price'
+          name='precio_unitario'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Precio de venta</FormLabel>
@@ -135,7 +133,7 @@ const ProductForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='initialInventory'
+          name='stock'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
@@ -155,7 +153,7 @@ const ProductForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='expirationDate'
+          name='fechaExpiracion'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
@@ -168,7 +166,9 @@ const ProductForm = () => {
                       variant='ghost'
                       className={cn(
                         'w-full pl-3 outline outline-1 outline-light-3',
-                        !field.value && 'text-light-3'
+                        {
+                          'text-light-3': !field.value
+                        }
                       )}
                     >
                       {field.value ? (
@@ -188,12 +188,25 @@ const ProductForm = () => {
                 <PopoverContent className='w-auto p-0' align='start'>
                   <Calendar
                     mode='single'
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    locale={es}
-                    disabled={date =>
-                      date > new Date() || date < new Date('1900-01-01')
+                    selected={
+                      field.value == null ? undefined : new Date(field.value)
                     }
+                    onSelect={date => {
+                      if (date == null) field.onChange(undefined)
+                      else {
+                        const fixedDate = date.setDate(date.getDate() + 1)
+                        field.onChange(
+                          date == null
+                            ? undefined
+                            : format(fixedDate, 'yyyy-MM-dd')
+                        )
+                      }
+                    }}
+                    // onSelect={date => {
+                    //   productForm.setValue('fechaExpiracion', date == null ? undefined : format(date, 'yyyy-MM-dd'))
+                    // }}
+                    disabled={date => date < new Date()}
+                    locale={es}
                     initialFocus
                   />
                 </PopoverContent>
@@ -204,7 +217,7 @@ const ProductForm = () => {
         />
         <FormField
           control={productForm.control}
-          name='category'
+          name='categoria'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
@@ -221,10 +234,11 @@ const ProductForm = () => {
                         !field.value && 'text-light-3'
                       )}
                     >
-                      {field.value
+                      {field.value?.nombre
                         ? PRODUCT_CATEGORIES_VALUES.find(
-                            category => category === field.value
-                          ) ?? 'Elige una categoría'
+                            category =>
+                              category?.idCategoria === field.value?.idCategoria
+                          )?.nombre ?? 'Elige una categoría'
                         : 'Elige una categoría'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
@@ -238,21 +252,23 @@ const ProductForm = () => {
                       <CommandGroup>
                         {PRODUCT_CATEGORIES_VALUES.map(category => (
                           <CommandItem
-                            value={category}
-                            key={category}
+                            value={category.nombre}
+                            key={category.idCategoria}
                             onSelect={() => {
-                              productForm.setValue('category', category)
+                              productForm.setValue('categoria', category)
                             }}
                           >
                             <BsCheck
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                category === field.value
+                                category.nombre === field.value?.nombre &&
+                                  category.idCategoria ===
+                                    field.value?.idCategoria
                                   ? 'opacity-100'
                                   : 'opacity-0'
                               )}
                             />
-                            {category}
+                            {category.nombre}
                           </CommandItem>
                         ))}
                       </CommandGroup>
@@ -278,10 +294,10 @@ const ProductForm = () => {
           <Button
             variant='default'
             type='submit'
-            className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
+            className='group focus-visible:bg-dark-3 focus-visible:text-light-1'
           >
             Agregar Producto
-            <GoPackageDependents
+            <FaParachuteBox
               size={20}
               className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
             />

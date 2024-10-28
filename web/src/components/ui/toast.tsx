@@ -28,10 +28,11 @@ const toastVariants = cva(
     variants: {
       variant: {
         default: "bg-confirmation text-light-1",
-        confirmation: "border-confirmation bg-dark-1 text-light-1",
-        accepted: "border-secure bg-green-300 text-dark-1",
+        confirmation: "bg-green-800",
+        accepted: "bg-blue-800",
+        action: "bg-amber-800",
         destructive:
-          "destructive group border-destructive bg-red-300 text-dark-1",
+          "group border-dark-1 bg-red-800",
       },
     },
     defaultVariants: {

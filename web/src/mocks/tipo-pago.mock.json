@@ -1,0 +1,14 @@
+[
+  {
+    "id_tipo_pago": 1,
+    "nombre": "Efectivo"
+  },
+  {
+    "id_tipo_pago": 2,
+    "nombre": "Yape"
+  },
+  {
+    "id_tipo_pago": 3,
+    "nombre": "Plin"
+  }
+]
