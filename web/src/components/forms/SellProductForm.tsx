@@ -16,9 +16,12 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import {
+  useQueryAllClients,
+  useQueryAllPaymentMethods
+} from '@/states/queries/hooks/queries'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
-import { PRIVATE_ROUTES, TYPE_PAYMENT_VALUES } from '@/values'
+import { PRIVATE_ROUTES } from '@/values'
 import {
   Command,
   CommandEmpty,
@@ -32,9 +35,21 @@ import { useEffect } from 'react'
 import { BsCheck } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import { useQueryAllProducts } from '../../states/queries/hooks/queries'
+import LoaderIcon from '../icons/LoaderIcon'
 
 const SellProductForm = () => {
-  const { clients, products } = useInventory()
+  const { data: clients } = useQueryAllClients()
+  const {
+    data: paymentMethods,
+    isLoading: isLoadingPaymentMethods,
+    isError: isErrorPaymentMethods
+  } = useQueryAllPaymentMethods()
+  const {
+    data: products,
+    isLoading: isLoadingProducts,
+    isError: isErrorProducts
+  } = useQueryAllProducts()
   const { toast } = useToast()
   const navigate = useNavigate()
 
@@ -42,10 +57,10 @@ const SellProductForm = () => {
     resolver: zodResolver(SellProductFormSchema),
     defaultValues: {
       idCliente: 0,
-      tipo_pago: undefined,
+      idTipoPago: undefined,
       cantidad: 1,
       idProducto: 0,
-      costo_total: 0,
+      costoTotal: 0,
       total: 0
     }
   })
@@ -72,12 +87,13 @@ const SellProductForm = () => {
   const watchCantidad = sellProductForm.watch('cantidad')
   const watchIdProducto = sellProductForm.watch('idProducto')
   useEffect(() => {
+    if (products == null) return
     const selectedProduct = products.find(
       product => product.idProducto === sellProductForm.getValues('idProducto')
     )
     if (selectedProduct != null) {
       sellProductForm.setValue(
-        'costo_total',
+        'costoTotal',
         selectedProduct.precioUnitario * watchCantidad
       )
       sellProductForm.setValue(
@@ -111,7 +127,7 @@ const SellProductForm = () => {
                       )}
                     >
                       {field.value
-                        ? clients.find(
+                        ? clients?.find(
                             client => client.idCliente === field.value
                           )?.numeroDocumento ?? 'Elige un cliente'
                         : 'Elige un cliente'}
@@ -125,28 +141,29 @@ const SellProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Cliente no encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {clients.map(client => (
-                          <CommandItem
-                            value={client.idCliente.toString()}
-                            key={client.idCliente}
-                            onSelect={() => {
-                              sellProductForm.setValue(
-                                'idCliente',
-                                client.idCliente
-                              )
-                            }}
-                          >
-                            <BsCheck
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                client.idCliente === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {client.nombreCliente}
-                          </CommandItem>
-                        ))}
+                        {clients != null &&
+                          clients.map(client => (
+                            <CommandItem
+                              value={client.idCliente.toString()}
+                              key={client.idCliente}
+                              onSelect={() => {
+                                sellProductForm.setValue(
+                                  'idCliente',
+                                  client.idCliente
+                                )
+                              }}
+                            >
+                              <BsCheck
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  client.idCliente === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {client.nombreCliente}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -158,7 +175,7 @@ const SellProductForm = () => {
         />
         <FormField
           control={sellProductForm.control}
-          name='tipo_pago'
+          name='idTipoPago'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Tipo de pago</FormLabel>
@@ -173,10 +190,10 @@ const SellProductForm = () => {
                         !field.value && 'text-light-3'
                       )}
                     >
-                      {field.value
-                        ? TYPE_PAYMENT_VALUES.find(
-                            category => category === field.value
-                          ) ?? 'Elige un tipo de pago'
+                      {paymentMethods != null && field.value
+                        ? paymentMethods?.find(
+                            category => category.idTipoPago === field.value
+                          )?.nombre ?? 'Elige un tipo de pago'
                         : 'Elige un tipo de pago'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
@@ -188,25 +205,39 @@ const SellProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Tipo de pago no encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {TYPE_PAYMENT_VALUES.map(receiptType => (
-                          <CommandItem
-                            value={receiptType}
-                            key={receiptType}
-                            onSelect={() => {
-                              sellProductForm.setValue('tipo_pago', receiptType)
-                            }}
-                          >
-                            <BsCheck
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                receiptType === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {receiptType}
-                          </CommandItem>
-                        ))}
+                        {isErrorPaymentMethods && (
+                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                            Hubo un error al cargar los tipos de pago
+                          </p>
+                        )}
+                        {isLoadingPaymentMethods && (
+                          <div className='w-full'>
+                            <LoaderIcon className='mx-auto' />
+                          </div>
+                        )}
+                        {paymentMethods != null &&
+                          paymentMethods.map(paymentMethod => (
+                            <CommandItem
+                              value={paymentMethod.nombre}
+                              key={paymentMethod.idTipoPago}
+                              onSelect={() => {
+                                sellProductForm.setValue(
+                                  'idTipoPago',
+                                  paymentMethod.idTipoPago
+                                )
+                              }}
+                            >
+                              <BsCheck
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  paymentMethod.idTipoPago === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {paymentMethod.nombre}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -302,7 +333,7 @@ const SellProductForm = () => {
                         !field.value && 'text-light-3'
                       )}
                     >
-                      {products.find(
+                      {products?.find(
                         product => product.idProducto === field.value
                       )?.nombre ?? 'Elige un producto'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
@@ -315,30 +346,41 @@ const SellProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Producto no encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {products.map(product => {
-                          return (
-                            <CommandItem
-                              value={product.idProducto.toString()}
-                              key={product.idProducto}
-                              onSelect={() => {
-                                sellProductForm.setValue(
-                                  'idProducto',
-                                  Number(product.idProducto)
-                                )
-                              }}
-                            >
-                              <BsCheck
-                                className={cn(
-                                  'mr-2 h-4 w-4',
-                                  product.idProducto === field.value
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
-                                )}
-                              />
-                              {product.nombre}
-                            </CommandItem>
-                          )
-                        })}
+                        {isErrorProducts && (
+                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                            Hubo un error al cargar los productos
+                          </p>
+                        )}
+                        {isLoadingProducts && (
+                          <div className='w-full'>
+                            <LoaderIcon className='mx-auto' />
+                          </div>
+                        )}
+                        {products != null &&
+                          products.map(product => {
+                            return (
+                              <CommandItem
+                                value={product.nombre}
+                                key={product.idProducto}
+                                onSelect={() => {
+                                  sellProductForm.setValue(
+                                    'idProducto',
+                                    Number(product.idProducto)
+                                  )
+                                }}
+                              >
+                                <BsCheck
+                                  className={cn(
+                                    'mr-2 h-4 w-4',
+                                    product.idProducto === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
+                                  )}
+                                />
+                                {product.nombre}
+                              </CommandItem>
+                            )
+                          })}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -393,7 +435,7 @@ const SellProductForm = () => {
         />
         <FormField
           control={sellProductForm.control}
-          name='costo_total'
+          name='costoTotal'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Precio total</FormLabel>

@@ -33,7 +33,7 @@ const ClientCard = ({ client }: { client: ICliente }) => {
           </li>
           <li className='w-full inline-flex justify-between'>
             <span className='text-sm text-light-3'>Dirección:</span>
-            <Badge variant='default'>{client.direccion}</Badge>
+            <Badge variant='default'>{client.direccion ?? 'N/A'}</Badge>
           </li>
         </ul>
       </CardContent>

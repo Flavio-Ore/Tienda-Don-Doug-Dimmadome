@@ -1,32 +1,69 @@
 // import clientData from '@/mocks/clients.mock.json'
 import { z } from 'zod'
 
+/**
+  SALIDA:
+  {
+  "cliente": {
+    "idCliente": 1
+  },
+  "tipoPago":{
+    "idTipoPago": 1
+  },
+  "costoTotal": 2
+}
+
+DETALLE_SALIDA:
+{
+  "salida": {
+    "idSalida": 1
+  },
+  "producto": {
+    "idProducto": 1
+  },
+  "cantidad": 2,
+  "costoUnitario":25,
+  "total": 50
+}
+ */
+
+
+/*
+export const SellProductFormSchema = z.object({
+  salida: z.object({
+    cliente: z.object({
+      idCliente: z.number()
+    }),
+    tipoPago: z.object({
+      idTipoPago: z.number()
+    }),
+    costoTotal: z.number()
+  }),
+  detalleSalida: z.object({
+    salida: z.object({
+      idSalida: z.number()
+    }),
+    producto: z.object({
+      idProducto: z.number()
+    }),
+    cantidad: z.number(),
+    costoUnitario: z.number(),
+    total: z.number()
+  })
+})
+*/
+
 export const SellProductFormSchema = z.object({
   idCliente: z.number().int().positive({
     message: 'El cliente no es válido'
   }),
-  tipo_pago: z.enum(['Efectivo', 'Yape', 'Plin'], {
+  idTipoPago: z.number().int().positive({
     message: 'El tipo de pago no es válido'
   }),
-  // tipo_comprobante: z.enum(
-  //   TYPE_RECEIPT_VALUES.filter(
-  //     typeReceipt =>
-  //       typeReceipt !== 'Nota de Crédito' && typeReceipt !== 'Nota de Débito'
-  //   ) as ['Boleta', 'Factura'],
-  //   {
-  //     message: 'El tipo de comprobante no es válido'
-  //   }
-  // ),
-  // productos: z.array(ProductsToSell, {
-  //   message: 'Los productos no son válidos'
-  // }),
   cantidad: z.number().nonnegative().min(1, {
     message: 'La cantidad debe ser mayor o igual a 1'
   }),
-  // costo_unitario: z.number().nonnegative({
-  //   message: 'El costo unitario no es válido'
-  // }),
   idProducto: z.number().int().positive(),
-  costo_total: z.number().nonnegative(),
+  costoTotal: z.number().nonnegative(),
   total: z.number().nonnegative()
 })

@@ -1,5 +1,34 @@
 import { z } from 'zod'
 
+/*
+/*
+formulario entrada
+{
+  "usuario":
+  {
+    "idUsuario": 1
+  },
+  "proveedor":{
+    "idProveedor": 1
+  },
+  "total": 200
+}
+
+formulario detalle Entrada 
+{
+  "entrada": {
+    "idEntrada":1
+  },
+  "producto":{
+    "idProducto":1
+  },
+  "nombreProducto":"Lentejas",
+  "cantidad": 4,
+  "costoUnitario": 6,
+  "subtotal":24
+}
+*/
+
 export const BuyProductSchema = z.object({
   idUsuario: z.number().nonnegative({
     message: 'El ID del usuario no puede ser negativo'

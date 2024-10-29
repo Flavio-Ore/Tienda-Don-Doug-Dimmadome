@@ -89,7 +89,12 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
       precioUnitario: formProduct.precioUnitario,
       stock: formProduct.stock,
       fechaVencimiento: formProduct.fechaVencimiento,
-      categoria: formProduct.categoria,
+      categoria: {
+        idCategoria: formProduct.categoria.idCategoria,
+        nombre: productsCategory.find(
+          c => c.idCategoria === formProduct.categoria.idCategoria
+        )?.nombre ?? 'N/A'
+      },
       estado: 'Activo'
     }
     console.log({ newProduct })
@@ -225,7 +230,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
       c =>
         c.nombreCliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
         c.numeroDocumento.toString().includes(searchTerm) ||
-        c.direccion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.direccion?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
         c.fechaRegistro.toString().includes(searchTerm.toLowerCase()) ||
         c.estado.toString().includes
     )

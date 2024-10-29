@@ -1,23 +1,24 @@
 /**
- * formulario detalle salida
+formulario detalle Entrada 
 {
-  "salida": {
-    "idSalida": 1
+  "entrada": {
+    "idEntrada":1
   },
-  "producto": {
-    "idProducto": 1
+  "producto":{
+    "idProducto":1
   },
-  "cantidad": 2,
-  "costoUnitario":25,
-  "total": 50
+  "nombreProducto":"Lentejas",
+  "cantidad": 4,
+  "costoUnitario": 6,
+  "subtotal":24
 }
  */
 
 import { z } from 'zod'
 
-export const DetalleSalidaSchema = z.object({
-  salida: z.object({
-    idSalida: z.number().nonnegative({
+export const DetallEntradaSchema = z.object({
+  entrada: z.object({
+    idEntrada: z.number().nonnegative({
       message: 'La salida es obligatoria'
     })
   }),

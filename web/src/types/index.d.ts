@@ -102,11 +102,17 @@ export interface IProducto {
   categoria: ICategoriaProducto
   estado: string
 }
+
+export interface ITipoPago {
+  idTipoPago: number
+  nombre: string
+}
+
 export interface ICliente {
   idCliente: number
   numeroDocumento: string
   nombreCliente: string
-  direccion: string
+  direccion: string | null
   fechaRegistro: Date | string
   estado: string
 }
@@ -136,6 +142,20 @@ export interface IKardex {
   costoUnitarioSaldo: number
   costoTotalSaldo: number
 }
+
+export interface ISalida {
+  idSalida: number
+  cliente: ICliente
+  tipoPago: ITipoPago
+  fechaSalida: string
+  costoTotal: number
+}
+export interface IEntrada {
+  11
+}
+
+export type IDetalleSalida = any
+export type IDetalleEntrada = any
 
 export interface ITipoUsuario {
   idTipoUsuario: number
