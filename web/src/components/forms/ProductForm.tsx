@@ -21,7 +21,7 @@ import { FaParachuteBox, FaRegCalendarAlt } from 'react-icons/fa'
 import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { useToast } from '@/hooks/use-toast'
-import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
+import { useAddProduct } from '@/states/queries/hooks/mutations'
 import { Calendar } from '@shadcn/calendar'
 import {
   Command,
@@ -35,8 +35,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import LoaderIcon from '../icons/LoaderIcon'
 const ProductForm = () => {
-  const { addProduct } = useInventory()
+  const { addProduct: addProductInventory, productsCategory } = useInventory()
+  const { mutateAsync: addProduct, isPending } = useAddProduct()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -55,15 +57,8 @@ const ProductForm = () => {
   const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
-      toast({
-        title: 'Producto agregado',
-        description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        )
-      })
-      addProduct({
+
+      addProductInventory({
         nombre: value.nombre,
         precioUnitario: value.precioUnitario,
         stock: value.stock,
@@ -71,7 +66,12 @@ const ProductForm = () => {
         categoria: value.categoria
       })
 
-      navigate(PRIVATE_ROUTES.PRODUCTS)
+      await addProduct(value)
+
+      toast({
+        title: 'Producto agregado',
+        description: `El producto "${value.nombre}" ha sido agregado correctamente`
+      })
     } catch (error) {
       console.error(error)
     }
@@ -205,9 +205,6 @@ const ProductForm = () => {
                         )
                       }
                     }}
-                    // onSelect={date => {
-                    //   productForm.setValue('fechaExpiracion', date == null ? undefined : format(date, 'yyyy-MM-dd'))
-                    // }}
                     disabled={date => date < new Date()}
                     locale={es}
                     initialFocus
@@ -237,8 +234,8 @@ const ProductForm = () => {
                         !field.value && 'text-light-3'
                       )}
                     >
-                      {field.value?.nombre
-                        ? PRODUCT_CATEGORIES_VALUES.find(
+                      {field.value?.idCategoria
+                        ? productsCategory.find(
                             category =>
                               category?.idCategoria === field.value?.idCategoria
                           )?.nombre ?? 'Elige una categoría'
@@ -253,7 +250,7 @@ const ProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Categoría no encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {PRODUCT_CATEGORIES_VALUES.map(category => (
+                        {productsCategory.map(category => (
                           <CommandItem
                             value={category.nombre}
                             key={category.idCategoria}
@@ -264,9 +261,8 @@ const ProductForm = () => {
                             <BsCheck
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                category.nombre === field.value?.nombre &&
-                                  category.idCategoria ===
-                                    field.value?.idCategoria
+                                category.idCategoria ===
+                                  field.value?.idCategoria
                                   ? 'opacity-100'
                                   : 'opacity-0'
                               )}
@@ -297,13 +293,17 @@ const ProductForm = () => {
           <Button
             variant='default'
             type='submit'
-            className='group focus-visible:bg-dark-3 focus-visible:text-light-1'
+            disabled={isPending}
+            className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Agregar Producto
-            <FaParachuteBox
-              size={20}
-              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
-            />
+            {!isPending && 'Agregar Producto'}
+            {!isPending && (
+              <FaParachuteBox
+                size={20}
+                className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
+              />
+            )}
+            {isPending && <LoaderIcon />}
           </Button>
         </div>
       </form>

@@ -26,7 +26,7 @@ const ClientForm = () => {
   const addClientForm = useForm<z.infer<typeof ClientFormSchema>>({
     resolver: zodResolver(ClientFormSchema),
     defaultValues: {
-      numeroDocumento: '',
+      dni: '',
       direccion: ''
     }
   })
@@ -56,7 +56,7 @@ const ClientForm = () => {
       >
         <FormField
           control={addClientForm.control}
-          name='numeroDocumento'
+          name='dni'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>DNI</FormLabel>

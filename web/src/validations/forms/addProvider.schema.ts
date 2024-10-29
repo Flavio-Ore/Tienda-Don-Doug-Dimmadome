@@ -1,6 +1,13 @@
-import { PRODUCT_CATEGORIES } from '@/values'
 import { z } from 'zod'
-
+/**formulario proveedor
+{
+  "nombre": "abanto SAC",
+  "contacto": "987445632",
+  "direccion":"Mariscal Caceres",
+  "categoria":{
+    "idCategoria": 1
+  }
+} */
 export const ProviderValidationSchema = z.object({
   nombre: z
     .string()
@@ -19,16 +26,12 @@ export const ProviderValidationSchema = z.object({
     .min(2, {
       message: 'La dirección del proveedor debe tener al menos 2 caracteres'
     })
-    .max(255),
+    .max(200),
     categoria: z.object(
       {
         idCategoria: z.number().nonnegative({
           message: 'La categoría es obligatoria'
         }),
-        nombre: z.nativeEnum(PRODUCT_CATEGORIES, {
-          message: 'Elige una categoría',
-          invalid_type_error: 'Elige una categoría'
-        })
       },
       {
         message: 'La categoría es obligatoria'

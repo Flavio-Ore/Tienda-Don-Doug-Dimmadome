@@ -13,6 +13,7 @@ export default defineConfig({
       '@layouts': path.resolve(__dirname, './src/layouts'),
       '@api': path.resolve(__dirname, './src/api'),
       '@pages': path.resolve(__dirname, './src/pages'),
+      '@doug-dimadon': path.resolve(__dirname, './src/services/doug-dimadon')
     }
   }
 })

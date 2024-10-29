@@ -1,4 +1,5 @@
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import { UserSchema } from '@/validations/forms/addUser.schema'
 import { z } from 'zod'
 
 export interface InventarioDimadon {
@@ -19,6 +20,7 @@ export interface InventarioDimadon {
 }
 export interface IInventoryContext {
   products: IProducto[]
+  productsCategory: ICategoriaProducto[]
   activateProduct: ({ productId }: { productId: number }) => void
   inactivateProduct: ({ productId }: { productId: number }) => void
   setProductStock: ({
@@ -29,9 +31,12 @@ export interface IInventoryContext {
     stock: number
   }) => void
   clients: ICliente[]
-  providers: IProvider[]
-  searchProviders: ({ searchTerm = '' }: { searchTerm: string }) => IProvider[]
-  users: IUsers[]
+  providers: IProveedor[]
+  searchProviders: ({ searchTerm = '' }: { searchTerm: string }) => IProveedor[]
+  users: IUsuario[]
+  addUser: (user: z.infer<typeof UserSchema>) => void
+  searchUsers: ({ searchTerm = '' }: { searchTerm: string }) => IUsuario[]
+  userTypes: ITipoUsuario[]
   kardexs: IKardex[]
   getKardexsByProducts: ({ productId }: { productId: number }) => IKardex[]
   login: {
@@ -106,7 +111,7 @@ export interface ICliente {
   estado: string
 }
 
-export interface IProvider {
+export interface IProveedor {
   id: number
   nombre: string
   contacto: string
@@ -132,7 +137,12 @@ export interface IKardex {
   costoTotalSaldo: number
 }
 
-export interface IUsers {
+export interface ITipoUsuario {
+  idTipoUsuario: number
+  nombre: string
+}
+
+export interface IUsuario {
   idUsuario: number
   nombre: string
   email: string
@@ -140,6 +150,12 @@ export interface IUsers {
   tipoUsuario: ITipoUsuario
   fechaCreacion: string
   estado: string
+}
+
+export interface ILoginResponse {
+  success: boolean
+  message: string
+  tipoUsuarioId?: number
 }
 
 export interface Producto {

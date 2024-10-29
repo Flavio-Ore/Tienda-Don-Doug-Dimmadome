@@ -1,7 +1,9 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
+import useInventory from '@/states/inventory/hooks/useInventory'
+import { useAddProvider } from '@/states/queries/hooks/mutations'
 import { ProviderValidationSchema } from '@/validations/forms/addProvider.schema'
-import { PRIVATE_ROUTES, PRODUCT_CATEGORIES_VALUES } from '@/values'
+import { PRIVATE_ROUTES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
 import {
@@ -29,9 +31,13 @@ import { FaTruckArrowRight } from 'react-icons/fa6'
 import { LuChevronsUpDown } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import LoaderIcon from '../icons/LoaderIcon'
 
 const ProviderForm = () => {
   const navigate = useNavigate()
+  const { productsCategory } = useInventory()
+
+  const { mutateAsync: addProvider, isPending } = useAddProvider()
   const { toast } = useToast()
   const providerForm = useForm<z.infer<typeof ProviderValidationSchema>>({
     resolver: zodResolver(ProviderValidationSchema),
@@ -39,20 +45,20 @@ const ProviderForm = () => {
       nombre: '',
       direccion: '',
       contacto: '',
-      categoria: undefined
+      categoria: {
+        idCategoria: undefined
+      }
     }
   })
 
   const onSubmit = async (value: z.infer<typeof ProviderValidationSchema>) => {
     try {
       console.log(value)
+      await addProvider(value)
       toast({
         title: 'Proveedor agregado exitosamente',
-        description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        )
+        description: `Proovedor ${value.nombre} ha sido agregado correctamente.`,
+        variant: 'confirmation'
       })
       navigate(PRIVATE_ROUTES.PROVIDERS)
     } catch (error) {
@@ -136,8 +142,8 @@ const ProviderForm = () => {
                         !field.value && 'text-light-3'
                       )}
                     >
-                      {field.value?.nombre
-                        ? PRODUCT_CATEGORIES_VALUES.find(
+                      {field.value?.idCategoria
+                        ? productsCategory.find(
                             category =>
                               category?.idCategoria === field.value?.idCategoria
                           )?.nombre ?? 'Elige una categoría'
@@ -152,7 +158,7 @@ const ProviderForm = () => {
                     <CommandList>
                       <CommandEmpty>Categoría no encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {PRODUCT_CATEGORIES_VALUES.map(category => (
+                        {productsCategory.map(category => (
                           <CommandItem
                             value={category.nombre}
                             key={category.idCategoria}
@@ -163,9 +169,8 @@ const ProviderForm = () => {
                             <BsCheck
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                category.nombre === field.value?.nombre &&
-                                  category.idCategoria ===
-                                    field.value?.idCategoria
+                                category.idCategoria ===
+                                  field.value?.idCategoria
                                   ? 'opacity-100'
                                   : 'opacity-0'
                               )}
@@ -196,13 +201,17 @@ const ProviderForm = () => {
           <Button
             variant='default'
             type='submit'
+            disabled={isPending}
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Agregar Proveedor
-            <FaTruckArrowRight
-              size={20}
-              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
-            />
+            {!isPending && 'Agregar Proveedor'}
+            {!isPending && (
+              <FaTruckArrowRight
+                size={20}
+                className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
+              />
+            )}
+            {isPending && <LoaderIcon />}
           </Button>
         </div>
       </form>
