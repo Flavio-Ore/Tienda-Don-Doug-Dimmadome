@@ -1,5 +1,6 @@
+import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useDebounce } from '@/hooks/useDebounce'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import { useQueryAllProducts } from '@/states/queries/hooks/queries'
 import ProductCard from '@pages/products/components/ProductCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
@@ -7,13 +8,27 @@ import { CiSearch } from 'react-icons/ci'
 import { FaBoxOpen } from 'react-icons/fa'
 
 const Products = () => {
-  const { products, searchProducts } = useInventory()
+  const {
+    data: products,
+    isLoading: isProductsLoading,
+    isError: isProductsError
+  } = useQueryAllProducts()
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
 
-  const filteredProducts = useMemo(() => {
-    return searchProducts({ searchTerm: debouncedValue })
-  }, [debouncedValue])
+  const filteredProducts = useMemo(
+    () =>
+      products?.filter(
+        p =>
+          p.nombre.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+          p.categoria.toString().includes(debouncedValue) ||
+          p.precioUnitario.toString().includes(debouncedValue) ||
+          p.stock.toString().includes(debouncedValue) ||
+          p.fechaVencimiento.toString().includes(debouncedValue) ||
+          p.estado.toLowerCase().includes(debouncedValue.toLowerCase())
+      ) ?? [],
+    [debouncedValue, products]
+  )
 
   const isTyping = searchValue !== ''
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,18 +67,28 @@ const Products = () => {
           />
         </div>
       </div>
-      {isTyping && filteredProducts.length <= 0 && (
+      {isProductsLoading && (
+        <div className='w-full'>
+          <LoaderIcon className='mx-auto' />
+        </div>
+      )}
+      {isProductsError && (
+        <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+          Hubo un error al cargar los productos
+        </p>
+      )}
+      {isTyping && !isProductsError && !isProductsLoading && products != null && filteredProducts.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No se encontraron productos
         </p>
       )}
-      {!isTyping && products.length <= 0 && (
+      {!isTyping && !isProductsError && !isProductsLoading && products != null && products.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No hay productos registrados
         </p>
       )}
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
-        {isTyping &&
+        {isTyping && !isProductsError && !isProductsLoading &&
           filteredProducts.length > 0 &&
           filteredProducts.map(product => (
             <ProductCard
@@ -75,7 +100,8 @@ const Products = () => {
             />
           ))}
 
-        {!isTyping &&
+        {!isTyping && !isProductsError && !isProductsLoading &&
+          products != null &&
           products.length > 0 &&
           products.map(product => (
             <ProductCard

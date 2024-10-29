@@ -6,9 +6,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { IProvider } from '@/types'
+import { IProveedor } from '@/types'
 
-const ProviderCard = ({ provider }: { provider: IProvider }) => {
+const ProviderCard = ({ provider }: { provider: IProveedor }) => {
   return (
     <Card className=''>
       <CardHeader>

@@ -1,14 +1,14 @@
 [
   {
-    "idUsuario": 1,
-    "nombre": "Edwin Luicho",
-    "email": "edwin.luicho@gmail.com",
-    "contrasena": "password123",
-    "fechaCreacion": "2024-10-26",
+    "idUsuario": 2,
+    "nombre": "Flavio Ore",
+    "email": "flavioore@gmail.com",
+    "contrasena": "flavioore",
+    "fechaCreacion": "2024-10-29",
     "estado": "activo",
     "tipoUsuario": {
       "idTipoUsuario": 1,
-      "nombre": "Admin"
+      "nombre": "Administrador"
     }
   }
 ]

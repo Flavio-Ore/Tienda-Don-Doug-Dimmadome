@@ -1,6 +1,10 @@
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
-import { signInSchema } from '@/validations'
+import { useSignin } from '@/states/queries/hooks/mutations'
+import { SigninSchema } from '@/validations/forms/signIn.schema'
+import { PRIVATE_ROUTES } from '@/values'
+import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
 import {
@@ -19,43 +23,50 @@ import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const SigninForm = ({ className }: { className?: string }) => {
-  const [isAuth, setIsAuth] = useState({
-    isLogged: false,
-    tryings: 0,
-    message: ''
-  })
+  const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
+  const { mutateAsync, isPending } = useSignin()
   const { checkAuth } = useInventory()
   const nagivation = useNavigate()
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof SigninSchema>>({
+    resolver: zodResolver(SigninSchema),
     defaultValues: {
       email: '',
-      password: ''
+      contrasena: ''
     }
   })
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
-  function onSubmit (values: z.infer<typeof signInSchema>) {
+  async function onSubmit (values: z.infer<typeof SigninSchema>) {
     console.log(values)
-    const auth = {
-      isLogged: checkAuth(values),
-      tryings: isAuth.tryings + 1,
-      message: ''
-    }
-    setIsAuth(auth)
-    if (auth.isLogged) {
-      nagivation('/inventario')
-      return
-    } else {
-      setIsAuth({
-        isLogged: false,
-        message: 'Usuario o contraseña incorrectos.',
-        tryings: auth.tryings
+    try {
+      const loginRes = await mutateAsync({
+        email: values.email,
+        contrasena: values.contrasena
       })
+
+      checkAuth({
+        email: values.email,
+        password: values.contrasena
+      })
+      if (loginRes.success) {
+        toast({
+          title: loginRes.message,
+          variant: 'accepted'
+        })
+        nagivation(PRIVATE_ROUTES.INVENTORY)
+      } else {
+        toast({
+          title: loginRes.message,
+          variant: 'destructive'
+        })
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
+
   return (
     <Form {...form}>
       <div className={cn('flex flex-col sm:w-420 w-full p-5', className)}>
@@ -64,7 +75,9 @@ const SigninForm = ({ className }: { className?: string }) => {
           alt='Doug Dimmadome'
           className='block w-24 h-full mx-auto'
         />
-        <h2 className='h3-bold md:h2-bold pt-5 sm:pt-9 font-ubuntu'>Iniciar Sesión</h2>
+        <h2 className='h3-bold md:h2-bold pt-5 sm:pt-9 font-ubuntu'>
+          Iniciar Sesión
+        </h2>
         <p className='text-light-3 small-medium md:base-regular'>
           Bienvenido de vuelta, por favor inicia sesión.
         </p>
@@ -92,7 +105,7 @@ const SigninForm = ({ className }: { className?: string }) => {
           />
           <FormField
             control={form.control}
-            name='password'
+            name='contrasena'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Contraseña</FormLabel>
@@ -117,13 +130,8 @@ const SigninForm = ({ className }: { className?: string }) => {
               </FormItem>
             )}
           />
-          {isAuth.message !== '' && (
-            <FormMessage className='text-red-500'>
-              Usuario o contraseña incorrectos.
-            </FormMessage>
-          )}
           <Button variant={'default'} type='submit'>
-            Iniciar Sesión
+            {isPending ? <LoaderIcon /> : 'Iniciar Sesión'}
           </Button>
         </form>
       </div>

@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
-    "nombre": "Distribuciones S.A.",
-    "contacto": "+51987466321",
-    "direccion": "Av. Principal 123",
+    "nombre": "abanto SAC",
+    "contacto": "987445632",
+    "direccion": "Mariscal Cáceres",
     "categoria": {
       "idCategoria": 1,
       "nombre": "Menestras"
