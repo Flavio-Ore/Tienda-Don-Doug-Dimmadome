@@ -1,15 +1,21 @@
+import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Input } from '@/components/ui/input'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import { useQueryAllKardexs } from '@/states/queries/hooks/queries'
 import { type IKardex } from '@/types'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
-import { FaSearch } from 'react-icons/fa'
+import { FaClipboardList, FaSearch } from 'react-icons/fa'
 import { FaTableCellsRowLock } from 'react-icons/fa6'
 import TableKardex from './components/TableKardex'
 
 const columnHelper = createColumnHelper<IKardex>()
 
 const Kardex = () => {
+  const {
+    data: kardexs,
+    isLoading: isLoadingKardexs,
+    isError: isErrorKardexs
+  } = useQueryAllKardexs()
   const columns = useMemo<ColumnDef<IKardex>[]>(
     () => [
       columnHelper.group({
@@ -54,21 +60,21 @@ const Kardex = () => {
         columns: [
           columnHelper.accessor('cantidadEntrada', {
             id: 'cantidadEntrada',
-            header: 'Cantidad',
+            header: 'CANT.',
             cell: info => {
               return <span>{info.getValue()}</span>
             }
           }),
           columnHelper.accessor('costoUnitarioEntrada', {
             id: 'costoUnitarioEntrada',
-            header: 'Costo Unitario',
+            header: 'C.U',
             cell: info => {
               return <span>{info.getValue()}</span>
             }
           }),
           columnHelper.accessor('costoTotalEntrada', {
             id: 'costoTotalEntrada',
-            header: 'Costo Total',
+            header: 'C.T',
             cell: info => {
               return <span>{info.getValue()}</span>
             }
@@ -81,14 +87,14 @@ const Kardex = () => {
         columns: [
           columnHelper.accessor('cantidadSalida', {
             id: 'cantidadSalida',
-            header: 'Cantidad',
+            header: 'CANT.',
             cell: info => {
               return <span>{info.getValue()}</span>
             }
           }),
           columnHelper.accessor('costoUnitarioSalida', {
             id: 'costo_unitario_salidas',
-            header: 'Costo Unitario',
+            header: 'C.U',
             cell: info => {
               // if (info.row.original.tipoOperacion === 'Venta') {
               // }
@@ -97,7 +103,7 @@ const Kardex = () => {
           }),
           columnHelper.accessor('costoTotalSalida', {
             id: 'costoTotalSalida',
-            header: 'Costo Total',
+            header: 'C.T',
             cell: info => {
               // if (info.row.original.tipoOperacion === 'Venta') {
               // }
@@ -112,17 +118,17 @@ const Kardex = () => {
         columns: [
           columnHelper.accessor('cantidadSaldo', {
             id: 'cantidadSaldo',
-            header: 'Cantidad',
+            header: 'CANT.',
             cell: info => <span>{info.getValue()}</span>
           }),
           columnHelper.accessor('costoUnitarioSaldo', {
             id: 'costoUnitarioSaldo',
-            header: 'Costo Unitario',
+            header: 'C.U',
             cell: info => <span>{info.getValue()}</span>
           }),
           columnHelper.accessor('costoTotalSaldo', {
             id: 'costoTotalSaldo',
-            header: 'Costo Total',
+            header: 'C.T',
             cell: info => <span>{info.getValue()}</span>
           })
         ]
@@ -130,20 +136,29 @@ const Kardex = () => {
     ],
     []
   )
-  const { kardexs, getKardexsByProducts } = useInventory()
+
   // const table = useReactTable<IKardex>({
   //   data: kardexs,
   //   columns,
   //   getCoreRowModel: getCoreRowModel()
   // })
-  const kardexByProduct = kardexs.map(kardex =>
-    getKardexsByProducts({
-      productId: kardex.producto.idProducto
+
+  const filteredKardexsByProducts = useMemo(() => {
+    const groupedKardexMap = new Map<number, IKardex[]>()
+
+    kardexs?.forEach(kardex => {
+      const productId = kardex.producto.idProducto
+      if (!groupedKardexMap.has(productId)) {
+        groupedKardexMap.set(productId, [])
+      }
+      groupedKardexMap.get(productId)?.push(kardex)
     })
-  )
+
+    return Array.from(groupedKardexMap.values())
+  }, [kardexs])
 
   console.log({
-    kardexByProduct
+    filteredKardexsByProducts
   })
 
   return (
@@ -174,23 +189,30 @@ const Kardex = () => {
         </div>
       </div>
       <hr className='border-light-3 mt-5' />
-      {kardexByProduct.map(kardex => {
-        return (
-          <div
-            key={kardex
-              .map(k => k.producto.idProducto + k.producto.nombre)
-              .join()}
-          >
-            <div className='flex flex-col p-5 gap-y-2'>
-              <h3 className='text-light-2 body-bold'>
-                Kardex de {kardex[0].producto.nombre}
+      {isErrorKardexs && (
+        <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+          Hubo un error al cargar los kardexs de inventario
+        </p>
+      )}
+      {isLoadingKardexs && (
+        <div className='w-full'>
+          <LoaderIcon className='mx-auto' />
+        </div>
+      )}
+      {filteredKardexsByProducts.map(kardex => (
+        <>
+          <section key={kardex[0].producto.idProducto}>
+            <div className='inline-flex items-center mb-4 gap-x-4'>
+              <FaClipboardList  size={36} className='fill-blue-500' />
+              <h3 className='text-light-2 font-ubuntu text-3xl'>
+                {kardex[0].producto.nombre}
               </h3>
             </div>
             <TableKardex columns={columns} data={kardex} />
-            <hr className='border-light-3 mt-5' />
-          </div>
-        )
-      })}
+          </section>
+          <hr className='border-light-3 mt-5' />
+        </>
+      ))}
       {/* <TableKardex columns={columns} data={kardexs} />
       <hr className='border-light-3 mt-5' /> */}
     </div>

@@ -1,6 +1,7 @@
 import ProviderForm from '@/components/forms/ProviderForm'
+import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useDebounce } from '@/hooks/useDebounce'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import { useQueryAllProviders } from '@/states/queries/hooks/queries'
 import ProviderCard from '@pages/providers/components/ProviderCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
@@ -9,16 +10,26 @@ import { FaPeopleCarry } from 'react-icons/fa'
 import { FaTruckPlane } from 'react-icons/fa6'
 
 const Providers = () => {
+  const {
+    data: providers,
+    isLoading: isProvidersLoading,
+    isError: isProvidersError
+  } = useQueryAllProviders()
   const [searchValue, setSearchValue] = useState('')
-  const { providers, searchProviders } = useInventory()
   const debouncedValue = useDebounce(searchValue, 500)
   const isTyping = searchValue !== ''
   const searchedProviders = useMemo(
     () =>
-      searchProviders({
-        searchTerm: debouncedValue
-      }),
-    [debouncedValue]
+      providers?.filter(
+        p =>
+          p.nombre.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+          p.contacto.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+          p.direccion.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+          p.categoria.nombre
+            .toLowerCase()
+            .includes(debouncedValue.toLowerCase())
+      ) ?? [],
+    [debouncedValue, providers]
   )
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
@@ -66,27 +77,43 @@ const Providers = () => {
           />
         </div>
       </div>
-      {isTyping && searchedProviders.length <= 0 && (
+      {isTyping && providers != null && searchedProviders.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No se encontraron clientes
         </p>
       )}
-      {!isTyping && providers.length <= 0 && (
+      {!isTyping && providers != null && providers.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
-          No hay clientes registrados
+          No hay proveedores registrados
         </p>
       )}
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
+        {isProvidersLoading && (
+          <div className='w-full'>
+            <LoaderIcon className='mx-auto' />
+          </div>
+        )}
+        {isProvidersError && (
+          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+            Hubo un error al cargar los proveedores
+          </p>
+        )}
         {isTyping &&
+          !isProvidersLoading &&
+          !isProvidersError &&
+          providers != null &&
           searchedProviders.length > 0 &&
           searchedProviders.map(provider => (
-            <ProviderCard key={provider.nombre} provider={provider} />
+            <ProviderCard key={provider.id} provider={provider} />
           ))}
 
         {!isTyping &&
+          !isProvidersLoading &&
+          !isProvidersError &&
+          providers != null &&
           providers.length > 0 &&
           providers.map(provider => (
-            <ProviderCard key={provider.nombre} provider={provider} />
+            <ProviderCard key={provider.id} provider={provider} />
           ))}
       </div>
     </div>

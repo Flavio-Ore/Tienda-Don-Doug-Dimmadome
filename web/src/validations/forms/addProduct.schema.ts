@@ -1,6 +1,17 @@
 import { PRODUCT_CATEGORIES } from '@/values'
 import { z } from 'zod'
 
+/**fomulario producto
+{
+  "nombre": "Lentejas",
+  "precioUnitario": 25,
+  "stock":4,
+  "fechaVencimiento": "2024/24/31",
+  "categoria": {
+    "idCategoria":1
+  }
+} */
+
 export const ProductCategorySchema = z.object({
   nombre: z.nativeEnum(PRODUCT_CATEGORIES),
   idCategoria: z.number()
@@ -31,10 +42,6 @@ export const AddProductFormSchema = z.object({
     {
       idCategoria: z.number().nonnegative({
         message: 'La categoría es obligatoria'
-      }),
-      nombre: z.nativeEnum(PRODUCT_CATEGORIES, {
-        message: 'Elige una categoría',
-        invalid_type_error: 'Elige una categoría'
       })
     },
     {

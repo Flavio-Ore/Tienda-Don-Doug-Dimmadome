@@ -3,20 +3,26 @@ import {
   removeFromLocalStorage,
   saveToLocalStorage
 } from '@/lib/local-storage'
+import PRODUCTS_CATEGORY from '@/mocks/categoria-producto.mock.json'
 import CLIENTS_JSON from '@/mocks/clients.mock.json'
 import KARDEX_JSON from '@/mocks/kardex.mock.json'
 import PRODUCTS_JSON from '@/mocks/product.mock.json'
 import PROVIDERS_JSON from '@/mocks/providers.mock.json'
+import USER_TYPES_JSON from '@/mocks/tipo-usuario.mock.json'
 import USERS_JSON from '@/mocks/user.mock.json'
 import InventoryContext from '@/states/inventory/contexts/InventoryContext'
 import {
+  ICategoriaProducto,
   ICliente,
+  ITipoUsuario,
   type IKardex,
   type IProducto,
-  type IProvider,
-  type IUsers
+  type IProveedor,
+  type IUsuario
 } from '@/types'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import { UserSchema } from '@/validations/forms/addUser.schema'
+import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 interface InventoryLogin {
@@ -33,10 +39,11 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
   })
   const [kardexs, setKardexs] = useState<IKardex[]>(KARDEX_JSON)
   const [products, setProducts] = useState<IProducto[]>(PRODUCTS_JSON)
-  // const [productsCategory] = useState<ICategoriaProducto[]>(PRODUCTS_CATEGORY)
+  const [productsCategory] = useState<ICategoriaProducto[]>(PRODUCTS_CATEGORY)
   const [clients] = useState<ICliente[]>(CLIENTS_JSON)
-  const [users] = useState<IUsers[]>(USERS_JSON)
-  const [providers] = useState<IProvider[]>(PROVIDERS_JSON)
+  const [users, setUsers] = useState<IUsuario[]>(USERS_JSON)
+  const [userTypes] = useState<ITipoUsuario[]>(USER_TYPES_JSON)
+  const [providers] = useState<IProveedor[]>(PROVIDERS_JSON)
 
   useEffect(() => {
     const wasLogged = loadFromLocalStorage<InventoryLogin>('login_dimadon')
@@ -109,7 +116,6 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
 
     setProducts([...products, newProduct])
   }
-
   const setProductStock = ({
     productId,
     stock
@@ -235,26 +241,54 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     )
   }
 
+  const searchUsers = ({ searchTerm = '' }: { searchTerm: string }) => {
+    return users.filter(
+      u =>
+        u.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.estado.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.tipoUsuario.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.fechaCreacion.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  }
+
+  const addUser = (user: z.infer<typeof UserSchema>) => {
+    const newUser = {
+      idUsuario: users.length + 1,
+      nombre: user.nombre,
+      email: user.email,
+      contrasena: user.contrasena,
+      tipoUsuario: user.tipoUsuario,
+      estado: 'activo',
+      fechaCreacion: format(new Date(), 'yyyy-MM-dd')
+    }
+    setUsers([...users, newUser])
+  }
+
   return (
     <InventoryContext.Provider
       value={{
         login,
         products,
+        searchProducts,
         inactivateProduct,
         activateProduct,
         setProductStock,
+        productsCategory,
         kardexs,
+        searchKardex,
         getKardexsByProducts,
         clients,
+        searchClients,
         users,
+        addUser,
+        searchUsers,
+        userTypes,
         providers,
         searchProviders,
         signOut,
         setLogin,
         checkAuth,
-        searchProducts,
-        searchKardex,
-        searchClients,
         addProduct,
         getProduct,
         removeProduct,

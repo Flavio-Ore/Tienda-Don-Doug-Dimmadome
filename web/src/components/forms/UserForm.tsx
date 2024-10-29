@@ -15,8 +15,9 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import { CreateUserSchema } from '@/validations/addUser.schema'
-import { PRIVATE_ROUTES, TYPE_USERS_VALUES } from '@/values'
+import useInventory from '@/states/inventory/hooks/useInventory'
+import { UserSchema } from '@/validations/forms/addUser.schema'
+import { PRIVATE_ROUTES } from '@/values'
 import {
   Command,
   CommandEmpty,
@@ -33,25 +34,27 @@ import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const UserForm = () => {
+  const { addUser, userTypes } = useInventory()
   const [showPassword, setShowPassword] = useState(false)
   const { toast } = useToast()
   const navigate = useNavigate()
 
-  const userForm = useForm<z.infer<typeof CreateUserSchema>>({
-    resolver: zodResolver(CreateUserSchema),
+  const userForm = useForm<z.infer<typeof UserSchema>>({
+    resolver: zodResolver(UserSchema),
     defaultValues: {
       nombre: '',
       email: '',
       contrasena: '',
-      tipo_usuario: undefined
+      tipoUsuario: undefined
     }
   })
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
-  const onSubmit = async (value: z.infer<typeof CreateUserSchema>) => {
+  const onSubmit = async (value: z.infer<typeof UserSchema>) => {
     try {
       console.log(value)
+      await addUser(value)
       toast({
         title: 'Usuario creado exitosamente',
         description: (
@@ -135,7 +138,7 @@ const UserForm = () => {
         />
         <FormField
           control={userForm.control}
-          name='tipo_usuario'
+          name='tipoUsuario'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Tipo de Usuario</FormLabel>
@@ -147,13 +150,17 @@ const UserForm = () => {
                       role='combobox'
                       className={cn(
                         'w-full justify-between outline outline-1 outline-light-3',
-                        !field.value && 'text-light-3'
+                        {
+                          'text-light-3': !field.value
+                        }
                       )}
                     >
-                      {field.value
-                        ? TYPE_USERS_VALUES.find(
-                            returnType => returnType === field.value
-                          ) ?? 'Elige un tipo de usuario'
+                      {field.value?.nombre != null
+                        ? userTypes.find(
+                            returnType =>
+                              returnType.idTipoUsuario ===
+                              field.value.idTipoUsuario
+                          )?.nombre ?? 'Elige un tipo de usuario'
                         : 'Elige un tipo de usuario'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
@@ -167,23 +174,23 @@ const UserForm = () => {
                         Tipo de usuario no encontrado.
                       </CommandEmpty>
                       <CommandGroup>
-                        {TYPE_USERS_VALUES.map(receiptType => (
+                        {userTypes.map(userType => (
                           <CommandItem
-                            value={receiptType}
-                            key={receiptType}
+                            value={userType.nombre}
+                            key={userType.idTipoUsuario}
                             onSelect={() => {
-                              userForm.setValue('tipo_usuario', receiptType)
+                              userForm.setValue('tipoUsuario', userType)
                             }}
                           >
                             <BsCheck
                               className={cn(
                                 'mr-2 h-4 w-4',
-                                receiptType === field.value
+                                userType === field.value
                                   ? 'opacity-100'
                                   : 'opacity-0'
                               )}
                             />
-                            {receiptType}
+                            {userType.nombre}
                           </CommandItem>
                         ))}
                       </CommandGroup>
