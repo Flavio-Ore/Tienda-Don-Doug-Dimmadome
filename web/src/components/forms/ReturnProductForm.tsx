@@ -15,6 +15,7 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
+import useInventory from '@/states/inventory/hooks/useInventory'
 import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
 import { PRIVATE_ROUTES, TYPE_RETURNS_VALUES } from '@/values'
 import {
@@ -33,14 +34,15 @@ import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const ReturnProductForm = () => {
+  const { products } = useInventory()
   const navigate = useNavigate()
   const { toast } = useToast()
   const returnProductForm = useForm<z.infer<typeof ReturnProductFormSchema>>({
     resolver: zodResolver(ReturnProductFormSchema),
     defaultValues: {
       DNI: '',
-      product: '',
-      quantity: 1,
+      idProducto: -1,
+      cantidad: 1,
       typeReturn: undefined,
       description: ''
     }
@@ -88,24 +90,68 @@ const ReturnProductForm = () => {
         />
         <FormField
           control={returnProductForm.control}
-          name='product'
+          name='idProducto'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Producto</FormLabel>
-              <FormControl>
-                <Input
-                  type='text'
-                  placeholder='Nombre del producto a devolver'
-                  {...field}
-                />
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant='ghost'
+                      role='combobox'
+                      className={cn(
+                        'w-full justify-between outline outline-1 outline-light-3',
+                        !field.value && 'text-light-3'
+                      )}
+                    >
+                      {products.find(
+                        product => product.idProducto === field.value
+                      )?.nombre ?? 'Elige un producto'}
+                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className='w-full p-0' align='start'>
+                  <Command>
+                    <CommandInput placeholder='Busca un producto...' />
+                    <CommandList>
+                      <CommandEmpty>Producto no encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        {products.map(product => (
+                          <CommandItem
+                            value={product.nombre}
+                            key={product.idProducto}
+                            onSelect={() => {
+                              returnProductForm.setValue(
+                                'idProducto',
+                                product.idProducto
+                              )
+                            }}
+                          >
+                            <BsCheck
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                Number(product.idProducto) === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0'
+                              )}
+                            />
+                            {product.nombre}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
         <FormField
           control={returnProductForm.control}
-          name='quantity'
+          name='cantidad'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Cantidad</FormLabel>

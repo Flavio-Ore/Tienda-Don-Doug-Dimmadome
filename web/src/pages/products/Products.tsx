@@ -1,31 +1,19 @@
 import { useDebounce } from '@/hooks/useDebounce'
-import PRODUCTS_JSON from '@/mocks/product.mock.json'
+import useInventory from '@/states/inventory/hooks/useInventory'
 import ProductCard from '@pages/products/components/ProductCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
 import { FaBoxOpen } from 'react-icons/fa'
 
-const productsData = PRODUCTS_JSON
-
 const Products = () => {
+  const { products, searchProducts } = useInventory()
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
 
-  const filteredProducts = useMemo(
-    () =>
-      productsData.filter(product => {
-        const { nombre, precioUnitario, stock, estado } = product
-        const searchValue = debouncedValue.toLowerCase()
-        return (
-          nombre.toLowerCase().includes(searchValue) ||
-          precioUnitario.toString().includes(searchValue) ||
-          stock.toString().includes(searchValue) ||
-          estado.toLowerCase().includes(searchValue)
-        )
-      }),
-    [debouncedValue]
-  )
+  const filteredProducts = useMemo(() => {
+    return searchProducts({ searchTerm: debouncedValue })
+  }, [debouncedValue])
 
   const isTyping = searchValue !== ''
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,15 +57,15 @@ const Products = () => {
           No se encontraron productos
         </p>
       )}
-      {!isTyping && productsData.length <= 0 && (
+      {!isTyping && products.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No hay productos registrados
         </p>
       )}
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
         {isTyping &&
-          productsData.length > 0 &&
-          productsData.map(product => (
+          filteredProducts.length > 0 &&
+          filteredProducts.map(product => (
             <ProductCard
               key={product.idProducto}
               product={{
@@ -88,8 +76,8 @@ const Products = () => {
           ))}
 
         {!isTyping &&
-          productsData.length > 0 &&
-          productsData.map(product => (
+          products.length > 0 &&
+          products.map(product => (
             <ProductCard
               key={product.idProducto}
               product={{
