@@ -1,14 +1,15 @@
-/**formulario salida
+/*
+SALIDA FORM:
 {
   "cliente": {
     "idCliente": 1
   },
-  "tipoPago":{
+  "tipoPago": {
     "idTipoPago": 1
   },
-  "costoTotal": 200
-} */
-
+  "costoTotal": 30.0
+}
+*/
 import { z } from 'zod'
 
 export const SalidaSchema = z.object({

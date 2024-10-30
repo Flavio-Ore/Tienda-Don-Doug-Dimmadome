@@ -1,7 +1,7 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
-import useInventory from '@/states/inventory/hooks/useInventory'
-import { useAddProvider } from '@/states/queries/hooks/mutations'
+import { useMutationAddProvider } from '@/states/queries/hooks/mutations'
+import { useQueryAllProductsCategories } from '@/states/queries/hooks/queries'
 import { ProviderValidationSchema } from '@/validations/forms/addProvider.schema'
 import { PRIVATE_ROUTES } from '@/values'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,10 +34,17 @@ import { z } from 'zod'
 import LoaderIcon from '../icons/LoaderIcon'
 
 const ProviderForm = () => {
+  const {
+    data: productsCategory,
+    isLoading: isLoadingProductsCategory,
+    isError: isErrorProductsCategory
+  } = useQueryAllProductsCategories()
+  const {
+    mutateAsync: addProvider,
+    isPending,
+    isError
+  } = useMutationAddProvider()
   const navigate = useNavigate()
-  const { productsCategory } = useInventory()
-
-  const { mutateAsync: addProvider, isPending } = useAddProvider()
   const { toast } = useToast()
   const providerForm = useForm<z.infer<typeof ProviderValidationSchema>>({
     resolver: zodResolver(ProviderValidationSchema),
@@ -63,6 +70,16 @@ const ProviderForm = () => {
       navigate(PRIVATE_ROUTES.PROVIDERS)
     } catch (error) {
       console.error(error)
+      if (isError) {
+        toast({
+          title: 'Error al agregar proveedor',
+          variant: 'destructive'
+        })
+      }
+      toast({
+        title: 'Error al agregar proveedor',
+        variant: 'destructive'
+      })
     }
   }
   return (
@@ -143,7 +160,7 @@ const ProviderForm = () => {
                       )}
                     >
                       {field.value?.idCategoria
-                        ? productsCategory.find(
+                        ? productsCategory?.find(
                             category =>
                               category?.idCategoria === field.value?.idCategoria
                           )?.nombre ?? 'Elige una categoría'
@@ -158,26 +175,39 @@ const ProviderForm = () => {
                     <CommandList>
                       <CommandEmpty>Categoría no encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {productsCategory.map(category => (
-                          <CommandItem
-                            value={category.nombre}
-                            key={category.idCategoria}
-                            onSelect={() => {
-                              providerForm.setValue('categoria', category)
-                            }}
-                          >
-                            <BsCheck
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                category.idCategoria ===
-                                  field.value?.idCategoria
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {category.nombre}
-                          </CommandItem>
-                        ))}
+                        {isErrorProductsCategory && (
+                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                            Hubo un error al cargar las categorías
+                          </p>
+                        )}
+                        {isLoadingProductsCategory && (
+                          <div className='w-full'>
+                            <LoaderIcon className='mx-auto' />
+                          </div>
+                        )}
+                        {productsCategory != null &&
+                          !isLoadingProductsCategory &&
+                          !isErrorProductsCategory &&
+                          productsCategory.map(category => (
+                            <CommandItem
+                              value={category.nombre}
+                              key={category.idCategoria}
+                              onSelect={() => {
+                                providerForm.setValue('categoria', category)
+                              }}
+                            >
+                              <BsCheck
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  category.idCategoria ===
+                                    field.value?.idCategoria
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {category.nombre}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>

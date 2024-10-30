@@ -1,12 +1,34 @@
 import axios from '@/lib/axios'
-import { DetallEntradaSchema } from '@/validations/schemas/detalleEntrada.schema'
+import { DetalleSalidaSchema } from '@/validations/schemas/detalleSalida.schema'
 import { SalidaSchema } from '@/validations/schemas/salida.schema'
-import { AxiosError } from 'axios'
 import { z } from 'zod'
 import { ENDPOINTS } from './values/constants'
 
 /**
- * response after saving a salida
+SALIDA FORM:
+{
+  "cliente": {
+    "idCliente": 1
+  },
+  "tipoPago": {
+    "idTipoPago": 1
+  },
+  "costoTotal": 30.0
+}
+
+DETALLE SALIDA FORM:
+{
+  "salida": {
+    "idSalida": 4
+  },
+  "producto": {
+    "idProducto": 1
+  },
+  "cantidad": 2,
+  "costoUnitario":15.0,
+  "total": 30.0
+}
+response after saving a salida
  {
   "idSalida": 1,
   "cliente": {
@@ -23,7 +45,9 @@ import { ENDPOINTS } from './values/constants'
   },
   "fechaSalida": null,
   "costoTotal": 2.0
-} */
+} 
+  
+*/
 
 /**
  * response after saving a detalle salida
@@ -98,30 +122,14 @@ interface IDetalleSalidaResponse {
 }
 
 export const saveSalida = async (salida: z.infer<typeof SalidaSchema>) => {
-  try {
-    const { data } = await axios.post<ISalidaResponse>(ENDPOINTS.POST.ENTRADA.CREATE, salida)
-    return data
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      return null
-    }
-    return null
-  }
+  return await axios.post<ISalidaResponse>(ENDPOINTS.POST.SALIDA.CREATE, salida)
 }
 
 export const saveDetalleSalida = async (
-  detalleEntrada: z.infer<typeof DetallEntradaSchema>
+  detalleEntrada: z.infer<typeof DetalleSalidaSchema>
 ) => {
-  try {
-    const { data } = await axios.post<IDetalleSalidaResponse>(
-      ENDPOINTS.POST.DETALLE_SALIDA.CREATE,
-      detalleEntrada
-    )
-    return data
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      return null
-    }
-    return null
-  }
+  return await axios.post<IDetalleSalidaResponse>(
+    ENDPOINTS.POST.DETALLE_SALIDA.CREATE,
+    detalleEntrada
+  )
 }

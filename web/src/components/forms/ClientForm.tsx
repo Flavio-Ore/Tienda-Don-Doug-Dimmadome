@@ -13,13 +13,21 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
+import { useMutationAddClient } from '@/states/queries/hooks/mutations'
 import { ClientFormSchema } from '@/validations/forms/addClient.schema'
 import { PRIVATE_ROUTES } from '@/values'
+import { useEffect } from 'react'
 import { FaUserPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import LoaderIcon from '../icons/LoaderIcon'
 
 const ClientForm = () => {
+  const {
+    mutateAsync: saveCliente,
+    isPending,
+    isError
+  } = useMutationAddClient()
   const { toast } = useToast()
   const navigate = useNavigate()
 
@@ -34,19 +42,34 @@ const ClientForm = () => {
   const onSubmit = async (value: z.infer<typeof ClientFormSchema>) => {
     try {
       console.log(value)
+      await saveCliente(value)
       toast({
         title: 'Cliente registrado exitosamente',
         description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
+          <p>
+            El cliente con DNI <b>{value.dni}</b> ha sido registrado
+            exitosamente.
+          </p>
         )
       })
       navigate(PRIVATE_ROUTES.CLIENTS)
     } catch (error) {
       console.error(error)
+      toast({
+        title: 'Error al registrar el cliente, puede que ya exista, verifique',
+        variant: 'action'
+      })
     }
   }
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: 'Error al registrar el cliente',
+        variant: 'destructive'
+      })
+    }
+  }, [isError])
 
   return (
     <Form {...addClientForm}>
@@ -101,11 +124,14 @@ const ClientForm = () => {
             type='submit'
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Agregar Cliente
-            <FaUserPlus
-              size={20}
-              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
-            />
+            {!isPending && 'Agregar Cliente'}
+            {!isPending && (
+              <FaUserPlus
+                size={20}
+                className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
+              />
+            )}
+            {isPending && <LoaderIcon />}
           </Button>
         </div>
       </form>

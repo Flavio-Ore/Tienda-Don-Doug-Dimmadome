@@ -2,68 +2,75 @@
 import { z } from 'zod'
 
 /**
-  SALIDA:
-  {
+SALIDA FORM:
+{
   "cliente": {
     "idCliente": 1
   },
-  "tipoPago":{
+  "tipoPago": {
     "idTipoPago": 1
   },
-  "costoTotal": 2
+  "costoTotal": 30.0
 }
 
-DETALLE_SALIDA:
+DETALLE SALIDA FORM:
 {
   "salida": {
-    "idSalida": 1
+    "idSalida": 4
   },
   "producto": {
     "idProducto": 1
   },
   "cantidad": 2,
-  "costoUnitario":25,
-  "total": 50
+  "costoUnitario":15.0,
+  "total": 30.0
 }
- */
-
-
-/*
-export const SellProductFormSchema = z.object({
-  salida: z.object({
-    cliente: z.object({
-      idCliente: z.number()
-    }),
-    tipoPago: z.object({
-      idTipoPago: z.number()
-    }),
-    costoTotal: z.number()
-  }),
-  detalleSalida: z.object({
-    salida: z.object({
-      idSalida: z.number()
-    }),
-    producto: z.object({
-      idProducto: z.number()
-    }),
-    cantidad: z.number(),
-    costoUnitario: z.number(),
-    total: z.number()
-  })
-})
 */
 
 export const SellProductFormSchema = z.object({
-  idCliente: z.number().int().positive({
-    message: 'El cliente no es válido'
-  }),
-  idTipoPago: z.number().int().positive({
-    message: 'El tipo de pago no es válido'
-  }),
-  cantidad: z.number().nonnegative().min(1, {
-    message: 'La cantidad debe ser mayor o igual a 1'
-  }),
-  idProducto: z.number().int().positive(),
-  costoTotal: z.number().nonnegative(),
-  total: z.number().nonnegative()
+  idProducto: z
+    .number({
+      required_error: 'El producto es requerido'
+    })
+    .int()
+    .positive({
+      message: 'El producto no es válido'
+    }),
+  idCliente: z
+    .number({
+      required_error: 'El cliente es requerido'
+    })
+    .int()
+    .positive({
+      message: 'El cliente no es válido'
+    }),
+  idTipoPago: z
+    .number({
+      required_error: 'El tipo de pago es requerido'
+    })
+    .int()
+    .positive({
+      message: 'El tipo de pago no es válido'
+    }),
+  cantidad: z
+    .number({
+      required_error: 'La cantidad es requerida'
+    })
+    .nonnegative()
+    .min(1, {
+      message: 'La cantidad debe ser mayor o igual a 1'
+    }),
+  precioUnitario: z
+    .number({
+      required_error: 'El costo unitario es requerido'
+    })
+    .nonnegative()
+    .min(1, {
+      message: 'El costo unitario debe ser mayor o igual a 1'
+    }),
+  total: z
+    .number({
+      required_error: 'El total es requerido'
+    })
+    .nonnegative()
 })

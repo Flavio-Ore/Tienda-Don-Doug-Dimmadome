@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 import { useQueryAllKardexs } from '@/states/queries/hooks/queries'
 import { type IKardex } from '@/types'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import { FaClipboardList, FaSearch } from 'react-icons/fa'
 import { FaTableCellsRowLock } from 'react-icons/fa6'
 import TableKardex from './components/TableKardex'
@@ -105,8 +105,6 @@ const Kardex = () => {
             id: 'costoTotalSalida',
             header: 'C.T',
             cell: info => {
-              // if (info.row.original.tipoOperacion === 'Venta') {
-              // }
               return <span>{info.getValue()}</span>
             }
           })
@@ -188,7 +186,6 @@ const Kardex = () => {
           />
         </div>
       </div>
-      <hr className='border-light-3 mt-5' />
       {isErrorKardexs && (
         <p className='text-red-700 body-bold text-center w-full animate-pulse'>
           Hubo un error al cargar los kardexs de inventario
@@ -199,11 +196,11 @@ const Kardex = () => {
           <LoaderIcon className='mx-auto' />
         </div>
       )}
-      {filteredKardexsByProducts.map(kardex => (
-        <>
-          <section key={kardex[0].producto.idProducto}>
+      {filteredKardexsByProducts.map((kardex, index) => (
+        <Fragment key={index}>
+          <section>
             <div className='inline-flex items-center mb-4 gap-x-4'>
-              <FaClipboardList  size={36} className='fill-blue-500' />
+              <FaClipboardList size={36} className='fill-blue-500' />
               <h3 className='text-light-2 font-ubuntu text-3xl'>
                 {kardex[0].producto.nombre}
               </h3>
@@ -211,7 +208,7 @@ const Kardex = () => {
             <TableKardex columns={columns} data={kardex} />
           </section>
           <hr className='border-light-3 mt-5' />
-        </>
+        </Fragment>
       ))}
       {/* <TableKardex columns={columns} data={kardexs} />
       <hr className='border-light-3 mt-5' /> */}

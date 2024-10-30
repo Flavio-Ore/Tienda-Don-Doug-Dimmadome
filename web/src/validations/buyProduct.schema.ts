@@ -30,11 +30,18 @@ formulario detalle Entrada
 */
 
 export const BuyProductSchema = z.object({
-  idUsuario: z.number().nonnegative({
+  idUsuario: z.number({
+    required_error: 'El ID del usuario es requerido'
+  }).nonnegative({
     message: 'El ID del usuario no puede ser negativo'
   }),
-  idProducto: z.number().nonnegative({
-    message: 'El ID del producto no puede ser negativo'
+  producto: z.object({
+    idProducto: z.number().nonnegative({
+      message: 'El ID del producto no puede ser negativo'
+    }),
+    nombreProducto: z.string().min(1, {
+      message: 'El nombre del producto no puede estar vacío'
+    })
   }),
   idProveedor: z.number().nonnegative({
     message: 'El ID del proveedor no puede ser negativo'
@@ -42,7 +49,7 @@ export const BuyProductSchema = z.object({
   cantidad: z.number().min(1, {
     message: 'La cantidad debe ser mayor a 0'
   }),
-  costo_unitario: z.number().min(1, {
+  costoUnitario: z.number().min(1, {
     message: 'El precio unitario debe ser mayor a 0'
   }),
   total: z.number().nonnegative({

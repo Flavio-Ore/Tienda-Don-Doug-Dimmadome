@@ -1,14 +1,15 @@
 /**formulario entrada
+formulario entrada
 {
-  "usuario":
-  {
-    "idUsuario": 1
+  "usuario": {
+    "idUsuario": 2
   },
-  "proveedor":{
-    "idProveedor": 1
+  "proveedor": {
+    "id": 5
   },
-  "total": 200
-} */
+  "total": 6
+}
+*/
 
 import { z } from 'zod'
 
@@ -19,7 +20,7 @@ export const EntradaSchema = z.object({
     })
   }),
   proveedor: z.object({
-    idProveedor: z.number().nonnegative({
+    id: z.number().nonnegative({
       message: 'El proveedor es obligatorio'
     })
   }),

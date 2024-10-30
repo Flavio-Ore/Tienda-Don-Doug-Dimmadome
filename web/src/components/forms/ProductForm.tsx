@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils'
-import useInventory from '@/states/inventory/hooks/useInventory'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
@@ -21,7 +20,9 @@ import { FaParachuteBox, FaRegCalendarAlt } from 'react-icons/fa'
 import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { useToast } from '@/hooks/use-toast'
-import { useAddProduct } from '@/states/queries/hooks/mutations'
+import { useMutationAddProduct } from '@/states/queries/hooks/mutations'
+import { useQueryAllProductsCategories } from '@/states/queries/hooks/queries'
+import LoaderIcon from '@components/icons/LoaderIcon'
 import { Calendar } from '@shadcn/calendar'
 import {
   Command,
@@ -35,10 +36,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import LoaderIcon from '../icons/LoaderIcon'
-const ProductForm = () => {
-  const { addProduct: addProductInventory, productsCategory } = useInventory()
-  const { mutateAsync: addProduct, isPending } = useAddProduct()
+const ProductForm = () => {  
+  const {
+    data: productsCategory,
+    isLoading: isLoadingProductsCategory,
+    isError: isErrorProductsCategory
+  } = useQueryAllProductsCategories()
+  const {
+    mutateAsync: addProduct,
+    isPending,
+    isError
+  } = useMutationAddProduct()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -57,16 +65,7 @@ const ProductForm = () => {
   const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
-
-      addProductInventory({
-        nombre: value.nombre,
-        precioUnitario: value.precioUnitario,
-        stock: value.stock,
-        fechaVencimiento: value.fechaVencimiento,
-        categoria: value.categoria
-      })
-
-      await addProduct(value)
+     await addProduct(value)
 
       toast({
         title: 'Producto agregado',
@@ -74,6 +73,12 @@ const ProductForm = () => {
       })
     } catch (error) {
       console.error(error)
+      if (isError) {
+        toast({
+          title: 'Error al agregar producto',
+          variant: 'destructive'
+        })
+      }
     }
   }
 
@@ -235,7 +240,7 @@ const ProductForm = () => {
                       )}
                     >
                       {field.value?.idCategoria
-                        ? productsCategory.find(
+                        ? productsCategory?.find(
                             category =>
                               category?.idCategoria === field.value?.idCategoria
                           )?.nombre ?? 'Elige una categoría'
@@ -250,26 +255,39 @@ const ProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Categoría no encontrada.</CommandEmpty>
                       <CommandGroup>
-                        {productsCategory.map(category => (
-                          <CommandItem
-                            value={category.nombre}
-                            key={category.idCategoria}
-                            onSelect={() => {
-                              productForm.setValue('categoria', category)
-                            }}
-                          >
-                            <BsCheck
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                category.idCategoria ===
-                                  field.value?.idCategoria
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {category.nombre}
-                          </CommandItem>
-                        ))}
+                        {isErrorProductsCategory && (
+                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                            Hubo un error al cargar las categorías
+                          </p>
+                        )}
+                        {isLoadingProductsCategory && (
+                          <div className='w-full'>
+                            <LoaderIcon className='mx-auto' />
+                          </div>
+                        )}
+                        {productsCategory != null &&
+                          !isLoadingProductsCategory &&
+                          !isErrorProductsCategory &&
+                          productsCategory.map(category => (
+                            <CommandItem
+                              value={category.nombre}
+                              key={category.idCategoria}
+                              onSelect={() => {
+                                productForm.setValue('categoria', category)
+                              }}
+                            >
+                              <BsCheck
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  category.idCategoria ===
+                                    field.value?.idCategoria
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {category.nombre}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>

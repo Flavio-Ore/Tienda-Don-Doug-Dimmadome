@@ -77,6 +77,16 @@ const Providers = () => {
           />
         </div>
       </div>
+      {isProvidersLoading && (
+        <div className='w-full'>
+          <LoaderIcon className='mx-auto' />
+        </div>
+      )}
+      {isProvidersError && (
+        <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+          Hubo un error al cargar los proveedores
+        </p>
+      )}
       {isTyping && providers != null && searchedProviders.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No se encontraron clientes
@@ -88,16 +98,6 @@ const Providers = () => {
         </p>
       )}
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
-        {isProvidersLoading && (
-          <div className='w-full'>
-            <LoaderIcon className='mx-auto' />
-          </div>
-        )}
-        {isProvidersError && (
-          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
-            Hubo un error al cargar los proveedores
-          </p>
-        )}
         {isTyping &&
           !isProvidersLoading &&
           !isProvidersError &&

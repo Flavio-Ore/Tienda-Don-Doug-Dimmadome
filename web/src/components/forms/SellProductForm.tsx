@@ -16,6 +16,7 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
+import { useMutationSellProduct } from '@/states/queries/hooks/mutations'
 import {
   useQueryAllClients,
   useQueryAllPaymentMethods
@@ -39,7 +40,11 @@ import { useQueryAllProducts } from '../../states/queries/hooks/queries'
 import LoaderIcon from '../icons/LoaderIcon'
 
 const SellProductForm = () => {
-  const { data: clients } = useQueryAllClients()
+  const {
+    data: clients,
+    isLoading: isLoadingClients,
+    isError: isErrorClients
+  } = useQueryAllClients()
   const {
     data: paymentMethods,
     isLoading: isLoadingPaymentMethods,
@@ -50,6 +55,11 @@ const SellProductForm = () => {
     isLoading: isLoadingProducts,
     isError: isErrorProducts
   } = useQueryAllProducts()
+  const {
+    mutateAsync: sellProduct,
+    isPending,
+    isError
+  } = useMutationSellProduct()
   const { toast } = useToast()
   const navigate = useNavigate()
 
@@ -57,10 +67,10 @@ const SellProductForm = () => {
     resolver: zodResolver(SellProductFormSchema),
     defaultValues: {
       idCliente: 0,
+      precioUnitario: 0,
       idTipoPago: undefined,
       cantidad: 1,
       idProducto: 0,
-      costoTotal: 0,
       total: 0
     }
   })
@@ -70,22 +80,40 @@ const SellProductForm = () => {
   ) => {
     try {
       console.log(value)
+      await sellProduct(value)
       toast({
         title: 'Producto vendido',
         description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
+          <p>
+            Se ha vendido el producto{' '}
+            {products?.find(product => product.idProducto === value.idProducto)
+              ?.nombre ?? 'Producto'}{' '}
+            al cliente{' '}
+            {clients?.find(client => client.idCliente === value.idCliente)
+              ?.nombreCliente ?? 'Cliente'}
+          </p>
         )
       })
       navigate(PRIVATE_ROUTES.SELL_PRODUCT)
     } catch (error) {
       console.error(error)
+      if (isError) {
+        toast({
+          title: 'Error al vender producto',
+          variant: 'destructive'
+        })
+        return
+      }
+      toast({
+        title: 'Error al vender producto',
+        variant: 'destructive'
+      })
     }
   }
 
   const watchCantidad = sellProductForm.watch('cantidad')
   const watchIdProducto = sellProductForm.watch('idProducto')
+
   useEffect(() => {
     if (products == null) return
     const selectedProduct = products.find(
@@ -93,15 +121,21 @@ const SellProductForm = () => {
     )
     if (selectedProduct != null) {
       sellProductForm.setValue(
-        'costoTotal',
-        selectedProduct.precioUnitario * watchCantidad
-      )
-      sellProductForm.setValue(
         'total',
         selectedProduct.precioUnitario * watchCantidad
       )
     }
   }, [watchCantidad, watchIdProducto])
+
+  useEffect(() => {
+    if (products == null) return
+    const selectedProduct = products.find(
+      product => product.idProducto === sellProductForm.getValues('idProducto')
+    )
+    if (selectedProduct != null) {
+      sellProductForm.setValue('precioUnitario', selectedProduct.precioUnitario)
+    }
+  }, [watchIdProducto])
 
   return (
     <Form {...sellProductForm}>
@@ -139,9 +173,33 @@ const SellProductForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un cliente...' />
                     <CommandList>
-                      <CommandEmpty>Cliente no encontrado.</CommandEmpty>
+                      {!isErrorClients &&
+                        !isLoadingClients &&
+                        clients?.length === 0 && (
+                          <CommandEmpty>
+                            Registra un cliente para vender
+                          </CommandEmpty>
+                        )}
+                      {clients != null &&
+                        !isErrorClients &&
+                        !isLoadingClients &&
+                        clients?.length > 0 && (
+                          <CommandEmpty>Cliente no encontrado.</CommandEmpty>
+                        )}
                       <CommandGroup>
+                        {isErrorClients && (
+                          <CommandEmpty className='text-red-700 text-center w-full animate-pulse'>
+                            Hubo un error al cargar los clientes
+                          </CommandEmpty>
+                        )}
+                        {isLoadingClients && (
+                          <CommandEmpty>
+                            <LoaderIcon className='mx-auto' />
+                          </CommandEmpty>
+                        )}
                         {clients != null &&
+                          !isLoadingClients &&
+                          !isErrorClients &&
                           clients.map(client => (
                             <CommandItem
                               value={client.idCliente.toString()}
@@ -216,6 +274,8 @@ const SellProductForm = () => {
                           </div>
                         )}
                         {paymentMethods != null &&
+                          !isLoadingPaymentMethods &&
+                          !isErrorPaymentMethods &&
                           paymentMethods.map(paymentMethod => (
                             <CommandItem
                               value={paymentMethod.nombre}
@@ -357,6 +417,8 @@ const SellProductForm = () => {
                           </div>
                         )}
                         {products != null &&
+                          !isLoadingProducts &&
+                          !isErrorProducts &&
                           products.map(product => {
                             return (
                               <CommandItem
@@ -392,12 +454,32 @@ const SellProductForm = () => {
         />
         <FormField
           control={sellProductForm.control}
+          name='precioUnitario'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>Precio Unitario</FormLabel>
+              <FormControl>
+                <Input
+                  type='number'
+                  readOnly
+                  disabled={sellProductForm.getValues('precioUnitario') <= 0}
+                  placeholder='Precio unitario del producto'
+                  {...field}
+                  onChange={e => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage className='shad-form_message' />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={sellProductForm.control}
           name='cantidad'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Cantidad</FormLabel>
               <FormControl>
-                <Input
+                <Input                
                   type='number'
                   disabled={sellProductForm.getValues('idProducto') <= 0}
                   placeholder='Cantidad de productos'
@@ -414,7 +496,7 @@ const SellProductForm = () => {
           control={sellProductForm.control}
           name='total'
           render={({ field }) => (
-            <FormItem className='hidden'>
+            <FormItem>
               <FormLabel className='shad-form_label'>Total</FormLabel>
               <FormControl>
                 <Input
@@ -422,28 +504,6 @@ const SellProductForm = () => {
                   readOnly
                   placeholder='Precio total de los productos a vender'
                   max={999_999}
-                  min={0}
-                  {...field}
-                  onChange={e => {
-                    field.onChange(Number(e.target.value))
-                  }}
-                />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={sellProductForm.control}
-          name='costoTotal'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>Precio total</FormLabel>
-              <FormControl>
-                <Input
-                  type='number'
-                  readOnly
-                  placeholder='Precio total de los productos a vender'
                   min={0}
                   {...field}
                   onChange={e => {
@@ -469,13 +529,17 @@ const SellProductForm = () => {
           <Button
             variant='default'
             type='submit'
+            disabled={isPending}
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Vender
-            <FaRegHandshake
-              size={20}
-              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
-            />
+            {!isPending && 'Vender Producto'}
+            {!isPending && (
+              <FaRegHandshake
+                size={20}
+                className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
+              />
+            )}
+            {isPending && <LoaderIcon />}
           </Button>
         </div>
       </form>

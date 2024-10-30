@@ -93,6 +93,7 @@ export interface ICategoriaProducto {
   idCategoria: number
   nombre: string
 }
+
 export interface IProducto {
   idProducto: number
   nombre: string
@@ -102,7 +103,6 @@ export interface IProducto {
   categoria: ICategoriaProducto
   estado: string
 }
-
 export interface ITipoPago {
   idTipoPago: number
   nombre: string
@@ -150,12 +150,49 @@ export interface ISalida {
   fechaSalida: string
   costoTotal: number
 }
+
 export interface IEntrada {
-  11
+  idEntrada: number
+  usuario: IUsuario
+  proveedor: IProveedor
+  fechaEntrada: string | Date
+  total: number
 }
 
-export type IDetalleSalida = any
-export type IDetalleEntrada = any
+export interface IDetalleEntrada {
+  idDetalle: number
+  entrada: IEntrada
+  producto: IProducto
+  nombreProducto: string
+  cantidad: number
+  costoUnitario: number
+  subtotal: number
+}
+
+export interface Usuario {
+  idUsuario: number
+  nombre: string
+  email: string
+  contrasena: string
+  fechaCreacion: Date
+  estado: string
+  tipoUsuario: TipoUsuario
+}
+
+export interface TipoUsuario {
+  idTipoUsuario: number
+  nombre: string
+}
+
+export interface Producto {
+  idProducto: number
+  nombre: string
+  precioUnitario: number
+  stock: number
+  fechaVencimiento: Date
+  categoria: Categoria
+  estado: string
+}
 
 export interface ITipoUsuario {
   idTipoUsuario: number
@@ -177,7 +214,6 @@ export interface ILoginResponse {
   message: string
   tipoUsuarioId?: number
 }
-
 export interface Producto {
   idProducto: number
   nombre: string

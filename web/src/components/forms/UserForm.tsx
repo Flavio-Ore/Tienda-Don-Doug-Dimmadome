@@ -15,7 +15,8 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import { useMutationAddUser } from '@/states/queries/hooks/mutations'
+import { useQueryAllUserTypes } from '@/states/queries/hooks/queries'
 import { UserSchema } from '@/validations/forms/addUser.schema'
 import { PRIVATE_ROUTES } from '@/values'
 import {
@@ -27,14 +28,20 @@ import {
   CommandList
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BsCheck } from 'react-icons/bs'
 import { FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import LoaderIcon from '../icons/LoaderIcon'
 
 const UserForm = () => {
-  const { addUser, userTypes } = useInventory()
+  const {
+    data: userTypes,
+    isLoading: isLoadingUserTypes,
+    isError: isErrorUserTypes
+  } = useQueryAllUserTypes()
+  const { mutateAsync: addUser, isPending, isError } = useMutationAddUser()
   const [showPassword, setShowPassword] = useState(false)
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -58,9 +65,10 @@ const UserForm = () => {
       toast({
         title: 'Usuario creado exitosamente',
         description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
+          <p>
+            El usuario <strong>{value.nombre}</strong> ha sido creado
+            exitosamente.
+          </p>
         )
       })
       navigate(PRIVATE_ROUTES.USERS)
@@ -68,6 +76,16 @@ const UserForm = () => {
       console.error(error)
     }
   }
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: 'Error al crear el usuario',
+        description:
+          ' Ocurrió un error al intentar crear el usuario. Por favor, intenta de nuevo.'
+      })
+    }
+  }, [isError])
 
   return (
     <Form {...userForm}>
@@ -155,8 +173,8 @@ const UserForm = () => {
                         }
                       )}
                     >
-                      {field.value?.nombre != null
-                        ? userTypes.find(
+                      {field.value != null
+                        ? userTypes?.find(
                             returnType =>
                               returnType.idTipoUsuario ===
                               field.value.idTipoUsuario
@@ -174,25 +192,39 @@ const UserForm = () => {
                         Tipo de usuario no encontrado.
                       </CommandEmpty>
                       <CommandGroup>
-                        {userTypes.map(userType => (
-                          <CommandItem
-                            value={userType.nombre}
-                            key={userType.idTipoUsuario}
-                            onSelect={() => {
-                              userForm.setValue('tipoUsuario', userType)
-                            }}
-                          >
-                            <BsCheck
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                userType === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {userType.nombre}
-                          </CommandItem>
-                        ))}
+                        {isLoadingUserTypes && (
+                          <div>
+                            <LoaderIcon className='mx-auto' />
+                          </div>
+                        )}
+                        {isErrorUserTypes && (
+                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                            Hubo un error al cargar los tipos de usuario
+                          </p>
+                        )}
+                        {userTypes != null &&
+                          !isLoadingUserTypes &&
+                          !isErrorUserTypes &&
+                          userTypes.length > 0 &&
+                          userTypes.map(userType => (
+                            <CommandItem
+                              value={userType.nombre}
+                              key={userType.idTipoUsuario}
+                              onSelect={() => {
+                                userForm.setValue('tipoUsuario', userType)
+                              }}
+                            >
+                              <BsCheck
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  userType === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {userType.nombre}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -216,13 +248,17 @@ const UserForm = () => {
           <Button
             variant='default'
             type='submit'
+            disabled={isPending}
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Crear Usuario
-            <FaUserPlus
-              size={20}
-              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
-            />
+            {!isPending && 'Crear Usuario'}
+            {!isPending && (
+              <FaUserPlus
+                size={20}
+                className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
+              />
+            )}
+            {isPending && <LoaderIcon />}
           </Button>
         </div>
       </form>

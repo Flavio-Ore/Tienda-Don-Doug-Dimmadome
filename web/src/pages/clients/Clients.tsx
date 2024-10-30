@@ -17,20 +17,19 @@ const Clients = () => {
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
   const isTyping = searchValue !== ''
-  const searchedClients = useMemo(
-    () =>
+  const searchedClients = useMemo(() => {
+    const debouncedValueLower = debouncedValue.toLowerCase()
+    return (
       clients?.filter(
         c =>
-          c.nombreCliente
-            .toLowerCase()
-            .includes(debouncedValue.toLowerCase()) ||
-          c.numeroDocumento.toString().includes(debouncedValue) ||
-          c.direccion?.toLowerCase().includes(debouncedValue.toLowerCase()) ||
-          c.fechaRegistro.toString().includes(debouncedValue.toLowerCase()) ||
-          c.estado.toString().includes
-      ) ?? [],
-    [debouncedValue, clients]
-  )
+          c.nombreCliente.toLowerCase().includes(debouncedValueLower) ||
+          c.numeroDocumento.toString().includes(debouncedValueLower) ||
+          c.direccion?.toLowerCase().includes(debouncedValueLower) ||
+          c.fechaRegistro.toString().includes(debouncedValueLower) ||
+          c.estado.toString().includes(debouncedValueLower)
+      ) ?? []
+    )
+  }, [debouncedValue, clients])
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     setSearchValue(value)
@@ -107,7 +106,7 @@ const Clients = () => {
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
         {isTyping &&
           !isLoadingClients &&
-          isErrorClients &&
+          !isErrorClients &&
           clients != null &&
           searchedClients.length > 0 &&
           searchedClients.map(client => (
@@ -116,7 +115,7 @@ const Clients = () => {
 
         {!isTyping &&
           !isLoadingClients &&
-          isErrorClients &&
+          !isErrorClients &&
           clients != null &&
           clients.length > 0 &&
           clients.map(client => (

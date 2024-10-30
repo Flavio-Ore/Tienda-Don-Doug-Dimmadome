@@ -1,3 +1,4 @@
+import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,20 +9,73 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
+import { useMutationChangeProductState } from '@/states/queries/hooks/mutations'
 import { IProducto } from '@/types'
 import { format } from 'date-fns'
+import { useEffect } from 'react'
 
 const ProductCard = ({ product }: { product: IProducto }) => {
-  const { activateProduct, inactivateProduct } = useInventory()
+  const {
+    mutateAsync: activateProduct,
+    isPending,
+    isError
+  } = useMutationChangeProductState()
+  const { toast } = useToast()
+  const handleClick = async ({
+    productId,
+    productState
+  }: {
+    productId: number
+    productState: string
+  }) => {
+    try {
+      if (productState.toLowerCase() === 'activo') {
+        await activateProduct({
+          idProducto: productId,
+          estado: 'inactivo'
+        })
+      } else {
+        await activateProduct({
+          idProducto: productId,
+          estado: 'activo'
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: 'Error al cambiar el estado del producto',
+        variant: 'action'
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: 'Error al cambiar el estado del producto',
+        variant: 'destructive'
+      })
+    }
+  }, [isError])
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>{product.nombre}</CardTitle>
         <CardDescription>
-          <Badge variant={product.estado.toLowerCase() === 'activo' ? 'on' : 'off'}>
+          <span
+            className={cn(
+              'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-red-700 text-light-1 shadow hover:bg-red-700/80',
+              {
+                'border-transparent bg-green-700 text-light-1 shadow hover:bg-green-700/80':
+                  product.estado.toLowerCase() === 'activo'
+              }
+            )}
+          >
             {product.estado}
-          </Badge>
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -52,17 +106,27 @@ const ProductCard = ({ product }: { product: IProducto }) => {
           <Button
             variant='outline'
             className='bg-red-900/10 hover:bg-red-900 hover:text-light-1'
-            onClick={() => inactivateProduct({ productId: product.idProducto })}
+            onClick={() =>
+              handleClick({
+                productId: product.idProducto,
+                productState: product.estado
+              })
+            }
           >
-            Desactivar Producto
+            {isPending ? <LoaderIcon /> : 'Desactivar Producto'}
           </Button>
         ) : (
           <Button
             variant='outline'
             className='bg-green-900/10 hover:bg-green-900 hover:text-light-1'
-            onClick={() => activateProduct({ productId: product.idProducto })}
+            onClick={() =>
+              handleClick({
+                productId: product.idProducto,
+                productState: product.estado
+              })
+            }
           >
-            Activar Producto
+            {isPending ? <LoaderIcon /> : 'Activar Producto'}
           </Button>
         )}
       </CardFooter>

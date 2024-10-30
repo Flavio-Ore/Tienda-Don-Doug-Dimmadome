@@ -45,6 +45,9 @@ export const ENDPOINTS = {
     }
   },
   POST: {
+    API_RENIEC: {
+      CREATE: '/api/reniec/dni'
+    },
     CLIENTE: {
       CREATE: '/cliente/guardar'
     },
