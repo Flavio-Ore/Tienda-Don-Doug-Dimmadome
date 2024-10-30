@@ -1,7 +1,7 @@
 import axios from 'axios'
 export default axios.create({
   baseURL: import.meta.env.DEV
-    ? import.meta.env.VITE_LOCAL_API_URL
-    : import.meta.env.VITE_PROD_API_URL,
+    ? 'http://localhost:8089/'
+    : 'https://tienda-don-doug-dimmadomev3-586821467377.us-central1.run.app/',
   withCredentials: false
 })
