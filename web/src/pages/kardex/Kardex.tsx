@@ -1,4 +1,5 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useQueryAllKardexs } from '@/states/queries/hooks/queries'
 import { type IKardex } from '@/types'
@@ -14,7 +15,8 @@ const Kardex = () => {
   const {
     data: kardexs,
     isLoading: isLoadingKardexs,
-    isError: isErrorKardexs
+    isError: isErrorKardexs,
+    refetch
   } = useQueryAllKardexs()
   const columns = useMemo<ColumnDef<IKardex>[]>(
     () => [
@@ -199,11 +201,16 @@ const Kardex = () => {
       {filteredKardexsByProducts.map((kardex, index) => (
         <Fragment key={index}>
           <section>
-            <div className='inline-flex items-center mb-4 gap-x-4'>
-              <FaClipboardList size={36} className='fill-blue-500' />
-              <h3 className='text-light-2 font-ubuntu text-3xl'>
-                {kardex[0].producto.nombre}
-              </h3>
+            <div className='flex flex-wrap justify-between items-center w-full mb-4 gap-x-4 gap-y-4'>
+              <div className='inline-flex gap-x-4 items-center'>
+                <FaClipboardList size={36} className='fill-blue-500' />
+                <h3 className='text-light-2 font-ubuntu text-3xl'>
+                  {kardex[0].producto.nombre}
+                </h3>
+              </div>
+              <Button variant='secondary' onClick={() => refetch()}>
+                Refrescar
+              </Button>
             </div>
             <TableKardex columns={columns} data={kardex} />
           </section>

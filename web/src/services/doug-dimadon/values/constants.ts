@@ -1,17 +1,17 @@
 export const ENDPOINTS = {
   GET: {
     CLIENTE: {
-      READ_ALL: '/cliente/listar'
+      READ_ALL: '/cliente/obtener'
     },
     CATEGORIA: {
-      READ_ALL: '/categoria'
+      READ_ALL: '/categoria/obtener'
     },
     PRODUCTO: {
-      READ_ALL: '/producto',
+      READ_ALL: '/producto/obtener',
       ESTADO: '/producto/estado/{estado}'
     },
     USUARIO: {
-      READ_ALL: '/usuarios',
+      READ_ALL: '/usuarios/obtener',
       ESTADO: '/usuarios/estado/{estado}'
     },
     INVENTARIO: {
@@ -38,10 +38,10 @@ export const ENDPOINTS = {
       READ_ULTIMO_ID: '/detalleEntrada/ultimoIdEntrada'
     },
     TIPO_PAGO: {
-      READ_ALL: '/tipoPago'
+      READ_ALL: '/tipoPago/obtener'
     },
     TIPO_USUARIO: {
-      READ_ALL: '/tipoUsuario'
+      READ_ALL: '/tipoUsuario/obtener'
     }
   },
   POST: {
@@ -49,13 +49,13 @@ export const ENDPOINTS = {
       CREATE: '/api/reniec/dni'
     },
     CLIENTE: {
-      CREATE: '/cliente/guardar'
+      CREATE: '/cliente/insertar'
     },
     CATEGORIA: {
       CREATE: '/categoria'
     },
     PRODUCTO: {
-      CREATE: '/producto'
+      CREATE: '/producto/insertar'
     },
     USUARIO: {
       CREATE: '/usuarios',

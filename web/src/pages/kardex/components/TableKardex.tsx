@@ -13,7 +13,6 @@ import {
   getCoreRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useReducer } from 'react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -24,7 +23,6 @@ const TableKardex = <TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) => {
-  const rerender = useReducer(() => ({}), {})[1]
   const table = useReactTable({
     data,
     columns,
@@ -38,7 +36,6 @@ const TableKardex = <TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-
                 {headerGroup.headers.map(header => (
                   <TableHead key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder
@@ -80,10 +77,6 @@ const TableKardex = <TData, TValue>({
             )}
           </TableBody>
         </Table>
-        <div className='h-4' />
-        <button onClick={() => rerender()} className='border p-2'>
-          Refrescar
-        </button>
       </div>
     </div>
   )
