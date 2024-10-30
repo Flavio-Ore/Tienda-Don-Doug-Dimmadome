@@ -1,7 +1,7 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import useInventory from '@/states/inventory/hooks/useInventory'
-import { useSignin } from '@/states/queries/hooks/mutations'
+import { useMutationSignin } from '@/states/queries/hooks/mutations'
 import { SigninSchema } from '@/validations/forms/signIn.schema'
 import { PRIVATE_ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
@@ -25,7 +25,7 @@ import { z } from 'zod'
 const SigninForm = ({ className }: { className?: string }) => {
   const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
-  const { mutateAsync, isPending } = useSignin()
+  const { mutateAsync, isPending } = useMutationSignin()
   const { checkAuth } = useInventory()
   const nagivation = useNavigate()
   const form = useForm<z.infer<typeof SigninSchema>>({
@@ -50,15 +50,15 @@ const SigninForm = ({ className }: { className?: string }) => {
         email: values.email,
         password: values.contrasena
       })
-      if (loginRes.success) {
+      if (loginRes.data.success) {
         toast({
-          title: loginRes.message,
+          title: loginRes.data.message,
           variant: 'accepted'
         })
         nagivation(PRIVATE_ROUTES.INVENTORY)
       } else {
         toast({
-          title: loginRes.message,
+          title: loginRes.data.message,
           variant: 'destructive'
         })
       }

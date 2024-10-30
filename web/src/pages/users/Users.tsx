@@ -1,23 +1,34 @@
 import UserForm from '@/components/forms/UserForm'
+import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/useDebounce'
 import UserCard from '@/pages/users/components/UserCard'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import { useQueryAllUsers } from '@/states/queries/hooks/queries'
 import { useMemo, useState } from 'react'
 import { FaSearch, FaUsersCog } from 'react-icons/fa'
 import { FaUsersViewfinder } from 'react-icons/fa6'
 const Users = () => {
+  const {
+    data: users,
+    isLoading: isLoadingUsers,
+    isError: isErrorUsers
+  } = useQueryAllUsers()
   const [searchValue, setSearchValue] = useState('')
-  const { users, searchUsers } = useInventory()
   const debouncedValue = useDebounce(searchValue, 500)
   const isTyping = searchValue !== ''
-  const searchedUsers = useMemo(
-    () =>
-      searchUsers({
-        searchTerm: debouncedValue
-      }),
-    [debouncedValue]
-  )
+  const searchedUsers = useMemo(() => {
+    const debouncedValueLower = debouncedValue.toLowerCase()
+    return (
+      users?.filter(
+        c =>
+          c.nombre.toLowerCase().includes(debouncedValueLower) ||
+          c.tipoUsuario.nombre.toString().includes(debouncedValueLower) ||
+          c.email.toLowerCase().includes(debouncedValueLower) ||
+          c.fechaCreacion.toString().includes(debouncedValueLower) ||
+          c.estado.toString().includes(debouncedValueLower)
+      ) ?? []
+    )
+  }, [debouncedValue, users])
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
     setSearchValue(value)
@@ -63,22 +74,42 @@ const Users = () => {
           />
         </div>
       </div>
-      {isTyping && searchUsers.length <= 0 && (
+      {isErrorUsers && (
+        <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+          Hubo un error al cargar los usuarios
+        </p>
+      )}
+      {isLoadingUsers && (
+        <div className='w-full'>
+          <LoaderIcon className='mx-auto' />
+        </div>
+      )}
+      {isTyping && searchedUsers.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
           No se encontraron usuarios
         </p>
       )}
-      {!isTyping && users.length <= 0 && (
-        <p className='text-light-3 body-bold text-center w-full'>
-          No se encontraron usuarios
-        </p>
-      )}
+      {!isTyping &&
+        !isLoadingUsers &&
+        !isErrorUsers &&
+        users != null &&
+        users.length <= 0 && (
+          <p className='text-light-3 body-bold text-center w-full'>
+            No se encontraron usuarios
+          </p>
+        )}
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
         {isTyping &&
+          !isLoadingUsers &&
+          !isErrorUsers &&
+          users != null &&
           searchedUsers.length > 0 &&
           searchedUsers.map(user => <UserCard key={user.email} user={user} />)}
 
         {!isTyping &&
+          !isLoadingUsers &&
+          !isErrorUsers &&
+          users != null &&
           users.length > 0 &&
           users.map(user => <UserCard key={user.email} user={user} />)}
       </div>

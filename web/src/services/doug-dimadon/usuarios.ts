@@ -3,32 +3,28 @@ import { ILoginResponse, IUsuario } from '@/types'
 import { UserSchema } from '@/validations/forms/addUser.schema'
 import { SigninSchema } from '@/validations/forms/signIn.schema'
 import { ENDPOINTS } from '@doug-dimadon/values/constants'
-import { AxiosError } from 'axios'
 import { z } from 'zod'
 export const getAllUsuarios = async () => {
-  const { data } = await axios.get(ENDPOINTS.GET.USUARIO.READ_ALL)
-  return data
+  return await axios.get<IUsuario[]>(ENDPOINTS.GET.USUARIO.READ_ALL)
 }
 
 export const saveUsuario = async (usuario: z.infer<typeof UserSchema>) => {
-  const { data } = await axios.post<IUsuario>(
-    ENDPOINTS.POST.USUARIO.CREATE,
-    usuario
-  )
-  return data
+  return await axios.post<IUsuario>(ENDPOINTS.POST.USUARIO.CREATE, usuario)
 }
 
 export const loginUsuario = async (usuario: z.infer<typeof SigninSchema>) => {
-  try {
-    const { data } = await axios.post<ILoginResponse>(
-      ENDPOINTS.POST.USUARIO.LOGIN,
-      usuario
-    )
-    return data
-  } catch (error) {
-    console.log(error)
-    if (error instanceof AxiosError) {
-      return error.response?.data
-    }
-  }
+  return await axios.post<ILoginResponse>(ENDPOINTS.POST.USUARIO.LOGIN, usuario)
+}
+
+export const updateEstadoUsuario = async ({
+  idUsuario,
+  estado
+}: {
+  idUsuario: number
+  estado: 'activo' | 'inactivo'
+}) => {
+  return await axios.put<IUsuario>(`usuarios/${idUsuario}/estado`, {
+    idUsuario,
+    estado
+  })
 }

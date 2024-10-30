@@ -1,15 +1,17 @@
-/**formulario dealleSalida
+/**
+DETALLE SALIDA FORM:
 {
   "salida": {
-    "idSalida": 1
+    "idSalida": 4
   },
   "producto": {
     "idProducto": 1
   },
   "cantidad": 2,
-  "costoUnitario":25,
-  "total": 50
-} */
+  "costoUnitario":15.0,
+  "total": 30.0
+}
+*/
 
 import { z } from 'zod'
 

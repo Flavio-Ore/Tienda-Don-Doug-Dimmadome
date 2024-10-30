@@ -9,7 +9,7 @@ import {
   FormMessage
 } from '@shadcn/form'
 import { Input } from '@shadcn/input'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaRegHandshake } from 'react-icons/fa6'
 
@@ -22,7 +22,12 @@ import { z } from 'zod'
 import { cn } from '@/lib/utils'
 import { LuChevronsUpDown } from 'react-icons/lu'
 
-import useInventory from '@/states/inventory/hooks/useInventory'
+import { useMutationBuyProduct } from '@/states/queries/hooks/mutations'
+import {
+  useQueryAllProducts,
+  useQueryAllProviders,
+  useQueryAllUsers
+} from '@/states/queries/hooks/queries'
 import {
   Command,
   CommandEmpty,
@@ -33,42 +38,105 @@ import {
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
+import LoaderIcon from '../icons/LoaderIcon'
 
 const BuyProductForm = () => {
-  const { providers, products, users } = useInventory()
+  const {
+    data: products,
+    isLoading: isLoadingProducts,
+    isError: isErrorProducts
+  } = useQueryAllProducts()
+  const {
+    data: providers,
+    isLoading: isLoadingProviders,
+    isError: isErrorProviders
+  } = useQueryAllProviders()
+  const {
+    data: users
+    // isLoading: isLoadingUsers,
+    // isError: isErrorUsers
+  } = useQueryAllUsers()
+  const {
+    mutateAsync: buyProduct,
+    isPending,
+    isError
+  } = useMutationBuyProduct()
+
+  const currentUser = useMemo(() => {
+    return users?.find(user => user.idUsuario === 2) ?? null
+  }, [users])
+
+  console.log({
+    products,
+    providers,
+    users
+  })
+
   const { toast } = useToast()
   const navigate = useNavigate()
 
   const buyProductForm = useForm<z.infer<typeof BuyProductSchema>>({
     resolver: zodResolver(BuyProductSchema),
     defaultValues: {
-      idProducto: undefined,
-      idUsuario: users[0].idUsuario,
+      producto: undefined,
+      idUsuario: currentUser?.idUsuario ?? 0,
       idProveedor: undefined,
       cantidad: 1,
-      costo_unitario: 0,
+      costoUnitario: 0,
       total: 0
     }
   })
   const watchCantidad = buyProductForm.watch('cantidad')
-  const watchCostoUnitario = buyProductForm.watch('costo_unitario')
-  const watchIdProducto = buyProductForm.watch('idProducto')
+  const watchCostoUnitario = buyProductForm.watch('costoUnitario')
+  const watchIdProducto = buyProductForm.watch('producto')
+
   const onSubmit = async (value: z.infer<typeof BuyProductSchema>) => {
     try {
       console.log(value)
+      await buyProduct(value)
       toast({
         title: 'Producto comprado',
         description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
+          <p>
+            El producto <strong>{value.producto.nombreProducto}</strong> ha sido
+            comprado exitosamente por el usuario{' '}
+            <strong>{currentUser?.nombre}</strong>
+          </p>
         )
       })
       navigate(PRIVATE_ROUTES.BUY_PRODUCT)
     } catch (error) {
       console.error(error)
+      if (isError) {
+        toast({
+          title: 'Error al comprar producto',
+          description:
+            value.idUsuario === 0 ? (
+              <p>
+                El usuario <strong>{value.idUsuario}</strong> no existe
+              </p>
+            ) : (
+              <p>
+                Hubo un error al comprar el producto{' '}
+                <strong>{value.producto.nombreProducto}</strong>
+              </p>
+            ),
+          variant: 'destructive'
+        })
+        return
+      }
+      toast({
+        title: 'Error al comprar producto',
+        variant: 'destructive'
+      })
     }
   }
+
+  useEffect(() => {
+    if (currentUser != null) {
+      buyProductForm.setValue('idUsuario', currentUser.idUsuario)
+    }
+  }, [currentUser])
 
   useEffect(() => {
     buyProductForm.setValue('total', Number(watchCantidad * watchCostoUnitario))
@@ -89,24 +157,31 @@ const BuyProductForm = () => {
           control={buyProductForm.control}
           name='idUsuario'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='hidden'>
               <FormLabel className='shad-form_label'>Usuario</FormLabel>
-              <FormControl>
-                <Input
-                  readOnly
-                  placeholder='Usuario'
-                  value={
-                    users.find(user => user.idUsuario === field.value)?.nombre
-                  }
-                />
-              </FormControl>
+              {currentUser == null && (
+                <div className='w-full'>
+                  <LoaderIcon className='mx-auto' />
+                </div>
+              )}
+              {currentUser != null && (
+                <FormControl>
+                  <Input
+                    readOnly
+                    type='text'
+                    placeholder='Usuario que realiza la compra'
+                    {...field}
+                  />
+                </FormControl>
+              )}
+
               <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
         <FormField
           control={buyProductForm.control}
-          name='idProducto'
+          name='producto'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Producto</FormLabel>
@@ -118,12 +193,18 @@ const BuyProductForm = () => {
                       role='combobox'
                       className={cn(
                         'w-full justify-between outline outline-1 outline-light-3',
-                        !field.value && 'text-light-3'
+                        {
+                          'text-light-1': field.value,
+                          'text-light-3': !field.value
+                        }
                       )}
                     >
-                      {products.find(
-                        product => product.idProducto === field.value
-                      )?.nombre ?? 'Elige un producto'}
+                      {field.value
+                        ? products?.find(
+                            product =>
+                              product.idProducto === field.value.idProducto
+                          )?.nombre ?? 'Elige un producto'
+                        : 'Elige un producto'}
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
                   </FormControl>
@@ -134,30 +215,44 @@ const BuyProductForm = () => {
                     <CommandList>
                       <CommandEmpty>Producto no encontrado.</CommandEmpty>
                       <CommandGroup>
-                        {products.map(product => {
-                          return (
-                            <CommandItem
-                              value={product.idProducto.toString()}
-                              key={product.idProducto}
-                              onSelect={() => {
-                                buyProductForm.setValue(
-                                  'idProducto',
-                                  product.idProducto
-                                )
-                              }}
-                            >
-                              <BsCheck
-                                className={cn(
-                                  'mr-2 h-4 w-4',
-                                  product.idProducto === field.value
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
-                                )}
-                              />
-                              {product.nombre}
-                            </CommandItem>
-                          )
-                        })}
+                        {isErrorProducts && (
+                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                            Hubo un error al cargar los productos
+                          </p>
+                        )}
+                        {isLoadingProducts && (
+                          <div className='w-full'>
+                            <LoaderIcon className='mx-auto' />
+                          </div>
+                        )}
+                        {products != null &&
+                          !isLoadingProducts &&
+                          !isErrorProducts &&
+                          products.map(product => {
+                            return (
+                              <CommandItem
+                                value={product.nombre}
+                                key={product.idProducto}
+                                onSelect={() => {
+                                  buyProductForm.setValue('producto', {
+                                    idProducto: product.idProducto,
+                                    nombreProducto: product.nombre
+                                  })
+                                }}
+                              >
+                                <BsCheck
+                                  className={cn(
+                                    'mr-2 h-4 w-4',
+                                    product.idProducto ===
+                                      field.value?.idProducto
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
+                                  )}
+                                />
+                                {product.nombre}
+                              </CommandItem>
+                            )
+                          })}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -185,7 +280,7 @@ const BuyProductForm = () => {
                       )}
                     >
                       {field.value
-                        ? providers.find(
+                        ? providers?.find(
                             provider => provider.id === field.value
                           )?.nombre ?? 'Elige un proveedor'
                         : 'Elige un proveedor'}
@@ -199,28 +294,41 @@ const BuyProductForm = () => {
                     <CommandList>
                       <CommandEmpty>No se encontraron proveedores</CommandEmpty>
                       <CommandGroup>
-                        {providers.map(provider => (
-                          <CommandItem
-                            value={provider.nombre.toString()}
-                            key={provider.nombre}
-                            onSelect={() => {
-                              buyProductForm.setValue(
-                                'idProveedor',
-                                provider.id
-                              )
-                            }}
-                          >
-                            <BsCheck
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                provider.id === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
-                            />
-                            {provider.nombre}
-                          </CommandItem>
-                        ))}
+                        {isLoadingProviders && (
+                          <div className='w-full'>
+                            <LoaderIcon className='mx-auto' />
+                          </div>
+                        )}
+                        {isErrorProviders && (
+                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                            Hubo un error al cargar los proveedores
+                          </p>
+                        )}
+                        {providers != null &&
+                          !isLoadingProviders &&
+                          !isErrorProviders &&
+                          providers.map(provider => (
+                            <CommandItem
+                              value={provider.nombre}
+                              key={provider.id}
+                              onSelect={() => {
+                                buyProductForm.setValue(
+                                  'idProveedor',
+                                  provider.id
+                                )
+                              }}
+                            >
+                              <BsCheck
+                                className={cn(
+                                  'mr-2 h-4 w-4',
+                                  provider.id === field.value
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                                )}
+                              />
+                              {provider.nombre}
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>
@@ -250,7 +358,7 @@ const BuyProductForm = () => {
         />
         <FormField
           control={buyProductForm.control}
-          name='costo_unitario'
+          name='costoUnitario'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Precio unitario</FormLabel>
@@ -300,11 +408,14 @@ const BuyProductForm = () => {
             type='submit'
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
-            Comprar
-            <FaRegHandshake
-              size={20}
-              className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
-            />
+            {!isPending && 'Comprar Producto'}
+            {!isPending && (
+              <FaRegHandshake
+                size={20}
+                className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
+              />
+            )}
+            {isPending && <LoaderIcon />}
           </Button>
         </div>
       </form>
