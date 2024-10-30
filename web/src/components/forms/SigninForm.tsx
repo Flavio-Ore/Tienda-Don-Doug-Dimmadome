@@ -52,18 +52,22 @@ const SigninForm = ({ className }: { className?: string }) => {
       })
       if (loginRes.data.success) {
         toast({
-          title: loginRes.data.message,
+          title: loginRes.data.message ?? 'Inicio de sesión exitoso',
           variant: 'accepted'
         })
         nagivation(PRIVATE_ROUTES.INVENTORY)
       } else {
         toast({
-          title: loginRes.data.message,
+          title: loginRes.data.message ?? 'Inicio de sesión fallido',
           variant: 'destructive'
         })
       }
     } catch (error) {
       console.error(error)
+      toast({
+        title: 'Ocurrió un error al iniciar sesión',
+        variant: 'destructive'
+      })
     }
   }
 
