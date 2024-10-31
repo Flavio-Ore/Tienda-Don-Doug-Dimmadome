@@ -30,8 +30,8 @@ const TableKardex = <TData, TValue>({
   })
 
   return (
-    <div className='rounded-md border'>
-      <div className='bg-dark-2 rounded-xl'>
+    <div className='rounded-md'>
+      <div className='bg-dark-2 border border-dark-4 '>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
