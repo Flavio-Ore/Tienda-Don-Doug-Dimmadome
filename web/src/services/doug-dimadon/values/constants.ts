@@ -52,13 +52,13 @@ export const ENDPOINTS = {
       CREATE: '/cliente/insertar'
     },
     CATEGORIA: {
-      CREATE: '/categoria'
+      CREATE: '/categoria/insertar'
     },
     PRODUCTO: {
       CREATE: '/producto/insertar'
     },
     USUARIO: {
-      CREATE: '/usuarios',
+      CREATE: '/usuarios/insertar',
       LOGIN: '/usuarios/login'
     },
     PROVEEDOR: {
@@ -74,7 +74,7 @@ export const ENDPOINTS = {
       CREATE: '/detalleSalida/insertar'
     },
     DETALLE_ENTRADA: {
-      CREATE: '/detalleEntrada/guardar'
+      CREATE: '/detalleEntrada/insertar'
     },
     TIPO_PAGO: {
       CREATE: '/tipoPago'

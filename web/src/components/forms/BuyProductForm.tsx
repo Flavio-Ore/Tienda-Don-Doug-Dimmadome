@@ -213,18 +213,21 @@ const BuyProductForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un cliente...' />
                     <CommandList>
-                      <CommandEmpty>Producto no encontrado.</CommandEmpty>
+                      {!isLoadingProducts && !isErrorProducts && (
+                        <CommandEmpty>Producto no encontrado.</CommandEmpty>
+                      )}
+
+                      {isErrorProducts && (
+                        <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
+                          Hubo un error al cargar los productos
+                        </CommandEmpty>
+                      )}
+                      {isLoadingProducts && (
+                        <CommandEmpty className='w-full my-4'>
+                          <LoaderIcon className='mx-auto' />
+                        </CommandEmpty>
+                      )}
                       <CommandGroup>
-                        {isErrorProducts && (
-                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
-                            Hubo un error al cargar los productos
-                          </p>
-                        )}
-                        {isLoadingProducts && (
-                          <div className='w-full'>
-                            <LoaderIcon className='mx-auto' />
-                          </div>
-                        )}
                         {products != null &&
                           !isLoadingProducts &&
                           !isErrorProducts &&
@@ -292,7 +295,22 @@ const BuyProductForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un proveedor...' />
                     <CommandList>
-                      <CommandEmpty>No se encontraron proveedores</CommandEmpty>
+                      {!isLoadingProviders && !isErrorProviders && (
+                        <CommandEmpty>
+                          No se encontraron proveedores
+                        </CommandEmpty>
+                      )}
+
+                      {isErrorProviders && (
+                        <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
+                          Hubo un error al cargar los proveedores
+                        </CommandEmpty>
+                      )}
+                      {isLoadingProviders && (
+                        <CommandEmpty className='w-full my-4'>
+                          <LoaderIcon className='mx-auto' />
+                        </CommandEmpty>
+                      )}
                       <CommandGroup>
                         {isLoadingProviders && (
                           <div className='w-full'>

@@ -1,10 +1,12 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useDebounce } from '@/hooks/useDebounce'
+import { cn, numberToCurrency } from '@/lib/utils'
 import { useQueryAllKardexs } from '@/states/queries/hooks/queries'
 import { type IKardex } from '@/types'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import { FaClipboardList, FaSearch } from 'react-icons/fa'
 import { FaTableCellsRowLock } from 'react-icons/fa6'
 import TableKardex from './components/TableKardex'
@@ -18,118 +20,196 @@ const Kardex = () => {
     isError: isErrorKardexs,
     refetch
   } = useQueryAllKardexs()
+  const [searchValue, setSearchValue] = useState('')
+  const debouncedValue = useDebounce(searchValue, 500)
+
   const columns = useMemo<ColumnDef<IKardex>[]>(
     () => [
-      columnHelper.group({
-        id: 'idKardex',
-        columns: [
-          columnHelper.accessor('idKardex', {
-            header: 'ID',
-            cell: info => <span>{info.getValue()}</span>
-          })
-        ]
-      }),
+      // columnHelper.group({
+      //   id: 'idKardex',
+      //   columns: [
+
+      //   ]
+      // }),
       columnHelper.group({
         id: 'documento',
-        header: 'Datos de la Operación',
+        header: () => {
+          return (
+            <p className='text-light-2 bg-dark-3 size-full py-4 px-2'>
+              Descripción
+            </p>
+          )
+        },
         columns: [
+          columnHelper.accessor('idKardex', {
+            header: () => {
+              return <span className='text-light-3'>ID</span>
+            },
+            cell: info => (
+              <span className='text-light-3'>{info.getValue()}</span>
+            )
+          }),
           columnHelper.accessor('fecha', {
-            header: 'Fecha',
+            header: () => <span className='text-light-3'>Fecha</span>,
             cell: info => <span>{info.getValue()}</span>
           }),
           columnHelper.accessor('empresa', {
-            header: 'Empresa',
+            header: () => <span className='text-light-3'>Empresa</span>,
             cell: info => <span>{info.getValue()}</span>
           }),
           columnHelper.accessor('producto', {
-            header: 'Producto',
+            header: () => <span className='text-light-3'>Producto</span>,
             cell: info => <span>{info.getValue().nombre}</span>
-          })
-        ]
-      }),
-      columnHelper.group({
-        id: 'tipoOperacion',
-        columns: [
+          }),
           columnHelper.accessor('tipoOperacion', {
-            header: 'Tipo de Operación',
-            cell: info => <span>{info.getValue()}</span>
+            header: () => <span className='text-light-3'>Operación</span>,
+            cell: info => (
+              <p
+                className={cn('py-2 px-1', {
+                  'bg-green-500/5 text-green-500':
+                    info.getValue() === 'Entrada',
+                  'bg-red-500/5 text-red-500': info.getValue() === 'Salida'
+                })}
+              >
+                {info.getValue()}
+              </p>
+            )
           })
         ]
       }),
       columnHelper.group({
-        id: 'Entradas',
-        header: () => <div className='text-center'>Entradas</div>,
+        id: 'Entrada',
+        header: () => (
+          <p className='w-full bg-green-500/5 text-green-500 py-4'>Entradas</p>
+        ),
         columns: [
           columnHelper.accessor('cantidadEntrada', {
             id: 'cantidadEntrada',
-            header: 'CANT.',
+            header: () => {
+              return <span className='text-light-3'>CANT.</span>
+            },
             cell: info => {
-              return <span>{info.getValue()}</span>
+              return (
+                <p className='bg-green-500/5 py-2 px-1'>{info.getValue()}</p>
+              )
             }
           }),
           columnHelper.accessor('costoUnitarioEntrada', {
             id: 'costoUnitarioEntrada',
-            header: 'C.U',
+            header: () => {
+              return <span className='text-light-3'>C.U</span>
+            },
             cell: info => {
-              return <span>{info.getValue()}</span>
+              return (
+                <p className='bg-green-500/5 py-2 px-1'>
+                  {numberToCurrency(info.getValue())}
+                </p>
+              )
             }
           }),
+
           columnHelper.accessor('costoTotalEntrada', {
             id: 'costoTotalEntrada',
-            header: 'C.T',
+            header: () => {
+              return <span className='text-light-3'>C.T</span>
+            },
             cell: info => {
-              return <span>{info.getValue()}</span>
+              return (
+                <p className='bg-green-500/5 py-2 px-1'>
+                  {numberToCurrency(info.getValue())}
+                </p>
+              )
             }
           })
         ]
       }),
       columnHelper.group({
-        id: 'Salidas',
-        header: () => <div className='text-center'>Salidas</div>,
+        id: 'Salida',
+        header: () => (
+          <p className='w-full bg-red-500/5 text-red-500 py-4'>Salidas</p>
+        ),
         columns: [
           columnHelper.accessor('cantidadSalida', {
             id: 'cantidadSalida',
-            header: 'CANT.',
+            header: () => {
+              return <span className='text-light-3'>CANT.</span>
+            },
             cell: info => {
-              return <span>{info.getValue()}</span>
+              return (
+                <p className='bg-green-500/5 py-2 px-1'>{info.getValue()}</p>
+              )
             }
           }),
           columnHelper.accessor('costoUnitarioSalida', {
-            id: 'costo_unitario_salidas',
-            header: 'C.U',
+            id: 'costoUnitarioSalida',
+            header: () => {
+              return <span className='text-light-3'>C.U</span>
+            },
             cell: info => {
-              // if (info.row.original.tipoOperacion === 'Venta') {
-              // }
-              return <span>{info.getValue()}</span>
+              return (
+                <p className='bg-red-500/5 py-2 px-1'>
+                  {numberToCurrency(info.getValue())}
+                </p>
+              )
             }
           }),
           columnHelper.accessor('costoTotalSalida', {
             id: 'costoTotalSalida',
-            header: 'C.T',
+            header: () => {
+              return <span className='text-light-3'>C.T</span>
+            },
             cell: info => {
-              return <span>{info.getValue()}</span>
+              return (
+                <p className='bg-red-500/5 py-2 px-1'>
+                  {numberToCurrency(info.getValue())}
+                </p>
+              )
             }
           })
         ]
       }),
       columnHelper.group({
         id: 'Saldo',
-        header: () => <div className='text-center'>Saldos</div>,
+        header: () => (
+          <p className='w-full bg-blue-500/5 text-blue-500 py-4'>Saldos</p>
+        ),
         columns: [
           columnHelper.accessor('cantidadSaldo', {
             id: 'cantidadSaldo',
-            header: 'CANT.',
-            cell: info => <span>{info.getValue()}</span>
+            header: () => {
+              return <span className='text-light-3'>CANT.</span>
+            },
+            cell: info => {
+              return (
+                <p className='bg-green-500/5 py-2 px-1'>{info.getValue()}</p>
+              )
+            }
           }),
           columnHelper.accessor('costoUnitarioSaldo', {
             id: 'costoUnitarioSaldo',
-            header: 'C.U',
-            cell: info => <span>{info.getValue()}</span>
+            header: () => {
+              return <span className='text-light-3'>C.U</span>
+            },
+            cell: info => {
+              return (
+                <p className='bg-blue-500/5 py-2 px-1'>
+                  {numberToCurrency(info.getValue())}
+                </p>
+              )
+            }
           }),
           columnHelper.accessor('costoTotalSaldo', {
             id: 'costoTotalSaldo',
-            header: 'C.T',
-            cell: info => <span>{info.getValue()}</span>
+            header: () => {
+              return <span className='text-light-3'>C.T</span>
+            },
+            cell: info => {
+              return (
+                <p className='bg-blue-500/5 py-2 px-1'>
+                  {numberToCurrency(info.getValue())}
+                </p>
+              )
+            }
           })
         ]
       })
@@ -137,15 +217,8 @@ const Kardex = () => {
     []
   )
 
-  // const table = useReactTable<IKardex>({
-  //   data: kardexs,
-  //   columns,
-  //   getCoreRowModel: getCoreRowModel()
-  // })
-
   const filteredKardexsByProducts = useMemo(() => {
     const groupedKardexMap = new Map<number, IKardex[]>()
-
     kardexs?.forEach(kardex => {
       const productId = kardex.producto.idProducto
       if (!groupedKardexMap.has(productId)) {
@@ -157,14 +230,60 @@ const Kardex = () => {
     return Array.from(groupedKardexMap.values())
   }, [kardexs])
 
+  const searchedKardexs = useMemo(() => {
+    const debouncedValueLowerCase = debouncedValue.toLowerCase()
+    return (
+      filteredKardexsByProducts.filter(record => {
+        return record.some(kardex => {
+          return (
+            kardex.producto.nombre
+              .toLowerCase()
+              .includes(debouncedValueLowerCase) ||
+            kardex.fecha.toLowerCase().includes(debouncedValueLowerCase) ||
+            kardex.empresa.toLowerCase().includes(debouncedValueLowerCase) ||
+            kardex.tipoOperacion
+              .toLowerCase()
+              .includes(debouncedValueLowerCase) ||
+            kardex.cantidadEntrada
+              .toString()
+              .includes(debouncedValueLowerCase) ||
+            kardex.costoUnitarioEntrada
+              .toString()
+              .includes(debouncedValueLowerCase) ||
+            kardex.costoTotalEntrada
+              .toString()
+              .includes(debouncedValueLowerCase) ||
+            kardex.cantidadSalida
+              .toString()
+              .includes(debouncedValueLowerCase) ||
+            kardex.costoUnitarioSalida
+              .toString()
+              .includes(debouncedValueLowerCase) ||
+            kardex.costoTotalSalida
+              .toString()
+              .includes(debouncedValueLowerCase) ||
+            kardex.cantidadSaldo.toString().includes(debouncedValueLowerCase) ||
+            kardex.costoUnitarioSaldo
+              .toString()
+              .includes(debouncedValueLowerCase) ||
+            kardex.costoTotalSaldo.toString().includes(debouncedValueLowerCase)
+          )
+        })
+      }) ?? []
+    )
+  }, [debouncedValue, filteredKardexsByProducts])
+  const isTyping = searchValue !== ''
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    setSearchValue(value)
+  }
   console.log({
     filteredKardexsByProducts
   })
 
   return (
-    <div className='common-container'>
+    <div className='flex flex-col flex-1 gap-10 overflow-y-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar w-full'>
       <div className='inline-flex gap-x-2'>
-        {' '}
         <FaTableCellsRowLock size={56} className='fill-blue-500' />
         <div>
           <h3 className='text-light-2 text-2xl'>Productos en Inventario</h3>
@@ -179,12 +298,13 @@ const Kardex = () => {
             Buscar productos en el inventario
           </h3>
         </div>
-        <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-4'>
-          <FaSearch size={24} />
+        <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-1'>
+          <FaSearch size={24} className='fill-light-3' />
           <Input
             type='search'
             placeholder='Buscar productos por nombre'
             className='border-light-3'
+            onChange={handleSearch}
           />
         </div>
       </div>
@@ -198,25 +318,80 @@ const Kardex = () => {
           <LoaderIcon className='mx-auto' />
         </div>
       )}
-      {filteredKardexsByProducts.map((kardex, index) => (
-        <Fragment key={index}>
-          <section>
-            <div className='flex flex-wrap justify-between items-center w-full mb-4 gap-x-4 gap-y-4'>
-              <div className='inline-flex gap-x-4 items-center'>
-                <FaClipboardList size={36} className='fill-blue-500' />
-                <h3 className='text-light-2 font-ubuntu text-3xl'>
-                  {kardex[0].producto.nombre}
-                </h3>
+      {}
+      {kardexs != null &&
+        !isLoadingKardexs &&
+        !isErrorKardexs &&
+        filteredKardexsByProducts.length === 0 && (
+          <p className='text-light-3 body-bold text-center w-full'>
+            No se encontraron productos en el inventario
+          </p>
+        )}
+      {isTyping &&
+        !isErrorKardexs &&
+        !isLoadingKardexs &&
+        searchedKardexs.length <= 0 && (
+          <p className='text-light-3 body-bold text-center w-full animate-pulse'>
+            No se encontraron productos con el término de búsqueda "
+            {debouncedValue}"
+          </p>
+        )}
+      {isTyping &&
+        !isErrorKardexs &&
+        !isLoadingKardexs &&
+        searchedKardexs.length > 0 &&
+        searchedKardexs.map((kardex, index) => (
+          <Fragment key={index}>
+            <section>
+              <div className='flex flex-wrap justify-between items-center w-full mb-4 gap-x-4 gap-y-4'>
+                <div className='inline-flex gap-x-4 items-center'>
+                  <FaClipboardList size={36} className='fill-blue-500' />
+                  <h3 className='text-light-2 font-ubuntu text-3xl'>
+                    {kardex[0].producto.nombre}
+                  </h3>
+                </div>
+                <Button variant='secondary' onClick={() => refetch()}>
+                  Refrescar
+                </Button>
               </div>
-              <Button variant='secondary' onClick={() => refetch()}>
-                Refrescar
-              </Button>
-            </div>
-            <TableKardex columns={columns} data={kardex} />
-          </section>
-          <hr className='border-light-3 mt-5' />
-        </Fragment>
-      ))}
+              <TableKardex columns={columns} data={kardex} />
+            </section>
+            <hr className='border-light-3 mt-5' />
+          </Fragment>
+        ))}
+      {!isTyping &&
+        !isErrorKardexs &&
+        !isLoadingKardexs &&
+        kardexs != null &&
+        kardexs.length <= 0 && (
+          <p className='text-light-3 body-bold text-center w-full'>
+            No se encontraron productos
+          </p>
+        )}
+      {!isTyping &&
+        kardexs != null &&
+        !isLoadingKardexs &&
+        !isErrorKardexs &&
+        filteredKardexsByProducts.length > 0 &&
+        filteredKardexsByProducts.map((kardex, index) => (
+          <Fragment key={index}>
+            <section>
+              <div className='flex flex-wrap justify-between items-center w-full mb-4 gap-x-4 gap-y-4'>
+                <div className='inline-flex gap-x-4 items-center'>
+                  <FaClipboardList size={36} className='fill-blue-500' />
+                  <h3 className='text-light-2 font-ubuntu text-3xl'>
+                    {kardex[0].producto.nombre}
+                  </h3>
+                </div>
+                <Button variant='secondary' onClick={() => refetch()}>
+                  Refrescar
+                </Button>
+              </div>
+              <TableKardex columns={columns} data={kardex} />
+            </section>
+            <hr className='border-light-3 mt-5' />
+          </Fragment>
+        ))}
       {/* <TableKardex columns={columns} data={kardexs} />
       <hr className='border-light-3 mt-5' /> */}
     </div>
