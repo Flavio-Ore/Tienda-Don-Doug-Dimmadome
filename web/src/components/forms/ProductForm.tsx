@@ -5,6 +5,7 @@ import { Button } from '@shadcn/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,7 +37,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-const ProductForm = () => {  
+const ProductForm = () => {
   const {
     data: productsCategory,
     isLoading: isLoadingProductsCategory,
@@ -65,7 +66,7 @@ const ProductForm = () => {
   const onSubmit = async (value: z.infer<typeof AddProductFormSchema>) => {
     try {
       console.log(value)
-     await addProduct(value)
+      await addProduct(value)
 
       toast({
         title: 'Producto agregado',
@@ -114,189 +115,204 @@ const ProductForm = () => {
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
+              <FormDescription>
+                El identificador del producto en los registros
+              </FormDescription>
             </FormItem>
           )}
         />
-        <FormField
-          control={productForm.control}
-          name='precioUnitario'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>Precio de venta</FormLabel>
-              <FormControl>
-                <Input
-                  type='number'
-                  placeholder='Precio del producto'
-                  min={0}
-                  step={0.01}
-                  {...field}
-                  onChange={e => {
-                    field.onChange(Number(e.target.value))
-                  }}
-                />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={productForm.control}
-          name='stock'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>
-                Inventario inicial
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type='number'
-                  placeholder='Inventario Inicial'
-                  {...field}
-                  onChange={e => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={productForm.control}
-          name='fechaVencimiento'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>
-                Fecha de vencimiento
-              </FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant='ghost'
-                      className={cn(
-                        'w-full pl-3 outline outline-1 outline-light-3',
-                        {
-                          'text-light-3': !field.value
-                        }
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, 'PPP', {
-                          locale: es
-                        })
-                      ) : (
-                        <span>Elige una fecha</span>
-                      )}
-                      <FaRegCalendarAlt
-                        strokeWidth={1.25}
-                        className='ml-auto h-4 w-4 fill-light-1'
-                      />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className='w-auto p-0' align='start'>
-                  <Calendar
-                    mode='single'
-                    selected={
-                      field.value == null ? undefined : new Date(field.value)
-                    }
-                    onSelect={date => {
-                      if (date == null) field.onChange(undefined)
-                      else {
-                        const fixedDate = date.setDate(date.getDate() + 1)
-                        field.onChange(
-                          date == null
-                            ? undefined
-                            : format(fixedDate, 'yyyy-MM-dd')
-                        )
+        <div className='flex gap-4 items-center justify-between w-full'>
+          <FormField
+            control={productForm.control}
+            name='fechaVencimiento'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>
+                  Fecha de vencimiento
+                </FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant='ghost'
+                        className={cn(
+                          'w-full pl-3 outline outline-1 outline-light-3',
+                          {
+                            'text-light-3': !field.value
+                          }
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, 'PPP', {
+                            locale: es
+                          })
+                        ) : (
+                          <span>Elige una fecha</span>
+                        )}
+                        <FaRegCalendarAlt
+                          strokeWidth={1.25}
+                          className='ml-auto h-4 w-4 fill-light-1'
+                        />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto p-0' align='start'>
+                    <Calendar
+                      mode='single'
+                      selected={
+                        field.value == null ? undefined : new Date(field.value)
                       }
+                      onSelect={date => {
+                        if (date == null) field.onChange(undefined)
+                        else {
+                          const fixedDate = date.setDate(date.getDate() + 1)
+                          field.onChange(
+                            date == null
+                              ? undefined
+                              : format(fixedDate, 'yyyy-MM-dd')
+                          )
+                        }
+                      }}
+                      disabled={date => date < new Date()}
+                      locale={es}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage className='shad-form_message' />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={productForm.control}
+            name='categoria'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>
+                  Categoría del producto
+                </FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant='ghost'
+                        role='combobox'
+                        className={cn(
+                          'w-full justify-between outline outline-1 outline-light-3',
+                          !field.value && 'text-light-3'
+                        )}
+                      >
+                        {field.value?.idCategoria
+                          ? productsCategory?.find(
+                              category =>
+                                category?.idCategoria ===
+                                field.value?.idCategoria
+                            )?.nombre ?? 'Elige una categoría'
+                          : 'Elige una categoría'}
+                        <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-full p-0' align='start'>
+                    <Command>
+                      <CommandInput placeholder='Busca una categoría...' />
+                      <CommandList>
+                        <CommandEmpty>Categoría no encontrada.</CommandEmpty>
+                        <CommandGroup>
+                          {isErrorProductsCategory && (
+                            <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                              Hubo un error al cargar las categorías
+                            </p>
+                          )}
+                          {isLoadingProductsCategory && (
+                            <div className='w-full'>
+                              <LoaderIcon className='mx-auto' />
+                            </div>
+                          )}
+                          {productsCategory != null &&
+                            !isLoadingProductsCategory &&
+                            !isErrorProductsCategory &&
+                            productsCategory.map(category => (
+                              <CommandItem
+                                value={category.nombre}
+                                key={category.idCategoria}
+                                onSelect={() => {
+                                  productForm.setValue('categoria', category)
+                                }}
+                              >
+                                <BsCheck
+                                  className={cn(
+                                    'mr-2 h-4 w-4',
+                                    category.idCategoria ===
+                                      field.value?.idCategoria
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
+                                  )}
+                                />
+                                {category.nombre}
+                              </CommandItem>
+                            ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage className='shad-form_message' />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='flex gap-4 items-center justify-between w-full'>
+          <FormField
+            control={productForm.control}
+            name='precioUnitario'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>
+                  Precio de venta
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='Precio del producto'
+                    min={0}
+                    step={0.01}
+                    {...field}
+                    onChange={e => {
+                      field.onChange(Number(e.target.value))
                     }}
-                    disabled={date => date < new Date()}
-                    locale={es}
-                    initialFocus
                   />
-                </PopoverContent>
-              </Popover>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={productForm.control}
-          name='categoria'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>
-                Categoría del producto
-              </FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant='ghost'
-                      role='combobox'
-                      className={cn(
-                        'w-full justify-between outline outline-1 outline-light-3',
-                        !field.value && 'text-light-3'
-                      )}
-                    >
-                      {field.value?.idCategoria
-                        ? productsCategory?.find(
-                            category =>
-                              category?.idCategoria === field.value?.idCategoria
-                          )?.nombre ?? 'Elige una categoría'
-                        : 'Elige una categoría'}
-                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className='w-full p-0' align='start'>
-                  <Command>
-                    <CommandInput placeholder='Busca una categoría...' />
-                    <CommandList>
-                      <CommandEmpty>Categoría no encontrada.</CommandEmpty>
-                      <CommandGroup>
-                        {isErrorProductsCategory && (
-                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
-                            Hubo un error al cargar las categorías
-                          </p>
-                        )}
-                        {isLoadingProductsCategory && (
-                          <div className='w-full'>
-                            <LoaderIcon className='mx-auto' />
-                          </div>
-                        )}
-                        {productsCategory != null &&
-                          !isLoadingProductsCategory &&
-                          !isErrorProductsCategory &&
-                          productsCategory.map(category => (
-                            <CommandItem
-                              value={category.nombre}
-                              key={category.idCategoria}
-                              onSelect={() => {
-                                productForm.setValue('categoria', category)
-                              }}
-                            >
-                              <BsCheck
-                                className={cn(
-                                  'mr-2 h-4 w-4',
-                                  category.idCategoria ===
-                                    field.value?.idCategoria
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
-                                )}
-                              />
-                              {category.nombre}
-                            </CommandItem>
-                          ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
+                </FormControl>
+                <FormMessage className='shad-form_message' />
+                <FormDescription>
+                  Nombre del producto que se mostrará en la tienda
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={productForm.control}
+            name='stock'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>Stock inicial</FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='Inventario inicial'
+                    {...field}
+                    onChange={e => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage className='shad-form_message' />
+                <FormDescription>
+                  Inventario inicial del producto en el registro y en el almacén
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+        </div>
+
         <div className='flex gap-4 items-center justify-end'>
           <Button
             type='button'

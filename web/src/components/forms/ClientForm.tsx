@@ -16,11 +16,11 @@ import { useToast } from '@/hooks/use-toast'
 import { useMutationAddClient } from '@/states/queries/hooks/mutations'
 import { ClientFormSchema } from '@/validations/forms/addClient.schema'
 import { PRIVATE_ROUTES } from '@/values'
+import LoaderIcon from '@components/icons/LoaderIcon'
 import { useEffect } from 'react'
 import { FaUserPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import LoaderIcon from '../icons/LoaderIcon'
 
 const ClientForm = () => {
   const {

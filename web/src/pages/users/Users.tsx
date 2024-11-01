@@ -64,10 +64,10 @@ const Users = () => {
           </h3>
         </div>
         <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-1'>
-          <FaSearch size={24} />
+          <FaSearch size={24} className='fill-light-3' />
           <Input
             type='search'
-            placeholder='Buscar proveedor por nombre, dirección o contacto'
+            placeholder='Buscar usuario por nombre, correo, rol o estado'
             className='border-light-3'
             value={searchValue}
             onChange={handleSearch}
@@ -85,8 +85,8 @@ const Users = () => {
         </div>
       )}
       {isTyping && searchedUsers.length <= 0 && (
-        <p className='text-light-3 body-bold text-center w-full'>
-          No se encontraron usuarios
+        <p className='text-light-3 body-bold text-center w-full animate-pulse'>
+          No se encontraron usuarios con el término de búsqueda "{searchValue}"
         </p>
       )}
       {!isTyping &&
@@ -94,11 +94,11 @@ const Users = () => {
         !isErrorUsers &&
         users != null &&
         users.length <= 0 && (
-          <p className='text-light-3 body-bold text-center w-full'>
+          <p className='text-light-3 body-bold text-center w-full animate-pulse'>
             No se encontraron usuarios
           </p>
         )}
-      <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
+      <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
         {isTyping &&
           !isLoadingUsers &&
           !isErrorUsers &&

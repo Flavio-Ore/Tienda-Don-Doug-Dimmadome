@@ -43,7 +43,9 @@ export const BuyProductSchema = z.object({
       message: 'El nombre del producto no puede estar vacío'
     })
   }),
-  idProveedor: z.number().nonnegative({
+  idProveedor: z.number({
+    required_error: 'El proveedor es requerido'
+  }).nonnegative({
     message: 'El ID del proveedor no puede ser negativo'
   }),
   cantidad: z.number().min(1, {

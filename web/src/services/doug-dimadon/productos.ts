@@ -4,9 +4,9 @@ import { BuyProductSchema } from '@/validations/buyProduct.schema'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { saveDetalleEntrada, saveEntrada } from '@doug-dimadon/entradas'
+import { saveDetalleSalida, saveSalida } from '@doug-dimadon/salidas'
 import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import { z } from 'zod'
-import { saveDetalleSalida, saveSalida } from './salidas'
 
 export const getAllProductos = async () => {
   return await axios.get<IProducto[]>(ENDPOINTS.GET.PRODUCTO.READ_ALL)

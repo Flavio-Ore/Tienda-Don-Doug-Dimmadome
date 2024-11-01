@@ -10,10 +10,11 @@ export const extractFirstRoutePart = (route: string) => {
   return match != null ? match[1] : null
 }
 
-export const numberToCurrency = (value: string | number): string => {
-  const numericValue = typeof value === 'string' ? parseFloat(value) : value
-  return new Intl.NumberFormat('es-PE', {
+export const numberToCurrency = (value: number) => {
+  const formattedValue = new Intl.NumberFormat('es-PE', {
     style: 'currency',
     currency: 'PEN'
-  }).format(numericValue)
+  }).format(Math.abs(value))
+
+  return value < 0 ? `(${formattedValue})` : formattedValue
 }

@@ -56,21 +56,25 @@ export const SellProductFormSchema = z.object({
     .number({
       required_error: 'La cantidad es requerida'
     })
-    .nonnegative()
+    .nonnegative({
+      message: 'La cantidad debe ser mayor o igual a 1'
+    })
     .min(1, {
       message: 'La cantidad debe ser mayor o igual a 1'
     }),
   precioUnitario: z
     .number({
-      required_error: 'El costo unitario es requerido'
+      required_error: 'El precio unitario es requerido'
     })
     .nonnegative()
     .min(1, {
-      message: 'El costo unitario debe ser mayor o igual a 1'
+      message: 'El precio unitario debe ser mayor o igual a 1'
     }),
   total: z
     .number({
       required_error: 'El total es requerido'
     })
-    .nonnegative()
+    .nonnegative({
+      message: 'El total debe ser mayor o igual a 0'
+    })
 })

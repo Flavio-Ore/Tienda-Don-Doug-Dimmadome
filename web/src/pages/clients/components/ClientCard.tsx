@@ -1,34 +1,107 @@
+import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
+import { useMutationChangeClientState } from '@/states/queries/hooks/mutations'
+import { useQueryAllKardexs } from '@/states/queries/hooks/queries'
 import { type ICliente } from '@/types'
+import { useEffect } from 'react'
+import { FaCircle } from 'react-icons/fa'
 
 const ClientCard = ({ client }: { client: ICliente }) => {
+  const {
+    mutateAsync: updateClientStatus,
+    isPending: isPendingUpdatingClientStatus,
+    isError: isErrorUpdatingClientStatus
+  } = useMutationChangeClientState()
+  const { isLoading: isLoadingClients , isRefetching: isRefetchingClients } = useQueryAllKardexs()
+  const { toast } = useToast()
+  const handleClick = async () => {
+    await updateClientStatus({
+      idCliente: client.idCliente,
+      state: client.estado.toLowerCase() === 'activo' ? 'inactivo' : 'activo'
+    })
+  }
+
+  useEffect(() => {
+    if (isErrorUpdatingClientStatus) {
+      toast({
+        title: 'Error',
+        description: 'Ocurrió un error al cambiar el estado del cliente',
+        variant: 'destructive'
+      })
+    }
+  }, [isErrorUpdatingClientStatus])
+
   return (
-    <Card className=''>
-      <CardHeader>
-        <CardTitle>{client.nombreCliente.split(',')[1]}</CardTitle>
-        <CardDescription>
+    <Card
+      className={cn({
+        'opacity-100': client.estado.toLowerCase() === 'activo',
+        'opacity-25': client.estado.toLowerCase() === 'inactivo'
+      })}
+    >
+      <CardHeader className='flex-row items-center justify-between w-full'>
+        <CardTitle className=''>{client.nombreCliente} </CardTitle>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='link'
+                className='p-0'
+                disabled={isPendingUpdatingClientStatus || isRefetchingClients || isLoadingClients}
+                onClick={handleClick}
+              >
+                <span className='sr-only'>
+                  {client.estado === 'activo'
+                    ? 'Desactivar cliente'
+                    : 'Activar cliente'}
+                </span>
+                {(isPendingUpdatingClientStatus || isRefetchingClients || isLoadingClients) && (
+                  <LoaderIcon className='size-5' />
+                )}
+                {!isPendingUpdatingClientStatus && !isRefetchingClients && (
+                  <FaCircle
+                    size={20}
+                    className={cn({
+                      'fill-green-700 hover:fill-green-500':
+                        client.estado === 'activo',
+                      'fill-red-700 hover:fill-red-500':
+                        client.estado === 'inactivo'
+                    })}
+                  />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span className='text-light-3 text-xs'>
+                {client.estado === 'activo'
+                  ? 'Desactivar cliente'
+                  : 'Activar cliente'}
+              </span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        {/* <CardDescription>
           <span
             className={cn(
               'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-red-700 text-light-1 shadow hover:bg-red-700/80',
               {
                 'border-transparent bg-green-700 text-light-1 shadow hover:bg-green-700/80':
-                  client.estado.toLowerCase() === 'activo'
+                  product.estado.toLowerCase() === 'activo'
               }
             )}
           >
-            {client.estado}
+            {product.estado}
           </span>
-        </CardDescription>
+        </CardDescription> */}
       </CardHeader>
       <CardContent>
         <ul className='flex flex-col gap-y-2 items-center'>
@@ -46,9 +119,29 @@ const ClientCard = ({ client }: { client: ICliente }) => {
           </li>
         </ul>
       </CardContent>
-      <CardFooter className='flex justify-center items-center'>
-        <Button variant='default'>Dar de baja</Button>
-      </CardFooter>
+      {/* <CardFooter className='flex justify-center items-center'>
+        {client.estado === 'activo' ? (
+          <Button
+            variant='outline'
+            className='bg-red-900/10 hover:bg-red-900 hover:text-light-1'
+            onClick={handleClick}
+          >
+            {isPendingUpdatingClientStatus ? (
+              <LoaderIcon />
+            ) : (
+              'Desactivar Usuario'
+            )}
+          </Button>
+        ) : (
+          <Button
+            variant='outline'
+            className='bg-green-900/10 hover:bg-green-900 hover:text-light-1'
+            onClick={handleClick}
+          >
+            {isPendingUpdatingClientStatus ? <LoaderIcon /> : 'Activar Usuario'}
+          </Button>
+        )}
+      </CardFooter> */}
     </Card>
   )
 }

@@ -1,4 +1,7 @@
-import { saveClienteReniec } from '@/services/doug-dimadon/clientes'
+import {
+  saveClienteReniec,
+  updateEstadoCliente
+} from '@/services/doug-dimadon/clientes'
 import {
   saveCompraProducto,
   saveProducto,
@@ -11,8 +14,8 @@ import {
   saveUsuario,
   updateEstadoUsuario
 } from '@/services/doug-dimadon/usuarios'
+import { QUERY_KEYS } from '@/states/queries/values/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { QUERY_KEYS } from '../values/query-keys'
 
 export function useMutationSignin () {
   return useMutation({
@@ -50,7 +53,10 @@ export function useMutationBuyProduct () {
     mutationFn: saveCompraProducto,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS, QUERY_KEYS.GET_ALL_KARDEXS]
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS]
+      })
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_KARDEXS]
       })
     }
   })
@@ -62,7 +68,10 @@ export function useMutationSellProduct () {
     mutationFn: saveVentaProducto,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS, QUERY_KEYS.GET_ALL_KARDEXS]
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS]
+      })
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_KARDEXS]
       })
     }
   })
@@ -92,6 +101,18 @@ export function useMutationAddClient () {
   })
 }
 
+export function useMutationChangeClientState () {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: updateEstadoCliente,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_CLIENTS]
+      })
+    }
+  })
+}
+
 export function useMutationAddUser () {
   const queryClient = useQueryClient()
   return useMutation({
@@ -109,7 +130,7 @@ export function useMutationChangeUserState () {
   return useMutation({
     mutationFn: updateEstadoUsuario,
     onSuccess: () => {
-      void queryClient.refetchQueries({
+      void queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_ALL_USERS]
       })
     }

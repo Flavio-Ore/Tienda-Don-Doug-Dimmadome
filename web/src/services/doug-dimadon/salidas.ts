@@ -1,8 +1,8 @@
 import axios from '@/lib/axios'
 import { DetalleSalidaSchema } from '@/validations/schemas/detalleSalida.schema'
 import { SalidaSchema } from '@/validations/schemas/salida.schema'
+import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import { z } from 'zod'
-import { ENDPOINTS } from './values/constants'
 
 /**
 SALIDA FORM:

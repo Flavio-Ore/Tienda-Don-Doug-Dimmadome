@@ -4,8 +4,7 @@ import { useQueryAllProducts } from '@/states/queries/hooks/queries'
 import ProductCard from '@pages/products/components/ProductCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
-import { CiSearch } from 'react-icons/ci'
-import { FaBoxOpen } from 'react-icons/fa'
+import { FaBoxOpen, FaSearch } from 'react-icons/fa'
 
 const Products = () => {
   const {
@@ -57,7 +56,7 @@ const Products = () => {
           </h3>
         </div>
         <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-1'>
-          <CiSearch size={24} />
+          <FaSearch size={24} className='fill-light-3' />
           <Input
             type='search'
             placeholder='Buscar productos por nombre, precio, etc.'

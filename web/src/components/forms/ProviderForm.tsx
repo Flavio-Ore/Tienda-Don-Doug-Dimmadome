@@ -4,6 +4,7 @@ import { useMutationAddProvider } from '@/states/queries/hooks/mutations'
 import { useQueryAllProductsCategories } from '@/states/queries/hooks/queries'
 import { ProviderValidationSchema } from '@/validations/forms/addProvider.schema'
 import { PRIVATE_ROUTES } from '@/values'
+import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
 import {
@@ -17,6 +18,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,13 +27,13 @@ import {
 import { Input } from '@shadcn/input'
 import { PhoneInput } from '@shadcn/phone-input'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { BsCheck } from 'react-icons/bs'
 import { FaTruckArrowRight } from 'react-icons/fa6'
 import { LuChevronsUpDown } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import LoaderIcon from '../icons/LoaderIcon'
 
 const ProviderForm = () => {
   const {
@@ -52,12 +54,9 @@ const ProviderForm = () => {
       nombre: '',
       direccion: '',
       contacto: '',
-      categoria: {
-        idCategoria: undefined
-      }
+      categoria: undefined
     }
   })
-
   const onSubmit = async (value: z.infer<typeof ProviderValidationSchema>) => {
     try {
       console.log(value)
@@ -82,6 +81,28 @@ const ProviderForm = () => {
       })
     }
   }
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: 'Error al agregar proveedor',
+        variant: 'destructive'
+      })
+    }
+  }, [isError])
+
+  // useEffect(() => {
+  //   console.log({
+  //     watchCategory
+  //   })
+  //   if (watchCategory == null) {
+  //     providerForm.setError('categoria', {
+  //       type: 'required',
+  //       message: 'La categoría es obligatoria'
+  //     })
+  //   }
+  // }, [watchCategory])
+
   return (
     <Form {...providerForm}>
       <form
@@ -93,36 +114,138 @@ const ProviderForm = () => {
           name='nombre'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Razón Social</FormLabel>
+              <FormLabel className='shad-form_label'>Razón social</FormLabel>
               <FormControl>
                 <Input
                   type='text'
-                  placeholder='Nombre del proveedor'
+                  placeholder='Identificación del proveedor'
                   {...field}
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
+              <FormDescription>
+                El nombre de la empresa o razón social del proveedor
+              </FormDescription>
             </FormItem>
           )}
         />
-        <FormField
-          control={providerForm.control}
-          name='contacto'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>Teléfono</FormLabel>
-              <FormControl>
-                <PhoneInput
-                  {...field}
-                  defaultCountry='PE'
-                  international
-                  className='focus-visible:border focus-visible:border-light-1'
-                />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
+        <div className='flex gap-4 items-center justify-between w-full'>
+          <FormField
+            control={providerForm.control}
+            name='contacto'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>Teléfono</FormLabel>
+                <FormControl>
+                  <PhoneInput
+                    {...field}
+                    defaultCountry='PE'
+                    international
+                    className='focus-visible:border focus-visible:border-light-1'
+                  />
+                </FormControl>
+                <FormMessage className='shad-form_message' />
+                {/*<FormDescription>
+                  Número de contacto del proveedor
+                </FormDescription> */}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={providerForm.control}
+            name='categoria'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>
+                  Categoría del proveedor
+                </FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant='ghost'
+                        role='combobox'
+                        className={cn(
+                          'w-full justify-between outline outline-1 outline-light-3',
+                          !field.value && 'text-light-3'
+                        )}
+                      >
+                        {field.value?.idCategoria
+                          ? productsCategory?.find(
+                              category =>
+                                category?.idCategoria ===
+                                field.value?.idCategoria
+                            )?.nombre ?? 'Elige una categoría'
+                          : 'Elige una categoría'}
+                        <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-full p-0' align='start'>
+                    <Command>
+                      <CommandInput placeholder='Busca una categoría...' />
+                      <CommandList>
+                        {!isErrorProductsCategory &&
+                          !isLoadingProductsCategory && (
+                            <CommandEmpty>
+                              Categoría no encontrada.
+                            </CommandEmpty>
+                          )}
+                        {!isErrorProductsCategory &&
+                          !isLoadingProductsCategory &&
+                          productsCategory != null &&
+                          productsCategory.length === 0 && (
+                            <CommandEmpty>
+                              No hay categorías disponibles
+                            </CommandEmpty>
+                          )}
+                        <CommandGroup>
+                          {isErrorProductsCategory && (
+                            <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
+                              Hubo un error al cargar las categorías
+                            </CommandEmpty>
+                          )}
+                          {isLoadingProductsCategory && (
+                            <CommandEmpty className='w-full my-4'>
+                              <LoaderIcon className='mx-auto' />
+                            </CommandEmpty>
+                          )}
+                          {productsCategory != null &&
+                            !isLoadingProductsCategory &&
+                            !isErrorProductsCategory &&
+                            productsCategory.map(category => (
+                              <CommandItem
+                                value={category.nombre}
+                                key={category.idCategoria}
+                                onSelect={() => {
+                                  providerForm.setValue('categoria', category)
+                                }}
+                              >
+                                <BsCheck
+                                  className={cn(
+                                    'mr-2 h-4 w-4',
+                                    category.idCategoria ===
+                                      field.value?.idCategoria
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
+                                  )}
+                                />
+                                {category.nombre}
+                              </CommandItem>
+                            ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage className='shad-form_message' />
+                {/* <FormDescription>
+                  La categoría de productos que provee el proveedor
+                </FormDescription> */}
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={providerForm.control}
           name='direccion'
@@ -137,83 +260,7 @@ const ProviderForm = () => {
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={providerForm.control}
-          name='categoria'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>
-                Categoría del proveedor
-              </FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant='ghost'
-                      role='combobox'
-                      className={cn(
-                        'w-full justify-between outline outline-1 outline-light-3',
-                        !field.value && 'text-light-3'
-                      )}
-                    >
-                      {field.value?.idCategoria
-                        ? productsCategory?.find(
-                            category =>
-                              category?.idCategoria === field.value?.idCategoria
-                          )?.nombre ?? 'Elige una categoría'
-                        : 'Elige una categoría'}
-                      <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className='w-full p-0' align='start'>
-                  <Command>
-                    <CommandInput placeholder='Busca una categoría...' />
-                    <CommandList>
-                      <CommandEmpty>Categoría no encontrada.</CommandEmpty>
-                      <CommandGroup>
-                        {isErrorProductsCategory && (
-                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
-                            Hubo un error al cargar las categorías
-                          </p>
-                        )}
-                        {isLoadingProductsCategory && (
-                          <div className='w-full'>
-                            <LoaderIcon className='mx-auto' />
-                          </div>
-                        )}
-                        {productsCategory != null &&
-                          !isLoadingProductsCategory &&
-                          !isErrorProductsCategory &&
-                          productsCategory.map(category => (
-                            <CommandItem
-                              value={category.nombre}
-                              key={category.idCategoria}
-                              onSelect={() => {
-                                providerForm.setValue('categoria', category)
-                              }}
-                            >
-                              <BsCheck
-                                className={cn(
-                                  'mr-2 h-4 w-4',
-                                  category.idCategoria ===
-                                    field.value?.idCategoria
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
-                                )}
-                              />
-                              {category.nombre}
-                            </CommandItem>
-                          ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormMessage className='shad-form_message' />
+              <FormDescription>Dirección física</FormDescription>
             </FormItem>
           )}
         />
