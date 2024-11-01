@@ -5,8 +5,7 @@ import ClientCard from '@/pages/clients/components/ClientCard'
 import { useQueryAllClients } from '@/states/queries/hooks/queries'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
-import { CiSearch } from 'react-icons/ci'
-import { FaUsers, FaUserTag } from 'react-icons/fa'
+import { FaSearch, FaUsers, FaUserTag } from 'react-icons/fa'
 
 const Clients = () => {
   const {
@@ -65,7 +64,7 @@ const Clients = () => {
           </h3>
         </div>
         <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-1'>
-          <CiSearch size={24} />
+          <FaSearch size={24} className='fill-light-3'/>
           <Input
             type='search'
             placeholder='Buscar cliente por nombre, número, apellido paterno o apellido materno'
@@ -103,7 +102,7 @@ const Clients = () => {
             No hay clientes registrados
           </p>
         )}
-      <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
+      <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
         {isTyping &&
           !isLoadingClients &&
           !isErrorClients &&

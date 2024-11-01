@@ -10,31 +10,43 @@ import { z } from 'zod'
 } */
 export const ProviderValidationSchema = z.object({
   nombre: z
-    .string()
+    .string({
+      required_error: 'El nombre del proveedor es obligatorio'
+    })
     .min(2, {
       message: 'El nombre del proveedor debe tener al menos 2 caracteres'
     })
     .max(100),
   contacto: z
-    .string()
-    .min(7, {
-      message: 'El número de teléfono debe tener al menos 7 caracteres'
+    .string({
+      required_error: 'El número de teléfono es obligatorio'
     })
-    .max(20),
+    .min(12 , {
+      message: 'El número de teléfono es inválido'
+    })
+    .max(20, {
+      message: 'El número de teléfono es inválido'
+    }),
   direccion: z
-    .string()
+    .string({
+      required_error: 'La dirección del proveedor es obligatoria'
+    })
     .min(2, {
       message: 'La dirección del proveedor debe tener al menos 2 caracteres'
     })
     .max(200),
-    categoria: z.object(
-      {
-        idCategoria: z.number().nonnegative({
+  categoria: z.object(
+    {
+      idCategoria: z
+        .number({
           message: 'La categoría es obligatoria'
-        }),
-      },
-      {
-        message: 'La categoría es obligatoria'
-      }
-    )
+        })
+        .nonnegative({
+          message: 'La categoría es obligatoria'
+        })
+    },
+    {
+      message: 'La categoría es obligatoria'
+    }
+  )
 })

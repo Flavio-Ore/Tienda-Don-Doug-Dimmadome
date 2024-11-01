@@ -29,7 +29,9 @@ export const AddProductFormSchema = z.object({
   precioUnitario: z.number().positive({
     message: 'El precio no puede ser negativo'
   }),
-  stock: z.number().nonnegative({
+  stock: z.number({
+    message: 'El inventario inicial es obligatorio'
+  }).nonnegative({
     message: 'El inventario inicial no puede ser negativo'
   }),
   fechaVencimiento: z

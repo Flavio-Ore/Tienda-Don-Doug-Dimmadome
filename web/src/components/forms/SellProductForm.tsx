@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn, numberToCurrency } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
 import { FaRegHandshake } from 'react-icons/fa6'
@@ -7,6 +7,7 @@ import { LuChevronsUpDown } from 'react-icons/lu'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,10 +20,12 @@ import { useToast } from '@/hooks/use-toast'
 import { useMutationSellProduct } from '@/states/queries/hooks/mutations'
 import {
   useQueryAllClients,
-  useQueryAllPaymentMethods
+  useQueryAllPaymentMethods,
+  useQueryAllProducts
 } from '@/states/queries/hooks/queries'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { PRIVATE_ROUTES } from '@/values'
+import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Command,
   CommandEmpty,
@@ -32,12 +35,10 @@ import {
   CommandList
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { BsCheck } from 'react-icons/bs'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import { useQueryAllProducts } from '../../states/queries/hooks/queries'
-import LoaderIcon from '../icons/LoaderIcon'
 
 const SellProductForm = () => {
   const {
@@ -74,12 +75,37 @@ const SellProductForm = () => {
       total: 0
     }
   })
+  const watchCantidad = sellProductForm.watch('cantidad')
+  const watchCostoTotal = sellProductForm.watch('total')
+  const watchIdProducto = sellProductForm.watch('idProducto')
+  const watchCostoUnitario = sellProductForm.watch('precioUnitario')
+  const selectedProduct = useMemo(
+    () =>
+      products?.find(
+        product =>
+          product.idProducto === sellProductForm.getValues('idProducto')
+      ),
+    [products, watchIdProducto]
+  )
 
   const handleSellProductSubmit = async (
     value: z.infer<typeof SellProductFormSchema>
   ) => {
     try {
       console.log(value)
+      if (selectedProduct == null) return
+      if (selectedProduct.stock < value.cantidad) {
+        toast({
+          title: 'No hay suficiente stock para vender',
+          description: (
+            <span>
+              {`El stock actual es de ${selectedProduct.stock} unidades, no se puede vender ${value.cantidad} unidades`}
+            </span>
+          ),
+          variant: 'action'
+        })
+        return
+      }
       await sellProduct(value)
       toast({
         title: 'Producto vendido',
@@ -111,19 +137,22 @@ const SellProductForm = () => {
     }
   }
 
-  const watchCantidad = sellProductForm.watch('cantidad')
-  const watchIdProducto = sellProductForm.watch('idProducto')
-
   useEffect(() => {
     if (products == null) return
-    const selectedProduct = products.find(
-      product => product.idProducto === sellProductForm.getValues('idProducto')
-    )
     if (selectedProduct != null) {
       sellProductForm.setValue(
         'total',
         selectedProduct.precioUnitario * watchCantidad
       )
+
+      if (selectedProduct.stock < watchCantidad) {
+        sellProductForm.setError('cantidad', {
+          type: 'manual',
+          message: 'No hay suficiente stock para vender'
+        })
+      } else {
+        sellProductForm.clearErrors('cantidad')
+      }
     }
   }, [watchCantidad, watchIdProducto])
 
@@ -202,7 +231,7 @@ const SellProductForm = () => {
                           !isErrorClients &&
                           clients.map(client => (
                             <CommandItem
-                              value={client.idCliente.toString()}
+                              value={`${client.nombreCliente} - ${client.numeroDocumento}`}
                               key={client.idCliente}
                               onSelect={() => {
                                 sellProductForm.setValue(
@@ -219,7 +248,7 @@ const SellProductForm = () => {
                                     : 'opacity-0'
                                 )}
                               />
-                              {client.nombreCliente}
+                              {client.numeroDocumento} - {client.nombreCliente}
                             </CommandItem>
                           ))}
                       </CommandGroup>
@@ -228,6 +257,15 @@ const SellProductForm = () => {
                 </PopoverContent>
               </Popover>
               <FormMessage className='shad-form_message' />
+              <FormDescription>
+                Si no encuentras al cliente,{' '}
+                <Link
+                  to={PRIVATE_ROUTES.CLIENTS}
+                  className='text-sky-500/70 underline-offset-4 hover:underline'
+                >
+                  regístralo aquí
+                </Link>
+              </FormDescription>
             </FormItem>
           )}
         />
@@ -261,18 +299,20 @@ const SellProductForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un tipo de comprobante...' />
                     <CommandList>
-                      <CommandEmpty>Tipo de pago no encontrado.</CommandEmpty>
+                      {!isErrorPaymentMethods && !isLoadingPaymentMethods && (
+                        <CommandEmpty>Tipo de pago no encontrado.</CommandEmpty>
+                      )}
+                      {isErrorPaymentMethods && (
+                        <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
+                          Hubo un error al cargar los tipos de pago
+                        </CommandEmpty>
+                      )}
+                      {isLoadingPaymentMethods && (
+                        <div className='w-full my-4'>
+                          <LoaderIcon className='mx-auto' />
+                        </div>
+                      )}
                       <CommandGroup>
-                        {isErrorPaymentMethods && (
-                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
-                            Hubo un error al cargar los tipos de pago
-                          </p>
-                        )}
-                        {isLoadingPaymentMethods && (
-                          <div className='w-full'>
-                            <LoaderIcon className='mx-auto' />
-                          </div>
-                        )}
                         {paymentMethods != null &&
                           !isLoadingPaymentMethods &&
                           !isErrorPaymentMethods &&
@@ -404,18 +444,30 @@ const SellProductForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un cliente...' />
                     <CommandList>
-                      <CommandEmpty>Producto no encontrado.</CommandEmpty>
+                      {!isErrorProducts &&
+                        !isLoadingProducts &&
+                        products?.length === 0 && (
+                          <CommandEmpty>
+                            Registra un producto para vender
+                          </CommandEmpty>
+                        )}
+                      {products != null &&
+                        !isErrorProducts &&
+                        !isLoadingProducts &&
+                        products?.length > 0 && (
+                          <CommandEmpty>Producto no encontrado.</CommandEmpty>
+                        )}
+                      {isErrorProducts && (
+                        <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
+                          Hubo un error al cargar los productos
+                        </CommandEmpty>
+                      )}
+                      {isLoadingProducts && (
+                        <div className='w-full my-4'>
+                          <LoaderIcon className='mx-auto' />
+                        </div>
+                      )}
                       <CommandGroup>
-                        {isErrorProducts && (
-                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
-                            Hubo un error al cargar los productos
-                          </p>
-                        )}
-                        {isLoadingProducts && (
-                          <div className='w-full'>
-                            <LoaderIcon className='mx-auto' />
-                          </div>
-                        )}
                         {products != null &&
                           !isLoadingProducts &&
                           !isErrorProducts &&
@@ -449,69 +501,129 @@ const SellProductForm = () => {
                 </PopoverContent>
               </Popover>
               <FormMessage className='shad-form_message' />
+              <FormDescription>
+                Seleccione primero un producto para poder venderlo
+              </FormDescription>
             </FormItem>
           )}
         />
-        <FormField
-          control={sellProductForm.control}
-          name='precioUnitario'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>Precio Unitario</FormLabel>
-              <FormControl>
-                <Input
-                  type='number'
-                  readOnly
-                  disabled={sellProductForm.getValues('precioUnitario') <= 0}
-                  placeholder='Precio unitario del producto'
-                  {...field}
-                  onChange={e => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={sellProductForm.control}
-          name='cantidad'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='shad-form_label'>Cantidad</FormLabel>
-              <FormControl>
-                <Input                
-                  type='number'
-                  disabled={sellProductForm.getValues('idProducto') <= 0}
-                  placeholder='Cantidad de productos'
-                  {...field}
-                  onChange={e => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage className='shad-form_message' />
-            </FormItem>
-          )}
-        />
-
+        <div className='flex gap-4 items-center justify-between w-full'>
+          <FormField
+            control={sellProductForm.control}
+            name='precioUnitario'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>
+                  Precio Unitario{' '}
+                  <span className='text-amber-600/50 text-xs'>
+                    {' '}
+                    No se puede modificar
+                  </span>
+                </FormLabel>{' '}
+                <p
+                  className={cn(
+                    'flex h-10 max-h-auto w-full rounded-md border border-light-3 bg-dark-1 px-3 py-2 small-regular ring-offset-light-1 file:border-0 file:bg-transparent file:small-regular placeholder:text-light-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-light-1 disabled:cursor-not-allowed disabled:opacity-50',
+                    {
+                      'text-light-3':
+                        sellProductForm.getValues('precioUnitario') <= 0
+                    }
+                  )}
+                >
+                  {numberToCurrency(watchCostoUnitario)}
+                </p>
+                <FormControl>
+                  <Input
+                    readOnly
+                    type='number'
+                    className='hidden'
+                    min={0}
+                    step={0.01}
+                    disabled={sellProductForm.getValues('precioUnitario') <= 0}
+                    placeholder='Precio unitario del producto'
+                    {...field}
+                    onChange={e => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage className='shad-form_message' />
+                <FormDescription>
+                  Precio unitario del producto seleccionado
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={sellProductForm.control}
+            name='cantidad'
+            render={({ field }) => (
+              <FormItem className='w-full'>
+                <FormLabel className='shad-form_label'>
+                  Cantidad{' '}
+                  <span
+                    className='
+                    text-lime-600/50 text-xs
+                  '
+                  >
+                    Elija primero un producto
+                  </span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    disabled={sellProductForm.getValues('idProducto') <= 0}
+                    placeholder='Cantidad de productos'
+                    min={0}
+                    step={1}
+                    {...field}
+                    onChange={e => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage className='shad-form_message' />
+                <FormDescription>
+                  Cantidad de productos a vender
+                </FormDescription>
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={sellProductForm.control}
           name='total'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Total</FormLabel>
+              <FormLabel className='shad-form_label'>
+                Total{' '}
+                <span className='text-amber-600/50 text-xs'>
+                  {' '}
+                  No se puede modificar
+                </span>
+              </FormLabel>
+              <p
+                className={cn(
+                  'flex h-10 max-h-auto w-full rounded-md border border-light-3 bg-dark-1 px-3 py-2 small-regular ring-offset-light-1 file:border-0 file:bg-transparent file:small-regular placeholder:text-light-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-light-1 disabled:cursor-not-allowed disabled:opacity-50',
+                  {
+                    'text-light-3':
+                      sellProductForm.getValues('precioUnitario') <= 0
+                  }
+                )}
+              >
+                {watchCantidad} <span className='text-light-3 mx-2'>x</span>
+                {numberToCurrency(watchCostoUnitario)}
+                <span className='text-light-3 mx-2'>=</span>
+                {numberToCurrency(watchCostoTotal)}
+              </p>
               <FormControl>
                 <Input
                   type='number'
+                  className='hidden'
                   readOnly
-                  placeholder='Precio total de los productos a vender'
-                  max={999_999}
                   min={0}
+                  step={0.01}
+                  placeholder='Precio total de los productos a vender'
                   {...field}
-                  onChange={e => {
-                    field.onChange(Number(e.target.value))
-                  }}
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
+              <FormDescription>Precio unitario x Cantidad</FormDescription>
             </FormItem>
           )}
         />

@@ -5,8 +5,7 @@ import { useQueryAllProviders } from '@/states/queries/hooks/queries'
 import ProviderCard from '@pages/providers/components/ProviderCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
-import { CiSearch } from 'react-icons/ci'
-import { FaPeopleCarry } from 'react-icons/fa'
+import { FaPeopleCarry, FaSearch } from 'react-icons/fa'
 import { FaTruckPlane } from 'react-icons/fa6'
 
 const Providers = () => {
@@ -67,7 +66,7 @@ const Providers = () => {
           </h3>
         </div>
         <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-1'>
-          <CiSearch size={24} />
+          <FaSearch size={24} className='fill-light-3' />
           <Input
             type='search'
             placeholder='Buscar proveedor por nombre, dirección o contacto'
@@ -89,7 +88,8 @@ const Providers = () => {
       )}
       {isTyping && providers != null && searchedProviders.length <= 0 && (
         <p className='text-light-3 body-bold text-center w-full'>
-          No se encontraron clientes
+          No se encontraron proveedores con el término de búsqueda "
+          {debouncedValue}"
         </p>
       )}
       {!isTyping && providers != null && providers.length <= 0 && (

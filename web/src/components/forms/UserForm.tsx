@@ -6,6 +6,7 @@ import { LuChevronsUpDown } from 'react-icons/lu'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,6 +20,7 @@ import { useMutationAddUser } from '@/states/queries/hooks/mutations'
 import { useQueryAllUserTypes } from '@/states/queries/hooks/queries'
 import { UserSchema } from '@/validations/forms/addUser.schema'
 import { PRIVATE_ROUTES } from '@/values'
+import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Command,
   CommandEmpty,
@@ -33,7 +35,6 @@ import { BsCheck } from 'react-icons/bs'
 import { FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import LoaderIcon from '../icons/LoaderIcon'
 
 const UserForm = () => {
   const {
@@ -107,6 +108,9 @@ const UserForm = () => {
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
+              <FormDescription>
+                El nombre del usuario debe ser único.
+              </FormDescription>
             </FormItem>
           )}
         />
@@ -119,7 +123,7 @@ const UserForm = () => {
               <FormControl>
                 <Input
                   type='email'
-                  placeholder='Correo del usuario'
+                  placeholder='usuario@dominio.com'
                   {...field}
                 />
               </FormControl>
@@ -151,6 +155,10 @@ const UserForm = () => {
                 </Button>
               </div>
               <FormMessage className='shad-form_message' />
+              <FormDescription>
+                Considere números, mayúsculas, minúsculas y caracteres
+                especiales como @, #, $, %, etc.
+              </FormDescription>
             </FormItem>
           )}
         />
@@ -188,19 +196,21 @@ const UserForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un tipo de devolución...' />
                     <CommandList>
-                      <CommandEmpty>
-                        Tipo de usuario no encontrado.
-                      </CommandEmpty>
+                      {!isLoadingUserTypes && !isErrorUserTypes && (
+                        <CommandEmpty>
+                          Tipo de usuario no encontrado.
+                        </CommandEmpty>
+                      )}
+                      {isLoadingUserTypes && (
+                        <CommandEmpty>
+                          <LoaderIcon className='mx-auto' />
+                        </CommandEmpty>
+                      )}
                       <CommandGroup>
-                        {isLoadingUserTypes && (
-                          <div>
-                            <LoaderIcon className='mx-auto' />
-                          </div>
-                        )}
                         {isErrorUserTypes && (
-                          <p className='text-red-700 body-bold text-center w-full animate-pulse'>
+                          <CommandEmpty className='text-red-700 text-sm text-center w-full animate-pulse'>
                             Hubo un error al cargar los tipos de usuario
-                          </p>
+                          </CommandEmpty>
                         )}
                         {userTypes != null &&
                           !isLoadingUserTypes &&

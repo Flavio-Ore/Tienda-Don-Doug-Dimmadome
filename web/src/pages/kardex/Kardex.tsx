@@ -5,11 +5,11 @@ import { useDebounce } from '@/hooks/useDebounce'
 import { cn, numberToCurrency } from '@/lib/utils'
 import { useQueryAllKardexs } from '@/states/queries/hooks/queries'
 import { type IKardex } from '@/types'
+import TableKardex from '@pages/kardex/components/TableKardex'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { Fragment, useMemo, useState } from 'react'
-import { FaClipboardList, FaSearch } from 'react-icons/fa'
+import { FaCircle, FaClipboardList, FaSearch } from 'react-icons/fa'
 import { FaTableCellsRowLock } from 'react-icons/fa6'
-import TableKardex from './components/TableKardex'
 
 const columnHelper = createColumnHelper<IKardex>()
 
@@ -43,29 +43,29 @@ const Kardex = () => {
         columns: [
           columnHelper.accessor('idKardex', {
             header: () => {
-              return <span className='text-light-3'>ID</span>
+              return <span className='text-light-3 px-2'>ID</span>
             },
-            cell: info => (
-              <span className='text-light-3'>{info.getValue()}</span>
-            )
+            cell: info => <p className='text-light-3'>{info.getValue()}</p>
           }),
           columnHelper.accessor('fecha', {
-            header: () => <span className='text-light-3'>Fecha</span>,
-            cell: info => <span>{info.getValue()}</span>
+            header: () => <p className='text-light-3 px-2'>Fecha</p>,
+            cell: info => <time className=''>{info.getValue()}</time>
           }),
           columnHelper.accessor('empresa', {
-            header: () => <span className='text-light-3'>Empresa</span>,
-            cell: info => <span>{info.getValue()}</span>
+            header: () => <span className='text-light-3 px-2'>Empresa</span>,
+            cell: info => <p className=''>{info.getValue()}</p>
           }),
           columnHelper.accessor('producto', {
-            header: () => <span className='text-light-3'>Producto</span>,
-            cell: info => <span>{info.getValue().nombre}</span>
+            header: () => <span className='text-light-3 px-2'>Producto</span>,
+            cell: info => {
+              return <p className=''>{info.getValue().nombre}</p>
+            }
           }),
           columnHelper.accessor('tipoOperacion', {
-            header: () => <span className='text-light-3'>Operación</span>,
+            header: () => <span className='text-light-3 px-2'>Operación</span>,
             cell: info => (
               <p
-                className={cn('py-2 px-1', {
+                className={cn('size-full p-2', {
                   'bg-green-500/5 text-green-500':
                     info.getValue() === 'Entrada',
                   'bg-red-500/5 text-red-500': info.getValue() === 'Salida'
@@ -86,22 +86,20 @@ const Kardex = () => {
           columnHelper.accessor('cantidadEntrada', {
             id: 'cantidadEntrada',
             header: () => {
-              return <span className='text-light-3'>CANT.</span>
+              return <span className='text-light-3 px-2'>CANT.</span>
             },
             cell: info => {
-              return (
-                <p className='bg-green-500/5 py-2 px-1'>{info.getValue()}</p>
-              )
+              return <p className='bg-green-500/5 p-2'>{info.getValue()}</p>
             }
           }),
           columnHelper.accessor('costoUnitarioEntrada', {
             id: 'costoUnitarioEntrada',
             header: () => {
-              return <span className='text-light-3'>C.U</span>
+              return <span className='text-light-3 px-2'>C.U</span>
             },
             cell: info => {
               return (
-                <p className='bg-green-500/5 py-2 px-1'>
+                <p className='bg-green-500/5 p-2'>
                   {numberToCurrency(info.getValue())}
                 </p>
               )
@@ -111,11 +109,11 @@ const Kardex = () => {
           columnHelper.accessor('costoTotalEntrada', {
             id: 'costoTotalEntrada',
             header: () => {
-              return <span className='text-light-3'>C.T</span>
+              return <span className='text-light-3 px-2'>C.T</span>
             },
             cell: info => {
               return (
-                <p className='bg-green-500/5 py-2 px-1'>
+                <p className='bg-green-500/5 p-2'>
                   {numberToCurrency(info.getValue())}
                 </p>
               )
@@ -132,22 +130,20 @@ const Kardex = () => {
           columnHelper.accessor('cantidadSalida', {
             id: 'cantidadSalida',
             header: () => {
-              return <span className='text-light-3'>CANT.</span>
+              return <span className='text-light-3 px-2'>CANT.</span>
             },
             cell: info => {
-              return (
-                <p className='bg-green-500/5 py-2 px-1'>{info.getValue()}</p>
-              )
+              return <p className='bg-red-500/5 p-2'>{info.getValue()}</p>
             }
           }),
           columnHelper.accessor('costoUnitarioSalida', {
             id: 'costoUnitarioSalida',
             header: () => {
-              return <span className='text-light-3'>C.U</span>
+              return <span className='text-light-3 px-2'>C.U</span>
             },
             cell: info => {
               return (
-                <p className='bg-red-500/5 py-2 px-1'>
+                <p className='bg-red-500/5 p-2'>
                   {numberToCurrency(info.getValue())}
                 </p>
               )
@@ -156,11 +152,11 @@ const Kardex = () => {
           columnHelper.accessor('costoTotalSalida', {
             id: 'costoTotalSalida',
             header: () => {
-              return <span className='text-light-3'>C.T</span>
+              return <span className='text-light-3 px-2'>C.T</span>
             },
             cell: info => {
               return (
-                <p className='bg-red-500/5 py-2 px-1'>
+                <p className='bg-red-500/5 p-2'>
                   {numberToCurrency(info.getValue())}
                 </p>
               )
@@ -177,22 +173,20 @@ const Kardex = () => {
           columnHelper.accessor('cantidadSaldo', {
             id: 'cantidadSaldo',
             header: () => {
-              return <span className='text-light-3'>CANT.</span>
+              return <span className='text-light-3 px-2'>CANT.</span>
             },
             cell: info => {
-              return (
-                <p className='bg-green-500/5 py-2 px-1'>{info.getValue()}</p>
-              )
+              return <p className='bg-blue-500/5 p-2'>{info.getValue()}</p>
             }
           }),
           columnHelper.accessor('costoUnitarioSaldo', {
             id: 'costoUnitarioSaldo',
             header: () => {
-              return <span className='text-light-3'>C.U</span>
+              return <span className='text-light-3 px-2'>C.U</span>
             },
             cell: info => {
               return (
-                <p className='bg-blue-500/5 py-2 px-1'>
+                <p className='bg-blue-500/5 p-2'>
                   {numberToCurrency(info.getValue())}
                 </p>
               )
@@ -201,11 +195,11 @@ const Kardex = () => {
           columnHelper.accessor('costoTotalSaldo', {
             id: 'costoTotalSaldo',
             header: () => {
-              return <span className='text-light-3'>C.T</span>
+              return <span className='text-light-3 px-2'>C.T</span>
             },
             cell: info => {
               return (
-                <p className='bg-blue-500/5 py-2 px-1'>
+                <p className='bg-blue-500/5 p-2'>
                   {numberToCurrency(info.getValue())}
                 </p>
               )
@@ -349,6 +343,13 @@ const Kardex = () => {
                   <h3 className='text-light-2 font-ubuntu text-3xl'>
                     {kardex[0].producto.nombre}
                   </h3>
+                  <FaCircle
+                    size={24}
+                    className={cn({
+                      'fill-green-500': kardex[0].producto.estado === 'activo',
+                      'fill-red-500': kardex[0].producto.estado === 'inactivo'
+                    })}
+                  />
                 </div>
                 <Button variant='secondary' onClick={() => refetch()}>
                   Refrescar
@@ -382,10 +383,14 @@ const Kardex = () => {
                   <h3 className='text-light-2 font-ubuntu text-3xl'>
                     {kardex[0].producto.nombre}
                   </h3>
+                  <FaCircle
+                    size={24}
+                    className={cn({
+                      'fill-green-500': kardex[0].producto.estado === 'activo',
+                      'fill-red-500': kardex[0].producto.estado === 'inactivo'
+                    })}
+                  />
                 </div>
-                <Button variant='secondary' onClick={() => refetch()}>
-                  Refrescar
-                </Button>
               </div>
               <TableKardex columns={columns} data={kardex} />
             </section>

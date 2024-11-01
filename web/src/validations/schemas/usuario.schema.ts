@@ -1,5 +1,5 @@
+import { TipoUsuarioSchema } from '@/validations/schemas/tipo-usuario.schema'
 import { z } from 'zod'
-import { TipoUsuarioSchema } from './tipo-usuario.schema'
 
 export const UsuarioSchema = z.object({
   id_usuario: z.number().int().positive(),
