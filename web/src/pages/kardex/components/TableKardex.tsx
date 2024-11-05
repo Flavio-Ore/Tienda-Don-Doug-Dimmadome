@@ -31,13 +31,13 @@ const TableKardex = <TData, TValue>({
 
   return (
     <div className='rounded-md'>
-      <div className='bg-dark-2 border border-dark-4 '>
+      <div className='bg-dark-1 border border-dark-4 '>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <TableHead key={header.id} colSpan={header.colSpan}>
+                  <TableHead key={header.id} colSpan={header.colSpan} className='text-sm'>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -55,9 +55,10 @@ const TableKardex = <TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  className='border-b-dark-4'
                 >
                   {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className='text-center text-xs hover:bg-dark-3'>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

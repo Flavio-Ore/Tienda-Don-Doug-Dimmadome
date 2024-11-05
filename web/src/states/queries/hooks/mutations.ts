@@ -29,7 +29,8 @@ export function useMutationAddProduct () {
     mutationFn: saveProducto,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS]
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
+        type: 'all'
       })
     }
   })
@@ -41,7 +42,8 @@ export function useMutationChangeProductState () {
     mutationFn: updateEstadoProducto,
     onSuccess: () => {
       void queryClient.refetchQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS]
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
+        type: 'all'
       })
     }
   })
@@ -53,10 +55,12 @@ export function useMutationBuyProduct () {
     mutationFn: saveCompraProducto,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS]
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
+        type: 'all'
       })
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_KARDEXS]
+        queryKey: [QUERY_KEYS.GET_ALL_KARDEXS],
+        type: 'all'
       })
     }
   })
@@ -68,10 +72,12 @@ export function useMutationSellProduct () {
     mutationFn: saveVentaProducto,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS]
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
+        type: 'all'
       })
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_KARDEXS]
+        queryKey: [QUERY_KEYS.GET_ALL_KARDEXS],
+        type: 'all'
       })
     }
   })
@@ -83,7 +89,8 @@ export function useMutationAddProvider () {
     mutationFn: saveProveedor,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_PROVIDERS]
+        queryKey: [QUERY_KEYS.GET_ALL_PROVIDERS],
+        type: 'all'
       })
     }
   })
@@ -95,7 +102,8 @@ export function useMutationAddClient () {
     mutationFn: saveClienteReniec,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_CLIENTS]
+        queryKey: [QUERY_KEYS.GET_ALL_CLIENTS],
+        type: 'all'
       })
     }
   })
@@ -107,7 +115,8 @@ export function useMutationChangeClientState () {
     mutationFn: updateEstadoCliente,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_CLIENTS]
+        queryKey: [QUERY_KEYS.GET_ALL_CLIENTS],
+        type: 'all'
       })
     }
   })
@@ -119,7 +128,8 @@ export function useMutationAddUser () {
     mutationFn: saveUsuario,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_USERS]
+        queryKey: [QUERY_KEYS.GET_ALL_USERS],
+        type: 'all'
       })
     }
   })
@@ -131,7 +141,8 @@ export function useMutationChangeUserState () {
     mutationFn: updateEstadoUsuario,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_ALL_USERS]
+        queryKey: [QUERY_KEYS.GET_ALL_USERS],
+        type: 'all'
       })
     }
   })

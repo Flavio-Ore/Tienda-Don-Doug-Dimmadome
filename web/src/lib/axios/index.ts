@@ -4,6 +4,6 @@ const baseURL = import.meta.env.DEV
   : import.meta.env.VITE_PROD_API_URL
 
 export default axios.create({
-  baseURL: baseURL,
-  withCredentials: false
+  baseURL,
+  withCredentials: true
 })
