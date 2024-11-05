@@ -6,12 +6,14 @@ import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
 import { FaBoxOpen, FaSearch } from 'react-icons/fa'
 
+
 const Products = () => {
   const {
     data: products,
     isLoading: isProductsLoading,
     isError: isProductsError
   } = useQueryAllProducts()
+
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
 
@@ -34,7 +36,6 @@ const Products = () => {
     const { value } = e.target
     setSearchValue(value)
   }
-
   return (
     <section className='common-container'>
       <div className='inline-flex gap-x-2'>
@@ -66,6 +67,11 @@ const Products = () => {
           />
         </div>
       </div>
+      {/* <div>
+        {!isProductsLoading && !isProductsError && products != null && (
+          <ProductDataTable products={products} />
+        )}
+      </div> */}
       {isProductsLoading && (
         <div className='w-full'>
           <LoaderIcon className='mx-auto' />
@@ -76,18 +82,28 @@ const Products = () => {
           Hubo un error al cargar los productos
         </p>
       )}
-      {isTyping && !isProductsError && !isProductsLoading && products != null && filteredProducts.length <= 0 && (
-        <p className='text-light-3 body-bold text-center w-full'>
-          No se encontraron productos
-        </p>
-      )}
-      {!isTyping && !isProductsError && !isProductsLoading && products != null && products.length <= 0 && (
-        <p className='text-light-3 body-bold text-center w-full'>
-          No hay productos registrados
-        </p>
-      )}
+      {isTyping &&
+        !isProductsError &&
+        !isProductsLoading &&
+        products != null &&
+        filteredProducts.length <= 0 && (
+          <p className='text-light-3 body-bold text-center w-full'>
+            No se encontraron productos
+          </p>
+        )}
+      {!isTyping &&
+        !isProductsError &&
+        !isProductsLoading &&
+        products != null &&
+        products.length <= 0 && (
+          <p className='text-light-3 body-bold text-center w-full'>
+            No hay productos registrados
+          </p>
+        )}
       <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
-        {isTyping && !isProductsError && !isProductsLoading &&
+        {isTyping &&
+          !isProductsError &&
+          !isProductsLoading &&
           filteredProducts.length > 0 &&
           filteredProducts.map(product => (
             <ProductCard
@@ -99,7 +115,9 @@ const Products = () => {
             />
           ))}
 
-        {!isTyping && !isProductsError && !isProductsLoading &&
+        {!isTyping &&
+          !isProductsError &&
+          !isProductsLoading &&
           products != null &&
           products.length > 0 &&
           products.map(product => (

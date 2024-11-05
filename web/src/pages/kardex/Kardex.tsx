@@ -9,7 +9,7 @@ import TableKardex from '@pages/kardex/components/TableKardex'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { Fragment, useMemo, useState } from 'react'
 import { FaCircle, FaClipboardList, FaSearch } from 'react-icons/fa'
-import { FaTableCellsRowLock } from 'react-icons/fa6'
+import { FaArrowRightArrowLeft, FaTableCellsRowLock } from 'react-icons/fa6'
 
 const columnHelper = createColumnHelper<IKardex>()
 
@@ -25,12 +25,6 @@ const Kardex = () => {
 
   const columns = useMemo<ColumnDef<IKardex>[]>(
     () => [
-      // columnHelper.group({
-      //   id: 'idKardex',
-      //   columns: [
-
-      //   ]
-      // }),
       columnHelper.group({
         id: 'documento',
         header: () => {
@@ -60,20 +54,6 @@ const Kardex = () => {
             cell: info => {
               return <p className=''>{info.getValue().nombre}</p>
             }
-          }),
-          columnHelper.accessor('tipoOperacion', {
-            header: () => <span className='text-light-3 px-2'>Operación</span>,
-            cell: info => (
-              <p
-                className={cn('size-full p-2', {
-                  'bg-green-500/5 text-green-500':
-                    info.getValue() === 'Entrada',
-                  'bg-red-500/5 text-red-500': info.getValue() === 'Salida'
-                })}
-              >
-                {info.getValue()}
-              </p>
-            )
           })
         ]
       }),
@@ -204,6 +184,28 @@ const Kardex = () => {
                 </p>
               )
             }
+          })
+        ]
+      }),
+      columnHelper.group({
+        id: 'tipoOperacion',
+        header: () => <div className='w-full bg-yellow-500/5 py-4'>
+          <FaArrowRightArrowLeft size={16} className='fill-yellow-600 mx-auto' />
+        </div>,
+        columns: [
+          columnHelper.accessor('tipoOperacion', {
+            header: () => <span className='text-light-3 px-2'>Operación</span>,
+            cell: info => (
+              <p
+                className={cn('size-full p-2', {
+                  'bg-green-500/5 text-green-500':
+                    info.getValue() === 'Entrada',
+                  'bg-red-500/5 text-red-500': info.getValue() === 'Salida'
+                })}
+              >
+                {info.getValue()}
+              </p>
+            )
           })
         ]
       })

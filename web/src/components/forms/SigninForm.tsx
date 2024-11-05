@@ -88,6 +88,10 @@ const SigninForm = ({ className }: { className?: string }) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className='flex flex-col gap-5 w-full mt-4'
+          role='form'
+          aria-label='
+          Formulario de inicio de sesión
+          '
         >
           <FormField
             control={form.control}

@@ -15,7 +15,7 @@ import { IProducto } from '@/types'
 import { PRIVATE_ROUTES } from '@/values'
 import { format } from 'date-fns'
 import { useEffect } from 'react'
-import { FaCircle, FaPlusCircle } from 'react-icons/fa'
+import { FaCircle, FaPlusCircle, FaWrench } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 const getStockColor = (stock: number) => {
@@ -75,50 +75,55 @@ const ProductCard = ({ product }: { product: IProducto }) => {
         'opacity-25': product.estado.toLowerCase() === 'inactivo'
       })}
     >
-      <CardHeader className='flex-row items-center justify-between w-full'>
-        <CardTitle className=''>{product.nombre} </CardTitle>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant='link'
-                className='p-0'
-                disabled={isPending}
-                onClick={() => {
-                  handleClick({
-                    productId: product.idProducto,
-                    productState: product.estado
-                  })
-                }}
-              >
-                <span className='sr-only'>
-                  {product.estado === 'activo'
-                    ? 'Desactivar producto'
-                    : 'Activar producto'}
-                </span>
-                {isPending && <LoaderIcon className='size-5'/>}
-                {!isPending && (
-                  <FaCircle
-                    size={20}
-                    className={cn({
-                      'fill-green-700 hover:fill-green-500':
-                        product.estado === 'activo',
-                      'fill-red-700 hover:fill-red-500':
-                        product.estado === 'inactivo'
-                    })}
-                  />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <span className='text-light-3 text-xs'>
-                {product.estado === 'activo'
-                  ? 'Desactivar producto'
-                  : 'Activar producto'}
-              </span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <CardHeader className='flex-row flex-wrap items-center justify-between w-full'>
+        <div className='inline-flex items-center justify-between flex-wrap w-full'>
+          <CardTitle className='text-ellipsis'>{product.nombre} </CardTitle>
+          <div className='inline-flex items-center gap-x-2'>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant='link'
+                    className='p-0'
+                    disabled={isPending}
+                    onClick={() => {
+                      handleClick({
+                        productId: product.idProducto,
+                        productState: product.estado
+                      })
+                    }}
+                  >
+                    <span className='sr-only'>
+                      {product.estado === 'activo'
+                        ? 'Desactivar producto'
+                        : 'Activar producto'}
+                    </span>
+                    {isPending && <LoaderIcon className='size-5' />}
+                    {!isPending && (
+                      <FaCircle
+                        size={20}
+                        className={cn({
+                          'fill-green-700 hover:fill-green-500':
+                            product.estado === 'activo',
+                          'fill-red-700 hover:fill-red-500':
+                            product.estado === 'inactivo'
+                        })}
+                      />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className='text-light-3 text-xs'>
+                    {product.estado === 'activo'
+                      ? 'Desactivar producto'
+                      : 'Activar producto'}
+                  </span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+
         {/* <CardDescription>
           <span
             className={cn(
@@ -132,6 +137,33 @@ const ProductCard = ({ product }: { product: IProducto }) => {
             {product.estado}
           </span>
         </CardDescription> */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                to={
+                  product.estado.toLowerCase() === 'activo'
+                    ? PRIVATE_ROUTES.ADD_PRODUCT
+                    : '.'
+                }
+                className='p-0'
+              >
+                <span className='sr-only'>
+                  Editar producto {product.nombre}
+                </span>
+                {!isPending && (
+                  <FaWrench
+                    size={20}
+                    className='fill-violet-500 hover:fill-violet-500/80'
+                  />
+                )}
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span className='text-light-3 text-xs'>Editar producto</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardHeader>
       <CardContent>
         <ul className='flex flex-col gap-y-2 justify-between'>
@@ -165,7 +197,13 @@ const ProductCard = ({ product }: { product: IProducto }) => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Link to={PRIVATE_ROUTES.BUY_PRODUCT}>
+                    <Link
+                      to={
+                        product.estado.toLowerCase() === 'activo'
+                          ? PRIVATE_ROUTES.BUY_PRODUCT
+                          : '.'
+                      }
+                    >
                       <span className='sr-only'>Comprar Producto</span>
                       <FaPlusCircle
                         size={18}
