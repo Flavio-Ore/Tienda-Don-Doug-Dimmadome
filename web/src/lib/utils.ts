@@ -1,4 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
+import { format, Locale, parseISO } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { twMerge } from 'tailwind-merge'
 
 export function cn (...inputs: ClassValue[]) {
@@ -17,4 +19,23 @@ export const numberToCurrency = (value: number) => {
   }).format(Math.abs(value))
 
   return value < 0 ? `(${formattedValue})` : formattedValue
+}
+
+export const addOneDay = (date: Date | string) => {
+  const newDate = new Date(date)
+  newDate.setDate(newDate.getDate() + 1)
+  return newDate
+}
+
+export const formatDate = (dateString: string): string => {
+  const parsedDate = parseISO(dateString)
+  return format(parsedDate, 'yyyy-MM-dd')
+}
+
+export const formatDateDisplay = (
+  dateString: string,
+  locale: Locale = es
+): string => {
+  const parsedDate = parseISO(dateString)
+  return format(parsedDate, 'PPP', { locale })
 }

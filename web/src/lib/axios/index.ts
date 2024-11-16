@@ -5,5 +5,8 @@ const baseURL = import.meta.env.DEV
 
 export default axios.create({
   baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
   withCredentials: true
 })

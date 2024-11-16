@@ -154,7 +154,7 @@ export const PUBLIC_ROUTES = {
 export const PRIVATE_ROUTES = {
   INVENTORY: '/inventario',
   CREATE_KARDEX: '/inventario/crear-kardex',
-  PRODUCTS: '/inventario/productos-registrados',
+  PRODUCTS: '/inventario/productos',
   ADD_PRODUCT: '/inventario/registrar-nuevo-producto',
   PROVIDERS: '/inventario/proveedores',
   BUY_PRODUCT: '/inventario/comprar-producto',

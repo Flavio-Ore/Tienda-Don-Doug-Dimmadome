@@ -89,7 +89,7 @@ export const ENDPOINTS = {
       UPDATE_ESTADO: '/usuarios/{id}/estado'
     },
     PRODUCTO: {
-      UPDATE: '/producto/{id}',
+      UPDATE: (id: number) => `/producto/${id}`,
       UPDATE_ESTADO: '/producto/{id}/estado'
     }
   }

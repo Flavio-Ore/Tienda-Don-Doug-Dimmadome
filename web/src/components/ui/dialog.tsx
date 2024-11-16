@@ -9,7 +9,7 @@ import {
   forwardRef,
   type HTMLAttributes
 } from 'react';
-import { TbLetterX } from "react-icons/tb";
+import { FaTimes } from 'react-icons/fa';
 
 const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
@@ -45,7 +45,7 @@ ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
     >
       {children}
       <DialogPrimitive.Close className='absolute right-2 top-2 rounded-md p-1 opacity-50 transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-light-1'>
-        <TbLetterX className='stroke-red-500' size={24} />
+        <FaTimes  className='fill-red-500' size={24} />
         <span className='sr-only'>Cerrar</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -109,7 +109,7 @@ ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      buttonVariants({ variant: 'outline' }),
+      buttonVariants({ variant: 'ghost' }),
       'mt-2 sm:mt-0',
       className
     )}

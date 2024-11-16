@@ -421,17 +421,22 @@ const BuyProductForm = () => {
                     Elija primero un producto
                   </span>
                 </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder='Precio unitario'
-                    min={0}
-                    step={0.01}
-                    disabled={buyProductForm.getValues('producto') == null}
-                    {...field}
-                    onChange={e => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
+                <div className='inline-flex w-full items-center gap-x-0.5'>
+                  <span className='p-2 bg-dark-1 rounded-md border border-light-3 text-sm'>
+                    S/.
+                  </span>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      placeholder='Precio unitario'
+                      min={0}
+                      step={0.01}
+                      disabled={buyProductForm.getValues('producto') == null}
+                      {...field}
+                      onChange={e => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                </div>
                 <FormMessage className='shad-form_message' />
                 <FormDescription>
                   Precio por unidad del producto que el proveedor ofrece

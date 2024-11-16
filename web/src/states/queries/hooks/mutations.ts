@@ -1,20 +1,18 @@
-import {
-  saveClienteReniec,
-  updateEstadoCliente
-} from '@/services/doug-dimadon/clientes'
+import { QUERY_KEYS } from '@/states/queries/values/query-keys'
+import { saveClienteReniec, updateEstadoCliente } from '@doug-dimadon/clientes'
 import {
   saveCompraProducto,
   saveProducto,
   saveVentaProducto,
-  updateEstadoProducto
-} from '@/services/doug-dimadon/productos'
-import { saveProveedor } from '@/services/doug-dimadon/proveedores'
+  updateEstadoProducto,
+  updateProducto
+} from '@doug-dimadon/productos'
+import { saveProveedor } from '@doug-dimadon/proveedores'
 import {
   loginUsuario,
   saveUsuario,
   updateEstadoUsuario
-} from '@/services/doug-dimadon/usuarios'
-import { QUERY_KEYS } from '@/states/queries/values/query-keys'
+} from '@doug-dimadon/usuarios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationSignin () {
@@ -27,6 +25,19 @@ export function useMutationAddProduct () {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: saveProducto,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
+        type: 'all'
+      })
+    }
+  })
+}
+
+export function useMutationUpdateProduct () {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: updateProducto,
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],

@@ -278,7 +278,7 @@ const Kardex = () => {
   })
 
   return (
-    <div className='flex flex-col flex-1 gap-10 overflow-y-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar w-full'>
+    <section className='common-container'>
       <div className='inline-flex gap-x-2'>
         <FaTableCellsRowLock size={56} className='fill-blue-500' />
         <div>
@@ -401,7 +401,7 @@ const Kardex = () => {
         ))}
       {/* <TableKardex columns={columns} data={kardexs} />
       <hr className='border-light-3 mt-5' /> */}
-    </div>
+    </section>
   )
 }
 

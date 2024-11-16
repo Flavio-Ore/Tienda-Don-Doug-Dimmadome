@@ -2,6 +2,7 @@ import axios from '@/lib/axios'
 import { IProducto } from '@/types'
 import { BuyProductSchema } from '@/validations/buyProduct.schema'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { saveDetalleEntrada, saveEntrada } from '@doug-dimadon/entradas'
 import { saveDetalleSalida, saveSalida } from '@doug-dimadon/salidas'
@@ -75,6 +76,16 @@ export const saveVentaProducto = async (
       total: venta.total
     })
   }
+}
+
+export const updateProducto = async ({
+  idProducto,
+  producto
+}: {
+  idProducto: number
+  producto: z.infer<typeof EditProductFormSchema>
+}) => {
+  return await axios.put(ENDPOINTS.PUT.PRODUCTO.UPDATE(idProducto), producto)
 }
 
 export const updateEstadoProducto = async ({

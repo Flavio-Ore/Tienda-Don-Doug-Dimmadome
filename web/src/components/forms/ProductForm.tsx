@@ -17,7 +17,7 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { FaParachuteBox, FaRegCalendarAlt } from 'react-icons/fa'
+import { FaCalendarAlt, FaParachuteBox } from 'react-icons/fa'
 import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { useToast } from '@/hooks/use-toast'
@@ -149,9 +149,9 @@ const ProductForm = () => {
                         ) : (
                           <span>Elige una fecha</span>
                         )}
-                        <FaRegCalendarAlt
+                        <FaCalendarAlt
                           strokeWidth={1.25}
-                          className='ml-auto h-4 w-4 fill-light-1'
+                          className='ml-auto h-4 w-4 fill-violet-500'
                         />
                       </Button>
                     </FormControl>
@@ -271,18 +271,23 @@ const ProductForm = () => {
                 <FormLabel className='shad-form_label'>
                   Precio de venta
                 </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder='Precio del producto'
-                    min={0}
-                    step={0.01}
-                    {...field}
-                    onChange={e => {
-                      field.onChange(Number(e.target.value))
-                    }}
-                  />
-                </FormControl>
+                <div className='inline-flex w-full items-center gap-x-0.5'>
+                  <span className='p-2 bg-dark-1 rounded-md border border-light-3 text-sm'>
+                    S/.
+                  </span>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      placeholder='Precio del producto'
+                      min={0}
+                      step={0.01}
+                      {...field}
+                      onChange={e => {
+                        field.onChange(Number(e.target.value))
+                      }}
+                    />
+                  </FormControl>
+                </div>
                 <FormMessage className='shad-form_message' />
                 <FormDescription>
                   Nombre del producto que se mostrará en la tienda
