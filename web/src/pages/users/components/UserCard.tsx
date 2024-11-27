@@ -1,11 +1,6 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Tooltip,
   TooltipContent,
@@ -48,6 +43,7 @@ const UserCard = ({ user }: { user: IUsuario }) => {
         variant: 'destructive'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError])
 
   return (

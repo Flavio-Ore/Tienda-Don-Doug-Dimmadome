@@ -1,5 +1,5 @@
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
-import { UserSchema } from '@/validations/forms/addUser.schema'
+import { UserFormSchema } from '@/validations/forms/addUser.schema'
 import { z } from 'zod'
 
 export interface InventarioDimadon {
@@ -34,7 +34,7 @@ export interface IInventoryContext {
   providers: IProveedor[]
   searchProviders: ({ searchTerm = '' }: { searchTerm: string }) => IProveedor[]
   users: IUsuario[]
-  addUser: (user: z.infer<typeof UserSchema>) => void
+  addUser: (user: z.infer<typeof UserFormSchema>) => void
   searchUsers: ({ searchTerm = '' }: { searchTerm: string }) => IUsuario[]
   userTypes: ITipoUsuario[]
   kardexs: IKardex[]
@@ -89,6 +89,16 @@ export interface IPedidoProducto {
   total: number
 }
 
+export interface IAuthContext {
+  user: IUsuario | undefined
+  isError: boolean
+  isLoading: boolean
+  isAuthenticated: boolean
+  checkAuth: () => Promise<boolean>
+  login: (login: { email: string; password: string }) => Promise<boolean>
+  logout: () => void
+}
+
 export interface ICategoriaProducto {
   idCategoria: number
   nombre: string
@@ -101,6 +111,7 @@ export interface IProducto {
   stock: number
   fechaVencimiento: Date | string
   categoria: ICategoriaProducto
+  descripcion: string
   estado: string
 }
 export interface ITipoPago {
@@ -131,7 +142,7 @@ export interface IKardex {
   nombreProducto: string
   fecha: string
   tipoOperacion: string
-  empresa: string
+  descripcion: string
   cantidadEntrada: number
   costoUnitarioEntrada: number
   costoTotalEntrada: number
@@ -151,6 +162,16 @@ export interface ISalida {
   costoTotal: number
 }
 
+export interface IDetalleSalida {
+  idDetalle: number
+  salida: ISalida
+  producto: IProducto
+  cantidad: number
+  costoUnitario: number
+  total: number
+  descripcion: string
+}
+
 export interface IEntrada {
   idEntrada: number
   usuario: IUsuario
@@ -163,10 +184,10 @@ export interface IDetalleEntrada {
   idDetalle: number
   entrada: IEntrada
   producto: IProducto
-  nombreProducto: string
   cantidad: number
   costoUnitario: number
   subtotal: number
+  descripcion: string
 }
 
 export interface Usuario {

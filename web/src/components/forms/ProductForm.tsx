@@ -93,6 +93,7 @@ const ProductForm = () => {
     return () => {
       formSubscription.unsubscribe()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchName])
 
   return (

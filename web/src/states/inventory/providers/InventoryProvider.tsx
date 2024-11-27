@@ -1,7 +1,7 @@
 import {
-  loadFromLocalStorage,
-  removeFromLocalStorage,
-  saveToLocalStorage
+    loadFromLocalStorage,
+    removeFromLocalStorage,
+    saveToLocalStorage
 } from '@/lib/local-storage'
 import PRODUCTS_CATEGORY from '@/mocks/categoria-producto.mock.json'
 import CLIENTS_JSON from '@/mocks/clients.mock.json'
@@ -12,16 +12,16 @@ import USER_TYPES_JSON from '@/mocks/tipo-usuario.mock.json'
 import USERS_JSON from '@/mocks/user.mock.json'
 import InventoryContext from '@/states/inventory/contexts/InventoryContext'
 import {
-  ICategoriaProducto,
-  ICliente,
-  ITipoUsuario,
-  type IKardex,
-  type IProducto,
-  type IProveedor,
-  type IUsuario
+    ICategoriaProducto,
+    ICliente,
+    ITipoUsuario,
+    type IKardex,
+    type IProducto,
+    type IProveedor,
+    type IUsuario
 } from '@/types'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
-import { UserSchema } from '@/validations/forms/addUser.schema'
+import { UserFormSchema } from '@/validations/forms/addUser.schema'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
@@ -105,7 +105,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
       nombreProducto: newProduct.nombre,
       fecha: new Date().toISOString().split('T')[0], // Current date
       tipoOperacion: 'Inicial',
-      empresa: '',
+      descripcion: '',
       cantidadEntrada: newProduct.stock,
       costoUnitarioEntrada: newProduct.precioUnitario,
       costoTotalEntrada: newProduct.stock * newProduct.precioUnitario,
@@ -203,7 +203,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     const searchTermLowercase = searchTerm.toLowerCase()
     return kardexs.filter(
       k =>
-        k.empresa.toLowerCase().includes(searchTermLowercase) ||
+        k.descripcion.toLowerCase().includes(searchTermLowercase) ||
         k.fecha.toLowerCase().includes(searchTermLowercase) ||
         k.nombreProducto.toLowerCase().includes(searchTermLowercase) ||
         k.tipoOperacion.toLowerCase().includes(searchTermLowercase) ||
@@ -257,7 +257,7 @@ const InventoryProvider = ({ children }: { children: React.ReactNode }) => {
     )
   }
 
-  const addUser = (user: z.infer<typeof UserSchema>) => {
+  const addUser = (user: z.infer<typeof UserFormSchema>) => {
     const newUser = {
       idUsuario: users.length + 1,
       nombre: user.nombre,

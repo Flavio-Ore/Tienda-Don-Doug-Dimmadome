@@ -1,6 +1,6 @@
 import axios from '@/lib/axios'
 import { IProveedor } from '@/types'
-import { ProviderValidationSchema } from '@/validations/forms/addProvider.schema'
+import { ProviderFormSchema } from '@/validations/forms/addProvider.schema'
 import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import { z } from 'zod'
 
@@ -9,7 +9,7 @@ export const getAllProveedores = async () => {
 }
 
 export const saveProveedor = async (
-  producto: z.infer<typeof ProviderValidationSchema>
+  producto: z.infer<typeof ProviderFormSchema>
 ) => {
   return await axios.post(ENDPOINTS.POST.PROVEEDOR.CREATE, producto)
 }

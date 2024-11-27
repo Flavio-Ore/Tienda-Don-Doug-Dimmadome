@@ -40,11 +40,11 @@ const ReturnProductForm = () => {
   const returnProductForm = useForm<z.infer<typeof ReturnProductFormSchema>>({
     resolver: zodResolver(ReturnProductFormSchema),
     defaultValues: {
-      DNI: '',
-      idProducto: -1,
-      cantidad: 1,
-      typeReturn: undefined,
-      description: ''
+      idCliente: undefined,
+      idProducto: undefined,
+      idTipoDevolucion: undefined,
+      cantidad: 0,
+      descripcion: ''
     }
   })
 
@@ -73,10 +73,10 @@ const ReturnProductForm = () => {
       >
         <FormField
           control={returnProductForm.control}
-          name='DNI'
+          name='idCliente'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>DNI</FormLabel>
+              <FormLabel className='shad-form_label'>Cliente</FormLabel>
               <FormControl>
                 <Input
                   type='text'
@@ -172,7 +172,7 @@ const ReturnProductForm = () => {
         />
         <FormField
           control={returnProductForm.control}
-          name='typeReturn'
+          name='idTipoDevolucion'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>
@@ -239,7 +239,7 @@ const ReturnProductForm = () => {
         />
         <FormField
           control={returnProductForm.control}
-          name='description'
+          name='descripcion'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Descripción</FormLabel>

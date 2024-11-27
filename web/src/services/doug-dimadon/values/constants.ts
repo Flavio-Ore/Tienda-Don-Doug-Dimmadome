@@ -45,6 +45,10 @@ export const ENDPOINTS = {
     }
   },
   POST: {
+    AUTH: {
+      LOGIN: '/auth/login',
+      REGISTRO: '/auth/registro'
+    },
     API_RENIEC: {
       CREATE: '/api/reniec/dni'
     },

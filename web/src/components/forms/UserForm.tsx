@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import { useToast } from '@/hooks/use-toast'
 import { useMutationAddUser } from '@/states/queries/hooks/mutations'
 import { useQueryAllUserTypes } from '@/states/queries/hooks/queries'
-import { UserSchema } from '@/validations/forms/addUser.schema'
+import { UserFormSchema } from '@/validations/forms/addUser.schema'
 import { PRIVATE_ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
@@ -47,8 +47,8 @@ const UserForm = () => {
   const { toast } = useToast()
   const navigate = useNavigate()
 
-  const userForm = useForm<z.infer<typeof UserSchema>>({
-    resolver: zodResolver(UserSchema),
+  const userForm = useForm<z.infer<typeof UserFormSchema>>({
+    resolver: zodResolver(UserFormSchema),
     defaultValues: {
       nombre: '',
       email: '',
@@ -59,7 +59,7 @@ const UserForm = () => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
-  const onSubmit = async (value: z.infer<typeof UserSchema>) => {
+  const onSubmit = async (value: z.infer<typeof UserFormSchema>) => {
     try {
       console.log(value)
       await addUser(value)
@@ -86,6 +86,7 @@ const UserForm = () => {
           ' Ocurrió un error al intentar crear el usuario. Por favor, intenta de nuevo.'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError])
 
   return (

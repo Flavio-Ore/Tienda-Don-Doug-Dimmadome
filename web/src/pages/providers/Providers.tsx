@@ -93,7 +93,7 @@ const Providers = () => {
         </p>
       )}
       {!isTyping && providers != null && providers.length <= 0 && (
-        <p className='text-light-3 body-bold text-center w-full'>
+        <p className='text-light-3 body-bold text-center w-full animate-pulse'>
           No hay proveedores registrados
         </p>
       )}

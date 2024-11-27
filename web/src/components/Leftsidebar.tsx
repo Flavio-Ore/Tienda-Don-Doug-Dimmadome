@@ -20,11 +20,13 @@ import {
 import { NavLink, useLocation } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
+import useAuth from '@/states/auth/hooks/useAuth'
 import { PRIVATE_ROUTES } from '@/values'
 import LogoutDialog from '@components/LogoutDialog'
 import { FaUsersCog } from 'react-icons/fa'
 
 const Leftsidebar = () => {
+  const { user } = useAuth()
   const { pathname } = useLocation()
 
   return (
@@ -39,6 +41,7 @@ const Leftsidebar = () => {
             className='block w-8 mx-auto lg:m-0'
             src='/Stock_Image_of_Doug_Dimmadome_logo.png'
           />
+          <p>{user != null ? user.nombre : 'Cargando...'}</p>
         </div>
         <hr className='w-full border-light-3' />
         <ul className='flex flex-col gap-2'>
@@ -110,9 +113,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-3': pathname.includes(
-                      PRIVATE_ROUTES.PRODUCTS
-                    )
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.PRODUCTS)
                   }
                 )}
               >
@@ -239,7 +240,11 @@ const Leftsidebar = () => {
           <hr className='w-full border-light-3 my-4' />
           <li className='flex flex-col justify-start'>
             <div className='inline-flex gap-x-2 items-center'>
-              <FaUsersViewfinder className='fill-teal-500' size={24} strokeWidth={1.25} />
+              <FaUsersViewfinder
+                className='fill-teal-500'
+                size={24}
+                strokeWidth={1.25}
+              />
               <h3 className='text-light-1 text-sm relative xl:text-lg font-ubuntu'>
                 Usuarios
               </h3>

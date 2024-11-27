@@ -137,6 +137,7 @@ const BuyProductForm = () => {
     if (currentUser != null) {
       buyProductForm.setValue('idUsuario', currentUser.idUsuario)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser])
 
   useEffect(() => {
@@ -146,6 +147,7 @@ const BuyProductForm = () => {
       watchCostoUnitario,
       watchIdProducto
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchCantidad, watchCostoUnitario, watchIdProducto])
 
   return (
@@ -211,11 +213,25 @@ const BuyProductForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un proveedor...' />
                     <CommandList>
-                      {!isLoadingProviders && !isErrorProviders && (
-                        <CommandEmpty>
-                          No se encontraron proveedores
-                        </CommandEmpty>
-                      )}
+                      {!isLoadingProviders &&
+                        !isErrorProviders &&
+                        providers != null &&
+                        providers.length > 0 && (
+                          <CommandEmpty>
+                            No se encontraron proveedores
+                          </CommandEmpty>
+                        )}
+                      {!isErrorProviders &&
+                        !isLoadingProviders &&
+                        providers?.length === 0 && (
+                          <CommandEmpty>Registra un proveedor</CommandEmpty>
+                        )}
+                      {providers != null &&
+                        !isErrorProviders &&
+                        !isLoadingProviders &&
+                        providers?.length > 0 && (
+                          <CommandEmpty>Proveedor no encontrado</CommandEmpty>
+                        )}
                       {isErrorProviders && (
                         <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
                           Hubo un error al cargar los proveedores
@@ -304,16 +320,18 @@ const BuyProductForm = () => {
                   <Command>
                     <CommandInput placeholder='Busca un cliente...' />
                     <CommandList>
-                      {!isLoadingProducts && !isErrorProducts && (
-                        <CommandEmpty>Producto no encontrado.</CommandEmpty>
-                      )}
                       {!isErrorProducts &&
                         !isLoadingProducts &&
-                        products != null &&
-                        products.length === 0 && (
+                        products?.length === 0 && (
                           <CommandEmpty>
-                            No hay categorías disponibles
+                            Registra un producto para vender
                           </CommandEmpty>
+                        )}
+                      {products != null &&
+                        !isErrorProducts &&
+                        !isLoadingProducts &&
+                        products?.length > 0 && (
+                          <CommandEmpty>Producto no encontrado.</CommandEmpty>
                         )}
                       <CommandGroup>
                         {isErrorProducts && (

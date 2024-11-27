@@ -1,19 +1,19 @@
 import axios from '@/lib/axios'
-import { ILoginResponse, IUsuario } from '@/types'
-import { UserSchema } from '@/validations/forms/addUser.schema'
-import { SigninSchema } from '@/validations/forms/signIn.schema'
+import { IUsuario } from '@/types'
+import { UserFormSchema } from '@/validations/forms/addUser.schema'
 import { ENDPOINTS } from '@doug-dimadon/values/constants'
+import Cookies from 'js-cookie'
 import { z } from 'zod'
 export const getAllUsuarios = async () => {
-  return await axios.get<IUsuario[]>(ENDPOINTS.GET.USUARIO.READ_ALL)
+  return await axios.get<IUsuario[]>(ENDPOINTS.GET.USUARIO.READ_ALL, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token') ?? ''}`
+    }
+  })
 }
 
-export const saveUsuario = async (usuario: z.infer<typeof UserSchema>) => {
+export const saveUsuario = async (usuario: z.infer<typeof UserFormSchema>) => {
   return await axios.post<IUsuario>(ENDPOINTS.POST.USUARIO.CREATE, usuario)
-}
-
-export const loginUsuario = async (usuario: z.infer<typeof SigninSchema>) => {
-  return await axios.post<ILoginResponse>(ENDPOINTS.POST.USUARIO.LOGIN, usuario)
 }
 
 export const updateEstadoUsuario = async ({

@@ -89,13 +89,13 @@ const Clients = () => {
         isErrorClients &&
         clients != null &&
         searchedClients.length <= 0 && (
-          <p className='text-light-3 body-bold text-center w-full'>
+          <p className='text-light-3 body-bold text-center w-full animate-pulse'>
             No se encontraron clientes
           </p>
         )}
       {!isTyping &&
         !isLoadingClients &&
-        isErrorClients &&
+        !isErrorClients &&
         clients != null &&
         clients.length <= 0 && (
           <p className='text-light-3 body-bold text-center w-full'>

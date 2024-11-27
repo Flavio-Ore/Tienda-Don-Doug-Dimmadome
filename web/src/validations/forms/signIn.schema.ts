@@ -1,13 +1,13 @@
 import { z } from 'zod'
 
-export const SigninSchema = z.object({
+export const SigninFormSchema = z.object({
   email: z.string().email({
     message: 'El email no es válido'
   }),
-  contrasena: z
+  password: z
     .string()
-    .min(8, {
-      message: 'Tu contraseña debe tener al menos 8 caracteres'
+    .min(7, {
+      message: 'Tu contraseña debe tener al menos 7 caracteres'
     })
     .max(255, {
       message: 'Tu contraseña debe tener menos de 255 caracteres'

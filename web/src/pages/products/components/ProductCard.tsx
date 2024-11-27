@@ -144,6 +144,7 @@ const ProductCard = ({ product }: { product: IProducto }) => {
         variant: 'destructive'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError])
 
   useEffect(() => {
@@ -153,6 +154,7 @@ const ProductCard = ({ product }: { product: IProducto }) => {
         variant: 'destructive'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdateProductError])
 
   return (

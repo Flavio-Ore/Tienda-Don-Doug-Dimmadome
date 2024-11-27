@@ -1,3 +1,4 @@
+import { authLogin } from '@/services/doug-dimadon/auth'
 import { QUERY_KEYS } from '@/states/queries/values/query-keys'
 import { saveClienteReniec, updateEstadoCliente } from '@doug-dimadon/clientes'
 import {
@@ -9,7 +10,6 @@ import {
 } from '@doug-dimadon/productos'
 import { saveProveedor } from '@doug-dimadon/proveedores'
 import {
-  loginUsuario,
   saveUsuario,
   updateEstadoUsuario
 } from '@doug-dimadon/usuarios'
@@ -17,7 +17,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationSignin () {
   return useMutation({
-    mutationFn: loginUsuario
+    mutationFn: authLogin
   })
 }
 

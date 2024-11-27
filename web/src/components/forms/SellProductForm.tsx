@@ -80,11 +80,7 @@ const SellProductForm = () => {
   const watchIdProducto = sellProductForm.watch('idProducto')
   const watchCostoUnitario = sellProductForm.watch('precioUnitario')
   const selectedProduct = useMemo(
-    () =>
-      products?.find(
-        product =>
-          product.idProducto === sellProductForm.getValues('idProducto')
-      ),
+    () => products?.find(product => product.idProducto === watchIdProducto),
     [products, watchIdProducto]
   )
 
@@ -154,12 +150,13 @@ const SellProductForm = () => {
         sellProductForm.clearErrors('cantidad')
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchCantidad, watchIdProducto])
 
   useEffect(() => {
     if (products == null) return
     const selectedProduct = products.find(
-      product => product.idProducto === sellProductForm.getValues('idProducto')
+      product => product.idProducto === watchIdProducto
     )
     if (selectedProduct != null) {
       sellProductForm.setValue('precioUnitario', selectedProduct.precioUnitario)
@@ -300,7 +297,7 @@ const SellProductForm = () => {
                     <CommandInput placeholder='Busca un tipo de comprobante...' />
                     <CommandList>
                       {!isErrorPaymentMethods && !isLoadingPaymentMethods && (
-                        <CommandEmpty>Tipo de pago no encontrado.</CommandEmpty>
+                        <CommandEmpty>Tipo de pago no encontrado</CommandEmpty>
                       )}
                       {isErrorPaymentMethods && (
                         <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>

@@ -12,18 +12,16 @@ import Providers from '@pages/providers/Providers'
 import ReturnProduct from '@pages/return-product/ReturnProduct'
 import SellProduct from '@pages/sell-product/SellProduct'
 import Users from '@pages/users/Users'
-import { Toaster } from '@shadcn/toaster'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 function App () {
   return (
     <main className='flex h-dvh text-yellow-50'>
-      <Toaster />
       <ReactQueryDevtools />
       <Routes>
         <Route path={PUBLIC_ROUTES.LOGIN} element={<Auth />}>
-          <Route element={<Login />} />
+          <Route index element={<Login />} />
         </Route>
         <Route path={PRIVATE_ROUTES.INVENTORY} element={<Root />}>
           <Route element={<Kardex />} />

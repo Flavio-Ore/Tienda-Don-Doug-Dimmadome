@@ -236,7 +236,7 @@ const Kardex = () => {
               .toLowerCase()
               .includes(debouncedValueLowerCase) ||
             kardex.fecha.toLowerCase().includes(debouncedValueLowerCase) ||
-            kardex.empresa.toLowerCase().includes(debouncedValueLowerCase) ||
+            kardex.descripcion.toLowerCase().includes(debouncedValueLowerCase) ||
             kardex.tipoOperacion
               .toLowerCase()
               .includes(debouncedValueLowerCase) ||
