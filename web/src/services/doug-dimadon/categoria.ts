@@ -1,7 +1,7 @@
 import axios from '@/lib/axios'
+import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
 import { ICategoriaProducto } from '@/types'
 import { CategoryFormSchema } from '@/validations/forms/addCategory.schema'
-import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import Cookies from 'js-cookie'
 import { z } from 'zod'
 

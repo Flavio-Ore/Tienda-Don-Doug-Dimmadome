@@ -490,6 +490,17 @@ const ProductCard = ({ product }: { product: IProducto }) => {
               {product.categoria.nombre}
             </Badge>
           </li>
+          <li className='grid grid-cols-2 items-start'>
+            <span className='text-sm text-light-3 max-w-max'>
+              Unidad Medida:
+            </span>
+            <Badge variant='default' className='max-w-max'>
+              {product.descripcion?.trim().length <= 0 ||
+              product.descripcion == null
+                ? 'N/A'
+                : product.descripcion}
+            </Badge>
+          </li>
         </ul>
       </CardContent>
     </Card>

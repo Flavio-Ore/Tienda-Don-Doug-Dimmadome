@@ -1,5 +1,4 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/useDebounce'
 import { cn, numberToCurrency } from '@/lib/utils'
@@ -17,8 +16,7 @@ const Kardex = () => {
   const {
     data: kardexs,
     isLoading: isLoadingKardexs,
-    isError: isErrorKardexs,
-    refetch
+    isError: isErrorKardexs
   } = useQueryAllKardexs()
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
@@ -45,8 +43,10 @@ const Kardex = () => {
             header: () => <p className='text-light-3 px-2'>Fecha</p>,
             cell: info => <time className=''>{info.getValue()}</time>
           }),
-          columnHelper.accessor('empresa', {
-            header: () => <span className='text-light-3 px-2'>Empresa</span>,
+          columnHelper.accessor('descripcion', {
+            header: () => (
+              <span className='text-light-3 px-2'>Descripción</span>
+            ),
             cell: info => <p className=''>{info.getValue()}</p>
           }),
           columnHelper.accessor('producto', {
@@ -189,9 +189,14 @@ const Kardex = () => {
       }),
       columnHelper.group({
         id: 'tipoOperacion',
-        header: () => <div className='w-full bg-yellow-500/5 py-4'>
-          <FaArrowRightArrowLeft size={16} className='fill-yellow-600 mx-auto' />
-        </div>,
+        header: () => (
+          <div className='w-full bg-yellow-500/5 py-4'>
+            <FaArrowRightArrowLeft
+              size={16}
+              className='fill-yellow-600 mx-auto'
+            />
+          </div>
+        ),
         columns: [
           columnHelper.accessor('tipoOperacion', {
             header: () => <span className='text-light-3 px-2'>Operación</span>,
@@ -236,7 +241,9 @@ const Kardex = () => {
               .toLowerCase()
               .includes(debouncedValueLowerCase) ||
             kardex.fecha.toLowerCase().includes(debouncedValueLowerCase) ||
-            kardex.descripcion.toLowerCase().includes(debouncedValueLowerCase) ||
+            kardex.descripcion
+              .toLowerCase()
+              .includes(debouncedValueLowerCase) ||
             kardex.tipoOperacion
               .toLowerCase()
               .includes(debouncedValueLowerCase) ||
@@ -353,9 +360,6 @@ const Kardex = () => {
                     })}
                   />
                 </div>
-                <Button variant='secondary' onClick={() => refetch()}>
-                  Refrescar
-                </Button>
               </div>
               <TableKardex columns={columns} data={kardex} />
             </section>

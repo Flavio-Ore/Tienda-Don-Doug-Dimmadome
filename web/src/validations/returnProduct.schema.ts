@@ -1,34 +1,40 @@
 import z from 'zod'
 /*
 {
-  "producto":{"idProducto":4},
-  "cliente":{"idCliente": 3},
-  "cantidad": 13,
-  "tipoDevolucion": {"idTipoDevolucion":2},
-  "descripcion":"primera devolucion"
-  
+  "producto": {
+    "idProducto": 1
+  },
+  "cliente": {
+    "idCliente": 1
+  },
+  "cantidad": 10,
+  "tipoDevolucion": {
+    "idTipoDevolucion": 2
+  },
+  "descripcion": "primera devolucion"
 }
 */
 
 export const ReturnProductFormSchema = z.object({
-  idProducto: z.number().nonnegative({
-    message: 'El ID del producto no puede ser negativo'
+  producto: z.object({
+    idProducto: z.number().nonnegative({
+      message: 'El producto es obligatorio'
+    })
   }),
-  idCliente: z.number().nonnegative({
-    message: 'El ID del cliente no puede ser negativo'
+  cliente: z.object({
+    idCliente: z.number().nonnegative({
+      message: 'El cliente es obligatorio'
+    })
   }),
   cantidad: z.number().positive({
-    message: 'La cantidad debe ser mayor a 0'
+    message: 'La cantidad no puede ser negativa'
   }),
-  idTipoDevolucion: z.number().nonnegative({
-    message: 'Tipo de devolución inválido'
+  tipoDevolucion: z.object({
+    idTipoDevolucion: z.number().nonnegative({
+      message: 'El tipo de devolución es obligatorio'
+    })
   }),
-  descripcion: z
-    .string()
-    .min(1, {
-      message: 'La descripción no puede estar vacía'
-    })
-    .max(255, {
-      message: 'La descripción no puede tener más de 255 caracteres'
-    })
+  descripcion: z.string().nonempty({
+    message: 'La descripción es obligatoria'
+  })
 })

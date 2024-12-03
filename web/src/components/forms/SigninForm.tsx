@@ -23,13 +23,13 @@ import { z } from 'zod'
 const SigninForm = ({ className }: { className?: string }) => {
   const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
-  const { login, checkAuth, isLoading, isAuthenticated } = useAuth()
+  const { login, isLoading } = useAuth()
   const navigate = useNavigate()
   const form = useForm<z.infer<typeof SigninFormSchema>>({
     resolver: zodResolver(SigninFormSchema),
     defaultValues: {
       email: '',
-      password: ''
+      contrasena: ''
     }
   })
   const handleClickShowPassword = () => {
@@ -38,13 +38,17 @@ const SigninForm = ({ className }: { className?: string }) => {
   async function onSubmit (values: z.infer<typeof SigninFormSchema>) {
     console.log(values)
     try {
-      await login({
+      const isLogged = await login({
         email: values.email,
-        password: values.password
+        contrasena: values.contrasena
       })
-      await checkAuth()
-      if (isAuthenticated) {
+      if (isLogged) {
         navigate('/inventario')
+      } else {
+        toast({
+          title: 'Credenciales incorrectas',
+          variant: 'destructive'
+        })
       }
     } catch (error) {
       console.error(error)
@@ -97,7 +101,7 @@ const SigninForm = ({ className }: { className?: string }) => {
           />
           <FormField
             control={form.control}
-            name='password'
+            name='contrasena'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Contraseña</FormLabel>

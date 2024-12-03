@@ -10,7 +10,7 @@ import {
   FormMessage
 } from '@shadcn/form'
 import { Input } from '@shadcn/input'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaRegHandshake } from 'react-icons/fa6'
 
@@ -23,12 +23,14 @@ import { z } from 'zod'
 import { cn, numberToCurrency } from '@/lib/utils'
 import { LuChevronsUpDown } from 'react-icons/lu'
 
+import { loadFromLocalStorage } from '@/lib/local-storage'
 import { useMutationBuyProduct } from '@/states/queries/hooks/mutations'
 import {
   useQueryAllProducts,
   useQueryAllProviders,
   useQueryAllUsers
 } from '@/states/queries/hooks/queries'
+import { IProducto, IUsuario } from '@/types'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Command,
@@ -40,8 +42,22 @@ import {
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
-
+import { FaCartArrowDown, FaCartPlus } from 'react-icons/fa'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '../ui/card'
+import { Textarea } from '../ui/textarea'
+interface IProductsToBeSold extends IProducto {
+  cantidad: number
+}
 const BuyProductForm = () => {
+  const [selectedProducts, setSelectedProducts] = useState<IProductsToBeSold[]>(
+    []
+  )
   const {
     data: products,
     isLoading: isLoadingProducts,
@@ -63,9 +79,14 @@ const BuyProductForm = () => {
     isError
   } = useMutationBuyProduct()
 
+  const storedUser = useMemo(
+    () => loadFromLocalStorage<IUsuario>('CURRENT_USER'),
+    []
+  )
+
   const currentUser = useMemo(() => {
-    return users?.find(user => user.idUsuario === 2) ?? null
-  }, [users])
+    return users?.find(user => user.idUsuario === storedUser?.idUsuario) ?? null
+  }, [users, storedUser])
 
   console.log({
     products,
@@ -79,49 +100,152 @@ const BuyProductForm = () => {
   const buyProductForm = useForm<z.infer<typeof BuyProductSchema>>({
     resolver: zodResolver(BuyProductSchema),
     defaultValues: {
-      producto: undefined,
-      idUsuario: currentUser?.idUsuario ?? 0,
-      idProveedor: undefined,
-      cantidad: 1,
-      costoUnitario: 0,
-      total: 0
+      productos: [],
+      usuario: {
+        idUsuario: 0
+      },
+      proveedor: {
+        id: 0
+      },
+      total: 0,
+      descripcion: ''
     }
   })
-  const watchCantidad = buyProductForm.watch('cantidad')
-  const watchCostoUnitario = buyProductForm.watch('costoUnitario')
-  const watchIdProducto = buyProductForm.watch('producto')
+  const watchCostoTotal = buyProductForm.watch('total')
+  const watchProductos = buyProductForm.watch('productos')
 
-  const onSubmit = async (value: z.infer<typeof BuyProductSchema>) => {
+  const handleAddProduct = (productId: number) => {
+    const selectedProduct = selectedProducts.find(
+      p => p.idProducto === productId
+    )
+
+    if (selectedProduct != null) {
+      setSelectedProducts(prevProducts =>
+        prevProducts.map(p =>
+          p.idProducto === productId ? { ...p, cantidad: p.cantidad + 1 } : p
+        )
+      )
+      buyProductForm.setValue(
+        'productos',
+        selectedProducts.map(p => ({
+          idProducto: p.idProducto,
+          cantidad: p.cantidad,
+          costoUnitario: p.precioUnitario,
+          total: p.precioUnitario * p.cantidad
+        }))
+      )
+      toast({
+        title: 'Producto agregado',
+        description: `Se ha agregado una unidad de ${selectedProduct.nombre} a la compra`,
+        variant: 'confirmation'
+      })
+      return
+    }
+
+    const product = products?.find(p => p.idProducto === productId) ?? null
+    if (selectedProduct == null && product != null) {
+      setSelectedProducts(prevProducts => [
+        ...prevProducts,
+        {
+          ...product,
+          cantidad: 1
+        }
+      ])
+      buyProductForm.setValue(
+        'productos',
+        selectedProducts.map(p => ({
+          idProducto: p.idProducto,
+          cantidad: p.cantidad,
+          costoUnitario: p.precioUnitario,
+          total: p.precioUnitario * p.cantidad
+        }))
+      )
+      toast({
+        title: 'Producto agregado',
+        description: `Se ha agregado ${product.nombre} a la compra`,
+        variant: 'accepted'
+      })
+      return
+    }
+  }
+  const handleRemoveProduct = (productId: number) => {
+    const wasProductSelected = selectedProducts.find(
+      p => p.idProducto === productId
+    )
+    if (wasProductSelected == null) {
+      return
+    }
+
+    if (wasProductSelected.cantidad > 1) {
+      setSelectedProducts(prevProducts =>
+        prevProducts.map(p =>
+          p.idProducto === productId ? { ...p, cantidad: p.cantidad - 1 } : p
+        )
+      )
+      buyProductForm.setValue(
+        'productos',
+        selectedProducts.map(p => ({
+          idProducto: p.idProducto,
+          cantidad: p.cantidad,
+          costoUnitario: p.precioUnitario,
+          total: p.precioUnitario * p.cantidad
+        }))
+      )
+      toast({
+        title: 'Producto eliminado',
+        description: `Se ha eliminado una unidad de ${wasProductSelected.nombre} de la compra`,
+        variant: 'action'
+      })
+    } else {
+      setSelectedProducts(prevState =>
+        prevState.filter(p => p.idProducto !== productId)
+      )
+      buyProductForm.setValue(
+        'productos',
+        selectedProducts.map(p => ({
+          idProducto: p.idProducto,
+          cantidad: p.cantidad,
+          costoUnitario: p.precioUnitario,
+          total: p.precioUnitario * p.cantidad
+        }))
+      )
+      toast({
+        title: 'Producto eliminado',
+        description: `No hay más unidades de ${wasProductSelected.nombre} en la compra`,
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleBuyProductsOnSubmit = async (
+    value: z.infer<typeof BuyProductSchema>
+  ) => {
     try {
       console.log(value)
       await buyProduct(value)
       toast({
-        title: 'Producto comprado',
+        title: 'Producto vendido',
         description: (
           <p>
-            El producto <strong>{value.producto.nombreProducto}</strong> ha sido
-            comprado exitosamente por el usuario{' '}
-            <strong>{currentUser?.nombre}</strong>
+            Se compraron los siguientes productos:{' '}
+            {selectedProducts.map(product => product.cantidad).join(', ')} al
+            proveedor{' '}
+            {providers?.find(provider => provider.id === value.proveedor.id)
+              ?.nombre ?? 'Proveedor no encontrado'}{' '}
+            por parte del usuario{' '}
+            {users?.find(user => user.idUsuario === value.usuario.idUsuario)
+              ?.nombre ?? 'Usuario no encontrado'}
           </p>
         )
       })
+      setSelectedProducts([])
       navigate(PRIVATE_ROUTES.BUY_PRODUCT)
     } catch (error) {
       console.error(error)
       if (isError) {
         toast({
-          title: 'Error al comprar producto',
-          description:
-            value.idUsuario === 0 ? (
-              <p>
-                El usuario <strong>{value.idUsuario}</strong> no existe
-              </p>
-            ) : (
-              <p>
-                Hubo un error al comprar el producto{' '}
-                <strong>{value.producto.nombreProducto}</strong>
-              </p>
-            ),
+          title: 'Error al realizar la compra',
+          description: 'Contacta al administrador del sistema',
           variant: 'destructive'
         })
         return
@@ -135,30 +259,32 @@ const BuyProductForm = () => {
 
   useEffect(() => {
     if (currentUser != null) {
-      buyProductForm.setValue('idUsuario', currentUser.idUsuario)
+      buyProductForm.setValue('usuario.idUsuario', currentUser.idUsuario)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser])
 
   useEffect(() => {
-    buyProductForm.setValue('total', Number(watchCantidad * watchCostoUnitario))
-    console.log({
-      watchCantidad,
-      watchCostoUnitario,
-      watchIdProducto
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchCantidad, watchCostoUnitario, watchIdProducto])
+    if (watchProductos != null && watchProductos.length > 0) {
+      const costoTotal = watchProductos.reduce(
+        (acc, product) => acc + product.costoUnitario * product.cantidad,
+        0
+      )
+      buyProductForm.setValue('total', costoTotal)
+    }
+    if (watchProductos.length <= 0) {
+      buyProductForm.setValue('total', 0)
+    }
+  }, [watchProductos])
 
   return (
     <Form {...buyProductForm}>
       <form
-        onSubmit={buyProductForm.handleSubmit(onSubmit)}
+        onSubmit={buyProductForm.handleSubmit(handleBuyProductsOnSubmit)}
         className='flex flex-col gap-8 w-full max-w-5xl'
       >
         <FormField
           control={buyProductForm.control}
-          name='idUsuario'
+          name='usuario.idUsuario'
           render={({ field }) => (
             <FormItem className='hidden'>
               <FormLabel className='shad-form_label'>Usuario</FormLabel>
@@ -185,7 +311,7 @@ const BuyProductForm = () => {
 
         <FormField
           control={buyProductForm.control}
-          name='idProveedor'
+          name='proveedor.id'
           render={({ field }) => (
             <FormItem>
               <FormLabel className='shad-form_label'>Proovedor</FormLabel>
@@ -233,7 +359,7 @@ const BuyProductForm = () => {
                           <CommandEmpty>Proveedor no encontrado</CommandEmpty>
                         )}
                       {isErrorProviders && (
-                        <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
+                        <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse my-4'>
                           Hubo un error al cargar los proveedores
                         </CommandEmpty>
                       )}
@@ -252,7 +378,7 @@ const BuyProductForm = () => {
                               key={provider.id}
                               onSelect={() => {
                                 buyProductForm.setValue(
-                                  'idProveedor',
+                                  'proveedor.id',
                                   provider.id
                                 )
                               }}
@@ -288,10 +414,10 @@ const BuyProductForm = () => {
         />
         <FormField
           control={buyProductForm.control}
-          name='producto'
+          name='productos'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='shad-form_label'>Producto</FormLabel>
+              <FormLabel className='shad-form_label'>Productos</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -300,31 +426,23 @@ const BuyProductForm = () => {
                       role='combobox'
                       className={cn(
                         'w-full justify-between outline outline-1 outline-light-3',
-                        {
-                          'text-light-1': field.value,
-                          'text-light-3': !field.value
-                        }
+                        { 'text-light-3': !field.value }
                       )}
                     >
-                      {field.value
-                        ? products?.find(
-                            product =>
-                              product.idProducto === field.value.idProducto
-                          )?.nombre ?? 'Elige un producto'
-                        : 'Elige un producto'}
+                      Elige un producto
                       <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className='w-full p-0' align='start'>
-                  <Command>
-                    <CommandInput placeholder='Busca un cliente...' />
+                <PopoverContent className='w-[500px]' align='start'>
+                  <Command className='w-full max-w-3xl'>
+                    <CommandInput placeholder='Busca un producto...' />
                     <CommandList>
                       {!isErrorProducts &&
                         !isLoadingProducts &&
                         products?.length === 0 && (
                           <CommandEmpty>
-                            Registra un producto para vender
+                            Registra productos para vender
                           </CommandEmpty>
                         )}
                       {products != null &&
@@ -335,134 +453,149 @@ const BuyProductForm = () => {
                         )}
                       <CommandGroup>
                         {isErrorProducts && (
-                          <CommandEmpty className='text-red-700 body-bold text-center w-full animate-pulse'>
+                          <CommandEmpty className='text-red-700 text-center w-full animate-pulse'>
                             Hubo un error al cargar los productos
                           </CommandEmpty>
                         )}
                         {isLoadingProducts && (
-                          <CommandEmpty className='w-full my-4'>
+                          <CommandEmpty>
                             <LoaderIcon className='mx-auto' />
                           </CommandEmpty>
                         )}
-                        {products != null &&
-                          !isLoadingProducts &&
+                        {!isLoadingProducts &&
                           !isErrorProducts &&
-                          products.map(product => {
-                            return (
-                              <CommandItem
-                                value={product.nombre}
-                                key={product.idProducto}
-                                onSelect={() => {
-                                  buyProductForm.setValue('producto', {
-                                    idProducto: product.idProducto,
-                                    nombreProducto: product.nombre
-                                  })
-                                }}
-                              >
-                                <BsCheck
-                                  className={cn(
-                                    'mr-2 h-4 w-4',
-                                    product.idProducto ===
-                                      field.value?.idProducto
-                                      ? 'opacity-100'
-                                      : 'opacity-0'
+                          products != null &&
+                          products.map(product => (
+                            <CommandItem
+                              className='w-full'
+                              value={product.nombre}
+                              key={product.idProducto}
+                            >
+                              <Card>
+                                <CardHeader>
+                                  <CardTitle>{product.nombre}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                  <ul className='flex gap-x-2 gap-y-2 items-center'>
+                                    <li className='w-full inline-flex justify-between items-center'>
+                                      <span className='text-sm text-light-3'>
+                                        Precio de compra:
+                                      </span>
+                                      <span
+                                        className={cn(
+                                          'bg-dark-1 px-2 py-1 text-sm',
+                                          {
+                                            'text-yellow-400':
+                                              product.precioUnitario > 0
+                                          }
+                                        )}
+                                      >
+                                        {numberToCurrency(
+                                          product.precioUnitario
+                                        )}
+                                      </span>
+                                    </li>
+                                  </ul>
+                                </CardContent>
+                                <CardFooter className='flex w-full justify-between items-center'>
+                                  {selectedProducts.find(
+                                    p => p.idProducto === product.idProducto
+                                  ) == null && (
+                                    <Button
+                                      variant='secondary'
+                                      size='sm'
+                                      type='button'
+                                      onClick={() =>
+                                        handleAddProduct(product.idProducto)
+                                      }
+                                    >
+                                      Agregar a la compra
+                                    </Button>
                                   )}
-                                />
-                                {product.nombre}
-                              </CommandItem>
-                            )
-                          })}
+
+                                  {selectedProducts.find(
+                                    p => p.idProducto === product.idProducto
+                                  ) != null && (
+                                    <Button
+                                      variant='destructive'
+                                      size='sm'
+                                      type='button'
+                                      onClick={() =>
+                                        handleRemoveProduct(product.idProducto)
+                                      }
+                                    >
+                                      Quitar de la compra
+                                    </Button>
+                                  )}
+                                </CardFooter>
+                              </Card>
+                            </CommandItem>
+                          ))}
                       </CommandGroup>
                     </CommandList>
                   </Command>
                 </PopoverContent>
               </Popover>
               <FormMessage className='shad-form_message' />
-              <FormDescription>
-                Si no encuentras el producto,{' '}
-                <Link
-                  to={PRIVATE_ROUTES.ADD_PRODUCT}
-                  className='text-violet-500/70 underline-offset-4 hover:underline'
-                >
-                  regístralo aquí
-                </Link>
-              </FormDescription>
             </FormItem>
           )}
         />
-        <div className='flex gap-4 items-center justify-between w-full'>
-          <FormField
-            control={buyProductForm.control}
-            name='cantidad'
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <FormLabel className='shad-form_label'>
-                  Cantidad{' '}
-                  <span
-                    className='
-                    text-lime-600/50 text-xs
-                  '
-                  >
-                    Elija primero un producto
-                  </span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder='Cantidad de productos'
-                    min={0}
-                    step={1}
-                    disabled={buyProductForm.getValues('producto') == null}
-                    {...field}
-                    onChange={e => field.onChange(Number(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage className='shad-form_message' />
-                <FormDescription>
-                  Cantidad de productos a comprar
-                </FormDescription>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={buyProductForm.control}
-            name='costoUnitario'
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <FormLabel className='shad-form_label'>
-                  Precio unitario{' '}
-                  <span
-                    className='
-                    text-lime-600/50 text-xs
-                  '
-                  >
-                    Elija primero un producto
-                  </span>
-                </FormLabel>
-                <div className='inline-flex w-full items-center gap-x-0.5'>
-                  <span className='p-2 bg-dark-1 rounded-md border border-light-3 text-sm'>
-                    S/.
-                  </span>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      placeholder='Precio unitario'
-                      min={0}
-                      step={0.01}
-                      disabled={buyProductForm.getValues('producto') == null}
-                      {...field}
-                      onChange={e => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                </div>
-                <FormMessage className='shad-form_message' />
-                <FormDescription>
-                  Precio por unidad del producto que el proveedor ofrece
-                </FormDescription>
-              </FormItem>
-            )}
-          />
+        <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
+          {selectedProducts.map(product => {
+            const selectedProduct =
+              products?.find(
+                selectedData => selectedData.idProducto === product.idProducto
+              ) ?? null
+            if (selectedProduct != null) {
+              return (
+                <Card key={selectedProduct.idProducto}>
+                  <CardHeader>
+                    <CardTitle className='inline-flex justify-between align-center font-normal'>
+                      <span className='text-lg'>{selectedProduct.nombre}</span>
+                      <span className='text-lg'>{product.cantidad}</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className='flex flex-col gap-y-2 items-center'>
+                      <li className='w-full inline-flex justify-between items-center'>
+                        <span className='text-sm text-light-3'>
+                          Precio de compra:
+                        </span>
+                        <span
+                          className={cn('bg-dark-1 px-2 py-1 text-sm', {
+                            'text-yellow-400':
+                              selectedProduct.precioUnitario > 0
+                          })}
+                        >
+                          {numberToCurrency(selectedProduct.precioUnitario)}
+                        </span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                  <CardFooter className='flex w-full justify-around items-center'>
+                    <Button
+                      variant='secondary'
+                      size='sm'
+                      type='button'
+                      onClick={() => handleAddProduct(product.idProducto)}
+                    >
+                      <FaCartPlus size={20} className='fill-light-1' />
+                    </Button>
+                    <Button
+                      variant='destructive'
+                      size='sm'
+                      type='button'
+                      onClick={() => handleRemoveProduct(product.idProducto)}
+                    >
+                      <FaCartArrowDown size={20} className='fill-light-1' />
+                    </Button>
+                  </CardFooter>
+                </Card>
+              )
+            }
+          })}
         </div>
+
         <FormField
           control={buyProductForm.control}
           name='total'
@@ -479,12 +612,11 @@ const BuyProductForm = () => {
                 className={cn(
                   'flex h-10 max-h-auto w-full rounded-md border border-light-3 bg-dark-1 px-3 py-2 small-regular ring-offset-light-1 file:border-0 file:bg-transparent file:small-regular placeholder:text-light-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-light-1 disabled:cursor-not-allowed disabled:opacity-50',
                   {
-                    'text-light-3': buyProductForm.getValues('total') <= 0
+                    'text-light-3': watchCostoTotal <= 0
                   }
                 )}
               >
-                {watchCantidad} x {numberToCurrency(watchCostoUnitario)} ={' '}
-                {numberToCurrency(buyProductForm.getValues('total'))}
+                {numberToCurrency(watchCostoTotal)}
               </p>
               <FormControl>
                 <Input
@@ -493,13 +625,33 @@ const BuyProductForm = () => {
                   type='number'
                   min={0}
                   step={0.01}
-                  disabled={buyProductForm.getValues('producto') == null}
+                  disabled={watchProductos == null}
                   placeholder='Precio total'
                   {...field}
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
-              <FormDescription>Cantidad x Precio unitario</FormDescription>
+              <FormDescription>
+                El precio total de la compra es la suma de los productos
+                seleccionados
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={buyProductForm.control}
+          name='descripcion'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='shad-form_label'>Descripción</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder='Descripción de la compra'
+                  {...field}
+                  className='w-full h-40 resize-none bg-dark-1 text-light-1 p-3 rounded-md outline-none'
+                />
+              </FormControl>
+              <FormMessage className='shad-form_message' />
             </FormItem>
           )}
         />
@@ -517,6 +669,7 @@ const BuyProductForm = () => {
           <Button
             variant='default'
             type='submit'
+            disabled={isPending}
             className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
           >
             {!isPending && 'Comprar Producto'}

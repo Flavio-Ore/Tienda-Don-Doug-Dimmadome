@@ -3,12 +3,13 @@ import { IUsuario } from '@/types'
 import { SigninFormSchema } from '@/validations/forms/signIn.schema'
 import { isAxiosError } from 'axios'
 import { z } from 'zod'
-import { ENDPOINTS } from './values/constants'
+import { ENDPOINTS } from './values/endpoints'
 
 export const authLogin = async (usuario: z.infer<typeof SigninFormSchema>) => {
   try {
     const response = await axios.post<{
-      user: IUsuario
+      token: string
+      usuario: IUsuario
     }>(ENDPOINTS.POST.AUTH.LOGIN, usuario)
     return {
       data: response.data,

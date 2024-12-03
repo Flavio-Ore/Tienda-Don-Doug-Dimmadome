@@ -24,7 +24,7 @@ function App () {
           <Route index element={<Login />} />
         </Route>
         <Route path={PRIVATE_ROUTES.INVENTORY} element={<Root />}>
-          <Route element={<Kardex />} />
+          <Route index element={<Kardex />} />
           {/* <Route
             path={PRIVATE_ROUTES.CREATE_KARDEX}
             element={<CreateKardex />}

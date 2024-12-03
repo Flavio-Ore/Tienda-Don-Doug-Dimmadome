@@ -122,10 +122,6 @@ const UserCard = ({ user }: { user: IUsuario }) => {
             <Badge variant='default'>{user.fechaCreacion}</Badge>
           </li>
           <li className='w-full inline-flex justify-between'>
-            <span className='text-sm text-light-3'>Contraseña:</span>
-            <Badge variant='accept'>{user.contrasena}</Badge>
-          </li>
-          <li className='w-full inline-flex justify-between'>
             <span className='text-sm text-light-3'>Rol:</span>
             {user.tipoUsuario.nombre === 'Administrador' && (
               <Badge variant='premium'>⭐{user.tipoUsuario.nombre}</Badge>

@@ -22,11 +22,9 @@ export const EditProductFormSchema = z.object({
     })
     .optional(),
 
-  precioUnitario: z
-    .number()
-    .positive({
-      message: 'El precio no puede ser menor o igual a 0'
-    }),
+  precioUnitario: z.number().positive({
+    message: 'El precio no puede ser menor o igual a 0'
+  }),
   // stock: z
   //   .number({
   //     message: 'El inventario inicial es obligatorio'
@@ -40,15 +38,6 @@ export const EditProductFormSchema = z.object({
       required_error: 'La fecha de expiración es obligatoria'
     })
     .date('Se espera una fecha válida')
-    .optional()
-  // categoria: z.object(
-  //   {
-  //     idCategoria: z.number().nonnegative({
-  //       message: 'La categoría es obligatoria'
-  //     })
-  //   },
-  //   {
-  //     message: 'La categoría es obligatoria'
-  //   }
-  // )
+    .optional(),
+  descripcion: z.string().optional()
 })

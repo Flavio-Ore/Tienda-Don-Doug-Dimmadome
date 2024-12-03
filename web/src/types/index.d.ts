@@ -95,7 +95,7 @@ export interface IAuthContext {
   isLoading: boolean
   isAuthenticated: boolean
   checkAuth: () => Promise<boolean>
-  login: (login: { email: string; password: string }) => Promise<boolean>
+  login: (login: { email: string; contrasena: string }) => Promise<boolean>
   logout: () => void
 }
 
@@ -113,6 +113,15 @@ export interface IProducto {
   categoria: ICategoriaProducto
   descripcion: string
   estado: string
+}
+
+export interface IUnidadMedida {
+  idUnidadMedida: number
+  nombre: string
+}
+export interface ITipoDevolucion {
+  idTipoDevolucion: number
+  nombre: string
 }
 export interface ITipoPago {
   idTipoPago: number
@@ -202,7 +211,7 @@ export interface Usuario {
 
 export interface TipoUsuario {
   idTipoUsuario: number
-  nombre: string
+  nombre: 'Administrador' | 'Vendedor' | 'Almacenero'
 }
 
 export interface Producto {

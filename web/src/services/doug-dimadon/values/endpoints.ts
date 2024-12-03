@@ -37,11 +37,17 @@ export const ENDPOINTS = {
       READ_ALL: '/detalleEntrada/obtener',
       READ_ULTIMO_ID: '/detalleEntrada/ultimoIdEntrada'
     },
+    TIPO_DEVOLUCION: {
+      READ_ALL: '/tipoDevolucion/obtener'
+    },
     TIPO_PAGO: {
       READ_ALL: '/tipoPago/obtener'
     },
     TIPO_USUARIO: {
       READ_ALL: '/tipoUsuario/obtener'
+    },
+    UNIDAD_MEDIDA: {
+      READ_ALL: '/unidadMedida/obtener'
     }
   },
   POST: {
@@ -85,16 +91,24 @@ export const ENDPOINTS = {
     },
     TIPO_USUARIO: {
       CREATE: '/tipoUsuario'
+    },
+    DEVOLUCION: {
+      CREATE: '/devolucion/insertar'
     }
   },
   PUT: {
     USUARIO: {
       UPDATE: '/usuarios/{id}',
-      UPDATE_ESTADO: '/usuarios/{id}/estado'
+      UPDATE_ACTUALIZAR: '/usuarios/{id}/actualizar'
     },
     PRODUCTO: {
       UPDATE: (id: number) => `/producto/${id}`,
       UPDATE_ESTADO: '/producto/{id}/estado'
+    }
+  },
+  PATCH: {
+    USUARIO: {
+      UPDATE: (id: number) => `/usuarios/${id}`
     }
   }
 } as const

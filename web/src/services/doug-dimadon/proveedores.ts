@@ -1,7 +1,7 @@
 import axios from '@/lib/axios'
+import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
 import { IProveedor } from '@/types'
 import { ProviderFormSchema } from '@/validations/forms/addProvider.schema'
-import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import { z } from 'zod'
 
 export const getAllProveedores = async () => {

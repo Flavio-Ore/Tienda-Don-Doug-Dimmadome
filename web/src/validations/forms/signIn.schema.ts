@@ -4,7 +4,7 @@ export const SigninFormSchema = z.object({
   email: z.string().email({
     message: 'El email no es válido'
   }),
-  password: z
+  contrasena: z
     .string()
     .min(7, {
       message: 'Tu contraseña debe tener al menos 7 caracteres'

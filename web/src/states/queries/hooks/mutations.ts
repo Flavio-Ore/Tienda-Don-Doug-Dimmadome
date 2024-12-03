@@ -1,5 +1,8 @@
+import { saveToLocalStorage } from '@/lib/local-storage'
 import { authLogin } from '@/services/doug-dimadon/auth'
+import { saveDevolucionProducto } from '@/services/doug-dimadon/devoluciones'
 import { QUERY_KEYS } from '@/states/queries/values/query-keys'
+import { IUsuario } from '@/types'
 import { saveClienteReniec, updateEstadoCliente } from '@doug-dimadon/clientes'
 import {
   saveCompraProducto,
@@ -9,15 +12,18 @@ import {
   updateProducto
 } from '@doug-dimadon/productos'
 import { saveProveedor } from '@doug-dimadon/proveedores'
-import {
-  saveUsuario,
-  updateEstadoUsuario
-} from '@doug-dimadon/usuarios'
+import { saveUsuario, updateEstadoUsuario } from '@doug-dimadon/usuarios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationSignin () {
   return useMutation({
-    mutationFn: authLogin
+    mutationFn: authLogin,
+    onSuccess: res => {
+      console.log({ res })
+      if (res?.data?.usuario?.idUsuario != null) {
+        saveToLocalStorage<IUsuario>('CURRENT_USER', res.data.usuario)
+      }
+    }
   })
 }
 
@@ -81,6 +87,23 @@ export function useMutationSellProduct () {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: saveVentaProducto,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
+        type: 'all'
+      })
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_KARDEXS],
+        type: 'all'
+      })
+    }
+  })
+}
+
+export function useMutationRefundProduct () {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: saveDevolucionProducto,
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],

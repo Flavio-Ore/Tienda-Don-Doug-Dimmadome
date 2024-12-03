@@ -1,7 +1,7 @@
 import axios from '@/lib/axios'
+import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
 import { ITipoUsuario } from '@/types'
 import { UserTypeSchema } from '@/validations/forms/addUserType.schema'
-import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import { z } from 'zod'
 
 export const saveTipoUsuario = async (
