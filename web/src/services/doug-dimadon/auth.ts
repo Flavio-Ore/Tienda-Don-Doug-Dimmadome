@@ -10,7 +10,7 @@ export const authLogin = async (usuario: z.infer<typeof SigninFormSchema>) => {
     const response = await axios.post<{
       token: string
       usuario: IUsuario
-    }>(ENDPOINTS.POST.AUTH.LOGIN, usuario)
+    }>(ENDPOINTS.POST.AUTH.LOGIN, usuario)  
     return {
       data: response.data,
       message: 'Inicio de sesión exitoso',

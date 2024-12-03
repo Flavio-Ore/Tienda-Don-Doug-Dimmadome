@@ -88,12 +88,6 @@ const BuyProductForm = () => {
     return users?.find(user => user.idUsuario === storedUser?.idUsuario) ?? null
   }, [users, storedUser])
 
-  console.log({
-    products,
-    providers,
-    users
-  })
-
   const { toast } = useToast()
   const navigate = useNavigate()
 
@@ -111,7 +105,7 @@ const BuyProductForm = () => {
       descripcion: ''
     }
   })
-  const watchCostoTotal = buyProductForm.watch('total')
+  const watchTotal = buyProductForm.watch('total')
   const watchProductos = buyProductForm.watch('productos')
 
   const handleAddProduct = (productId: number) => {
@@ -125,18 +119,10 @@ const BuyProductForm = () => {
           p.idProducto === productId ? { ...p, cantidad: p.cantidad + 1 } : p
         )
       )
-      buyProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+
       toast({
         title: 'Producto agregado',
-        description: `Se ha agregado una unidad de ${selectedProduct.nombre} a la compra`,
+        description: `Se ha agregado una unidad de ${selectedProduct.nombre} a la venta`,
         variant: 'confirmation'
       })
       return
@@ -151,18 +137,10 @@ const BuyProductForm = () => {
           cantidad: 1
         }
       ])
-      buyProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+
       toast({
         title: 'Producto agregado',
-        description: `Se ha agregado ${product.nombre} a la compra`,
+        description: `Se ha agregado ${product.nombre} a la venta`,
         variant: 'accepted'
       })
       return
@@ -182,15 +160,7 @@ const BuyProductForm = () => {
           p.idProducto === productId ? { ...p, cantidad: p.cantidad - 1 } : p
         )
       )
-      buyProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+
       toast({
         title: 'Producto eliminado',
         description: `Se ha eliminado una unidad de ${wasProductSelected.nombre} de la compra`,
@@ -200,15 +170,7 @@ const BuyProductForm = () => {
       setSelectedProducts(prevState =>
         prevState.filter(p => p.idProducto !== productId)
       )
-      buyProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+
       toast({
         title: 'Producto eliminado',
         description: `No hay más unidades de ${wasProductSelected.nombre} en la compra`,
@@ -221,7 +183,6 @@ const BuyProductForm = () => {
     value: z.infer<typeof BuyProductSchema>
   ) => {
     try {
-      console.log(value)
       await buyProduct(value)
       toast({
         title: 'Producto vendido',
@@ -264,6 +225,17 @@ const BuyProductForm = () => {
   }, [currentUser])
 
   useEffect(() => {
+    buyProductForm.setValue(
+      'productos',
+      selectedProducts.map(p => ({
+        idProducto: p.idProducto,
+        cantidad: p.cantidad,
+        costoUnitario: p.precioUnitario
+      }))
+    )
+  }, [selectedProducts, buyProductForm])
+
+  useEffect(() => {
     if (watchProductos != null && watchProductos.length > 0) {
       const costoTotal = watchProductos.reduce(
         (acc, product) => acc + product.costoUnitario * product.cantidad,
@@ -286,25 +258,16 @@ const BuyProductForm = () => {
           control={buyProductForm.control}
           name='usuario.idUsuario'
           render={({ field }) => (
-            <FormItem className='hidden'>
-              <FormLabel className='shad-form_label'>Usuario</FormLabel>
-              {currentUser == null && (
-                <div className='w-full'>
-                  <LoaderIcon className='mx-auto' />
-                </div>
-              )}
-              {currentUser != null && (
-                <FormControl>
-                  <Input
-                    readOnly
-                    type='text'
-                    placeholder='Usuario que realiza la compra'
-                    {...field}
-                  />
-                </FormControl>
-              )}
-
-              <FormMessage className='shad-form_message' />
+            <FormItem>
+              <FormControl>
+                <Input
+                  className='hidden'
+                  readOnly
+                  type='text'
+                  placeholder='Usuario que realiza la compra'
+                  {...field}
+                />
+              </FormControl>
             </FormItem>
           )}
         />
@@ -440,6 +403,7 @@ const BuyProductForm = () => {
                     <CommandList>
                       {!isErrorProducts &&
                         !isLoadingProducts &&
+                        products != null &&
                         products?.length === 0 && (
                           <CommandEmpty>
                             Registra productos para vender
@@ -612,11 +576,11 @@ const BuyProductForm = () => {
                 className={cn(
                   'flex h-10 max-h-auto w-full rounded-md border border-light-3 bg-dark-1 px-3 py-2 small-regular ring-offset-light-1 file:border-0 file:bg-transparent file:small-regular placeholder:text-light-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-light-1 disabled:cursor-not-allowed disabled:opacity-50',
                   {
-                    'text-light-3': watchCostoTotal <= 0
+                    'text-light-3': watchTotal <= 0
                   }
                 )}
               >
-                {numberToCurrency(watchCostoTotal)}
+                {numberToCurrency(watchTotal)}
               </p>
               <FormControl>
                 <Input

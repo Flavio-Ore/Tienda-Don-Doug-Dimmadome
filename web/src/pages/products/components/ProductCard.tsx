@@ -90,9 +90,6 @@ const ProductCard = ({ product }: { product: IProducto }) => {
   const onSubmitEditedProduct = async (
     data: z.infer<typeof EditProductFormSchema>
   ) => {
-    console.log({
-      'data previous': data
-    })
     try {
       const areEqual =
         data.precioUnitario === product.precioUnitario &&
@@ -495,10 +492,7 @@ const ProductCard = ({ product }: { product: IProducto }) => {
               Unidad Medida:
             </span>
             <Badge variant='default' className='max-w-max'>
-              {product.descripcion?.trim().length <= 0 ||
-              product.descripcion == null
-                ? 'N/A'
-                : product.descripcion}
+              {product.unidadMedida.nombre}
             </Badge>
           </li>
         </ul>

@@ -37,7 +37,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { useEffect, useState } from 'react'
 import { BsCheck } from 'react-icons/bs'
-import { FaCartArrowDown, FaCartPlus } from 'react-icons/fa'
+import { FaMinus, FaPlus } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import {
@@ -103,7 +103,7 @@ const SellProductForm = () => {
     )
 
     if (selectedProduct != null) {
-      if (selectedProduct.stock < selectedProduct.cantidad) {
+      if (selectedProduct.stock <= selectedProduct.cantidad) {
         toast({
           title: 'No hay suficiente stock',
           description: `No hay suficiente stock para vender ${selectedProduct.nombre}`,
@@ -116,15 +116,7 @@ const SellProductForm = () => {
           p.idProducto === productId ? { ...p, cantidad: p.cantidad + 1 } : p
         )
       )
-      sellProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+
       toast({
         title: 'Producto agregado',
         description: `Se ha agregado una unidad de ${selectedProduct.nombre} a la venta`,
@@ -134,7 +126,7 @@ const SellProductForm = () => {
     }
 
     const product = products?.find(p => p.idProducto === productId) ?? null
-    if (selectedProduct == null && product != null) {
+    if (product != null) {
       setSelectedProducts(prevProducts => [
         ...prevProducts,
         {
@@ -142,15 +134,7 @@ const SellProductForm = () => {
           cantidad: 1
         }
       ])
-      sellProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+
       toast({
         title: 'Producto agregado',
         description: `Se ha agregado ${product.nombre} a la venta`,
@@ -159,6 +143,10 @@ const SellProductForm = () => {
       return
     }
   }
+
+  const dirtyFiels = sellProductForm.formState.dirtyFields
+  console.log({ dirtyFiels })
+
   const handleRemoveProduct = (productId: number) => {
     const wasProductSelected = selectedProducts.find(
       p => p.idProducto === productId
@@ -168,41 +156,26 @@ const SellProductForm = () => {
     }
 
     if (wasProductSelected.cantidad > 1) {
-      setSelectedProducts(prevProducts =>
-        prevProducts.map(p =>
+      setSelectedProducts(prevProducts => {
+        const newProducts = prevProducts.map(p =>
           p.idProducto === productId ? { ...p, cantidad: p.cantidad - 1 } : p
         )
-      )
-      sellProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+
+        return newProducts
+      })
       toast({
         title: 'Producto eliminado',
-        description: `Se ha eliminado una unidad de ${wasProductSelected.nombre} de la compra`,
+        description: `Se ha eliminado una unidad de ${wasProductSelected.nombre} de la venta`,
         variant: 'action'
       })
     } else {
-      setSelectedProducts(prevState =>
-        prevState.filter(p => p.idProducto !== productId)
-      )
-      sellProductForm.setValue(
-        'productos',
-        selectedProducts.map(p => ({
-          idProducto: p.idProducto,
-          cantidad: p.cantidad,
-          costoUnitario: p.precioUnitario,
-          total: p.precioUnitario * p.cantidad
-        }))
-      )
+      setSelectedProducts(prevState => {
+        const newState = prevState.filter(p => p.idProducto !== productId)
+        return newState
+      })
       toast({
         title: 'Producto eliminado',
-        description: `No hay más unidades de ${wasProductSelected.nombre} en la compra`,
+        description: `No hay más unidades de ${wasProductSelected.nombre} en la venta`,
         variant: 'destructive'
       })
     }
@@ -266,9 +239,18 @@ const SellProductForm = () => {
   }
 
   console.log({ watchProductos })
-
   useEffect(() => {
-    if (watchProductos != null && watchProductos.length > 0) {
+    sellProductForm.setValue(
+      'productos',
+      selectedProducts.map(p => ({
+        idProducto: p.idProducto,
+        cantidad: p.cantidad,
+        costoUnitario: p.precioUnitario
+      }))
+    )
+  }, [selectedProducts, sellProductForm])
+  useEffect(() => {
+    if (watchProductos.length > 0) {
       const costoTotal = watchProductos.reduce(
         (acc, product) => acc + product.costoUnitario * product.cantidad,
         0
@@ -278,7 +260,7 @@ const SellProductForm = () => {
     if (watchProductos.length <= 0) {
       sellProductForm.setValue('costoTotal', 0)
     }
-  }, [watchProductos])
+  }, [watchProductos, sellProductForm])
 
   return (
     <Form {...sellProductForm}>
@@ -593,7 +575,13 @@ const SellProductForm = () => {
                                       size='sm'
                                       type='button'
                                       onClick={() =>
-                                        handleRemoveProduct(product.idProducto)
+                                        setSelectedProducts(prevState =>
+                                          prevState.filter(
+                                            p =>
+                                              p.idProducto !==
+                                              product.idProducto
+                                          )
+                                        )
                                       }
                                     >
                                       Quitar de la venta
@@ -612,7 +600,7 @@ const SellProductForm = () => {
             </FormItem>
           )}
         />
-        <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
+        <div className='w-full grid grid-cols-1 gap-7 max-w-5xl'>
           {selectedProducts.map(product => {
             const selectedProduct =
               products?.find(
@@ -620,68 +608,43 @@ const SellProductForm = () => {
               ) ?? null
             if (selectedProduct != null) {
               return (
-                <Card key={selectedProduct.idProducto}>
-                  <CardHeader>
-                    <CardTitle className='inline-flex justify-between align-center font-normal'>
-                      <span className='text-lg'>{selectedProduct.nombre}</span>
-                      <span className='text-lg'>{product.cantidad}</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className='flex flex-col gap-y-2 items-center'>
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>
-                          Precio de venta:
-                        </span>
-                        <span
-                          className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                            'text-yellow-400':
-                              selectedProduct.precioUnitario > 0
-                          })}
-                        >
-                          {numberToCurrency(selectedProduct.precioUnitario)}
-                        </span>
-                      </li>
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>Stock:</span>
-                        <span
-                          className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                            'text-blue-400': selectedProduct.stock > 0,
-                            'text-red-700': selectedProduct.stock <= 0
-                          })}
-                        >
-                          {selectedProduct.stock} unidades
-                        </span>
-                      </li>
-                    </ul>
-                  </CardContent>
-                  <CardFooter className='flex w-full justify-around items-center'>
-                    {selectedProduct.stock > 0 ? (
-                      <>
-                        <Button
-                          variant='secondary'
-                          size='sm'
-                          type='button'
-                          onClick={() => handleAddProduct(product.idProducto)}
-                        >
-                          <FaCartPlus size={20} className='fill-light-1' />
-                        </Button>
-                        <Button
-                          variant='destructive'
-                          size='sm'
-                          type='button'
-                          onClick={() =>
-                            handleRemoveProduct(product.idProducto)
-                          }
-                        >
-                          <FaCartArrowDown size={20} className='fill-light-1' />
-                        </Button>
-                      </>
-                    ) : (
-                      <p>No hay stock suficiente :(</p>
-                    )}
-                  </CardFooter>
-                </Card>
+                <div className='flex flex-row flex-wrap gap-y-4 justify-evenly items-center bg-dark-3 border border-light-4 p-4'>
+                  <div className=''>
+                    <p className='text-xl'>
+                      {product.nombre}{' '}
+                      <span className='text-yellow-400 textl-2xl px-2 py-1'>
+                        {numberToCurrency(product.precioUnitario)}
+                      </span>
+                    </p>
+                    <span className='text-sm text-light-3'>
+                      {product.categoria.nombre}
+                    </span>
+                  </div>
+                  <div className='flex flex-col items-center justify-between gap-y-2'>
+                    <div className='inline-flex items-center justify-between gap-x-4'>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        type='button'
+                        onClick={() => handleRemoveProduct(product.idProducto)}
+                      >
+                        <FaMinus className='fill-ligh-2' size={16} />
+                      </Button>
+                      <span>{product.cantidad}</span>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        type='button'
+                        onClick={() => handleAddProduct(product.idProducto)}
+                      >
+                        <FaPlus className='fill-ligh-2' size={16} />
+                      </Button>
+                    </div>
+                    <span className='text-sm text-light-3'>
+                      Máx. {product.stock} unidades{' '}
+                    </span>
+                  </div>
+                </div>
               )
             }
           })}

@@ -111,7 +111,7 @@ export interface IProducto {
   stock: number
   fechaVencimiento: Date | string
   categoria: ICategoriaProducto
-  descripcion: string
+  unidadMedida: IUnidadMedida
   estado: string
 }
 

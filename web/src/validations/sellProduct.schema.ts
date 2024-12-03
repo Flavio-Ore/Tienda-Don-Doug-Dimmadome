@@ -17,14 +17,21 @@ SALIDA FORM:
 DETALLE SALIDA FORM:
 {
   "salida": {
-    "idSalida": 4
+    "idSalida": 1
   },
-  "producto": {
-    "idProducto": 1
-  },
-  "cantidad": 2,
-  "costoUnitario":15.0,
-  "total": 30.0
+  "descripcion": "Entrega de productos por campaña de verano1",
+  "detallesSalida": [
+    {
+      "producto": {"idProducto": 1},
+      "cantidad": 10,
+      "costoUnitario": 15.50
+    },
+    {
+      "producto": {"idProducto": 2},
+      "cantidad": 5,
+      "costoUnitario": 20.00
+    }
+  ]
 }
 
 SELL PRODUCT FORM:
@@ -54,20 +61,41 @@ SELL PRODUCT FORM:
 */
 
 export const SellProductFormSchema = z.object({
-  productos: z.array(
-    z.object({
-      idProducto: z.number().int().nonnegative({
-        message: 'El producto es requerido'
+  productos: z
+    .array(
+      z.object({
+        idProducto: z
+          .number({
+            required_error: 'El producto es requerido',
+            message: 'El producto es requerido'
+          })
+          .int()
+          .positive({
+            message: 'El producto es requerido'
+          }),
+        cantidad: z.number().int().positive({
+          message: 'La cantidad no puede ser negativa'
+        }),
+        costoUnitario: z.number().positive({
+          message: 'El costo unitario no puede ser negativo'
+        }),
+        total: z.number().optional()
       }),
-      cantidad: z.number().int().nonnegative({
-        message: 'La cantidad no puede ser negativa'
-      }),
-      costoUnitario: z.number().positive({
-        message: 'El costo unitario no puede ser negativo'
-      }),
-      total: z.number().optional()
+      {
+        invalid_type_error: 'Debe agregar al menos un producto',
+        required_error: 'Debe agregar al menos un producto',
+        message: 'Debe agregar al menos un producto'
+      }
+    )
+    .min(1, {
+      message: 'Debe agregar al menos un producto'
+    }),
+  descripcion: z
+    .string({
+      required_error: 'La descripción es requerida'
     })
-  ),
-  descripcion: z.string().optional(),
+    .min(1, {
+      message: 'La descripción es requerida'
+    }),
   ...SalidaSchema.shape
 })

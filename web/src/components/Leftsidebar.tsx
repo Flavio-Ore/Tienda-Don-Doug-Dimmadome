@@ -40,7 +40,7 @@ const Leftsidebar = () => {
       <div className='flex flex-col gap-8'>
         <div className='w-full h-10 flex gap-x-2 justify-center items-center'>
           <img
-            className='block w-8   mx-auto lg:m-0'
+            className='block w-8 mx-auto lg:m-0'
             src='/Stock_Image_of_Doug_Dimmadome_logo.png'
           />
           <h2 className='xl:text-2xl md:text-lg font-semibold relative hidden md:inline font-ubuntu'>

@@ -26,6 +26,9 @@ export const saveProducto = async (
 export const saveCompraProducto = async (
   compra: z.infer<typeof BuyProductSchema>
 ) => {
+  console.log({
+    compra
+  })
   const { data } = await saveEntrada({
     usuario: {
       idUsuario: compra.usuario.idUsuario
@@ -58,6 +61,7 @@ export const saveCompraProducto = async (
 export const saveVentaProducto = async (
   venta: z.infer<typeof SellProductFormSchema>
 ) => {
+  console.log({ venta })
   const { data } = await saveSalida({
     cliente: {
       idCliente: venta.cliente.idCliente
@@ -67,14 +71,14 @@ export const saveVentaProducto = async (
     },
     costoTotal: venta.costoTotal
   })
-
+  console.log({ data })
   if (data.idSalida != null) {
     await saveDetalleSalida({
-      detallesSalida: venta.productos.map(producto => ({
-        cantidad: producto.cantidad,
-        costoUnitario: producto.costoUnitario,
+      detallesSalida: venta.productos.map(p => ({
+        cantidad: p.cantidad,
+        costoUnitario: p.costoUnitario,
         producto: {
-          idProducto: producto.idProducto
+          idProducto: p.idProducto
         }
       })),
       salida: {

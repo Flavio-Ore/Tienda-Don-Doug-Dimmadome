@@ -13,17 +13,44 @@ SALIDA FORM:
 import { z } from 'zod'
 
 export const SalidaSchema = z.object({
-  cliente: z.object({
-    idCliente: z.number().nonnegative({
-      message: 'El cliente es obligatorio'
+  cliente: z.object(
+    {
+      idCliente: z
+        .number({
+          required_error: 'El cliente es obligatorio'
+        })
+        .int()
+        .positive({
+          message: 'El cliente es obligatorio'
+        })
+    },
+    {
+      message: 'El cliente es obligatorio',
+      required_error: 'El cliente es obligatorio'
+    }
+  ),
+  tipoPago: z.object(
+    {
+      idTipoPago: z
+        .number({
+          required_error: 'El tipo de pago es obligatorio'
+        })
+        .int()
+        .positive({
+          message: 'El tipo de pago es obligatorio'
+        })
+    },
+    {
+      message: 'El tipo de pago es obligatorio',
+      required_error: 'El tipo de pago es obligatorio'
+    }
+  ),
+  costoTotal: z
+    .number({
+      required_error: 'El costo total no puede ser 0'
     })
-  }),
-  tipoPago: z.object({
-    idTipoPago: z.number().nonnegative({
-      message: 'El tipo de pago es obligatorio'
+    .int()
+    .positive({
+      message: 'El costo total no puede ser 0'
     })
-  }),
-  costoTotal: z.number().positive({
-    message: 'El costo total no puede ser negativo'
-  })
 })

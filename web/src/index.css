@@ -147,7 +147,7 @@
 
   /*! Left Sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-4 xl:px-6 py-10 flex-col justify-between max-w-52 min-w-52 overflow-scroll custom-scrollbar;
+    @apply hidden md:flex px-4 py-10 flex-col justify-between max-w-52 min-w-52 overflow-scroll custom-scrollbar;
   }
 
   .leftsidebar-link {
