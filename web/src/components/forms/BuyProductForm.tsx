@@ -42,7 +42,7 @@ import {
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
-import { FaCartArrowDown, FaCartPlus } from 'react-icons/fa'
+import { FaMinus, FaPlus } from 'react-icons/fa'
 import {
   Card,
   CardContent,
@@ -512,49 +512,43 @@ const BuyProductForm = () => {
               ) ?? null
             if (selectedProduct != null) {
               return (
-                <Card key={selectedProduct.idProducto}>
-                  <CardHeader>
-                    <CardTitle className='inline-flex justify-between align-center font-normal'>
-                      <span className='text-lg'>{selectedProduct.nombre}</span>
-                      <span className='text-lg'>{product.cantidad}</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className='flex flex-col gap-y-2 items-center'>
-                      <li className='w-full inline-flex justify-between items-center'>
-                        <span className='text-sm text-light-3'>
-                          Precio de compra:
-                        </span>
-                        <span
-                          className={cn('bg-dark-1 px-2 py-1 text-sm', {
-                            'text-yellow-400':
-                              selectedProduct.precioUnitario > 0
-                          })}
-                        >
-                          {numberToCurrency(selectedProduct.precioUnitario)}
-                        </span>
-                      </li>
-                    </ul>
-                  </CardContent>
-                  <CardFooter className='flex w-full justify-around items-center'>
-                    <Button
-                      variant='secondary'
-                      size='sm'
-                      type='button'
-                      onClick={() => handleAddProduct(product.idProducto)}
-                    >
-                      <FaCartPlus size={20} className='fill-light-1' />
-                    </Button>
-                    <Button
-                      variant='destructive'
-                      size='sm'
-                      type='button'
-                      onClick={() => handleRemoveProduct(product.idProducto)}
-                    >
-                      <FaCartArrowDown size={20} className='fill-light-1' />
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <div className='flex flex-row flex-wrap gap-y-4 justify-evenly items-center bg-dark-3 border border-light-4 p-4'>
+                  <div className=''>
+                    <p className='text-xl'>
+                      {product.nombre}{' '}
+                      <span className='text-yellow-400 textl-2xl px-2 py-1'>
+                        {numberToCurrency(product.precioUnitario)}
+                      </span>
+                    </p>
+                    <span className='text-sm text-light-3'>
+                      {product.categoria.nombre}
+                    </span>
+                  </div>
+                  <div className='flex flex-col items-center justify-between gap-y-2'>
+                    <div className='inline-flex items-center justify-between gap-x-4'>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        type='button'
+                        onClick={() => handleRemoveProduct(product.idProducto)}
+                      >
+                        <FaMinus className='fill-ligh-2' size={16} />
+                      </Button>
+                      <span>{product.cantidad}</span>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        type='button'
+                        onClick={() => handleAddProduct(product.idProducto)}
+                      >
+                        <FaPlus className='fill-ligh-2' size={16} />
+                      </Button>
+                    </div>
+                    <span className='text-sm text-light-3'>
+                      Máx. {product.stock} unidades{' '}
+                    </span>
+                  </div>
+                </div>
               )
             }
           })}

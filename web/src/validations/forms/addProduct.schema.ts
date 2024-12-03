@@ -1,4 +1,3 @@
-import { PRODUCT_CATEGORIES } from '@/values'
 import { z } from 'zod'
 
 /**fomulario producto
@@ -16,11 +15,6 @@ import { z } from 'zod'
     
   }
      */
-
-export const ProductCategorySchema = z.object({
-  nombre: z.nativeEnum(PRODUCT_CATEGORIES),
-  idCategoria: z.number()
-})
 
 export const AddProductFormSchema = z.object({
   nombre: z

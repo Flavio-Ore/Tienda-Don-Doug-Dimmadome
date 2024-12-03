@@ -1,6 +1,5 @@
 import App from '@/App.tsx'
 import '@/index.css'
-import InventoryProvider from '@/states/inventory/providers/InventoryProvider'
 import QueryProvider from '@/states/queries/providers/QueryProvider'
 import '@fontsource/ubuntu'
 
@@ -15,11 +14,9 @@ createRoot(document.getElementById('root')!).render(
     <Toaster />
     <QueryProvider>
       <AuthProvider>
-        <InventoryProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </InventoryProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </AuthProvider>
     </QueryProvider>
   </StrictMode>

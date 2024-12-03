@@ -1,4 +1,3 @@
-// import clientData from '@/mocks/clients.mock.json'
 import { z } from 'zod'
 import { SalidaSchema } from './schemas/salida.schema'
 
