@@ -1,7 +1,33 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
 import {
   Tooltip,
   TooltipContent,
@@ -9,14 +35,28 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
-import { cn, numberToCurrency } from '@/lib/utils'
-import { useMutationChangeProductState } from '@/states/queries/hooks/mutations'
+import { addOneDay, cn, numberToCurrency } from '@/lib/utils'
+import {
+  useMutationChangeProductState,
+  useMutationUpdateProduct
+} from '@/states/queries/hooks/mutations'
 import { IProducto } from '@/types'
+import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
 import { PRIVATE_ROUTES } from '@/values'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { useEffect } from 'react'
-import { FaCircle, FaPlusCircle, FaWrench } from 'react-icons/fa'
+import { useForm } from 'react-hook-form'
+import {
+  FaCalendarAlt,
+  FaCheck,
+  FaCircle,
+  FaEdit,
+  FaPlusCircle
+} from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import { z } from 'zod'
 
 const getStockColor = (stock: number) => {
   const red = Math.min(255, Math.max(0, 255 - stock * 2.55))
@@ -30,7 +70,49 @@ const ProductCard = ({ product }: { product: IProducto }) => {
     isPending,
     isError
   } = useMutationChangeProductState()
+  const {
+    mutateAsync: updateProduct,
+    isPending: isUpdatingProduct,
+    isError: isUpdateProductError
+  } = useMutationUpdateProduct()
+
   const { toast } = useToast()
+
+  const editProductForm = useForm<z.infer<typeof EditProductFormSchema>>({
+    resolver: zodResolver(EditProductFormSchema),
+    defaultValues: {
+      nombre: product.nombre,
+      precioUnitario: product.precioUnitario,
+      fechaVencimiento: format(product.fechaVencimiento, 'yyyy-MM-dd')
+    }
+  })
+
+  const onSubmitEditedProduct = async (
+    data: z.infer<typeof EditProductFormSchema>
+  ) => {
+    try {
+      const areEqual =
+        data.precioUnitario === product.precioUnitario &&
+        data.nombre === product.nombre &&
+        data.fechaVencimiento === format(product.fechaVencimiento, 'yyyy-MM-dd')
+      if (areEqual) {
+        toast({
+          title: 'No se han realizado cambios',
+          variant: 'action'
+        })
+        return
+      }
+
+      await updateProduct({
+        idProducto: product.idProducto,
+        producto: data
+      })
+
+      console.log(data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
   const handleClick = async ({
     productId,
     productState
@@ -39,17 +121,10 @@ const ProductCard = ({ product }: { product: IProducto }) => {
     productState: string
   }) => {
     try {
-      if (productState.toLowerCase() === 'activo') {
-        await activateProduct({
-          idProducto: productId,
-          estado: 'inactivo'
-        })
-      } else {
-        await activateProduct({
-          idProducto: productId,
-          estado: 'activo'
-        })
-      }
+      await activateProduct({
+        idProducto: productId,
+        estado: productState.toLowerCase() === 'activo' ? 'inactivo' : 'activo'
+      })
     } catch (error) {
       console.error(error)
       toast({
@@ -66,7 +141,18 @@ const ProductCard = ({ product }: { product: IProducto }) => {
         variant: 'destructive'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError])
+
+  useEffect(() => {
+    if (isUpdateProductError) {
+      toast({
+        title: 'Error al editar el producto',
+        variant: 'destructive'
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdateProductError])
 
   return (
     <Card
@@ -79,6 +165,221 @@ const ProductCard = ({ product }: { product: IProducto }) => {
         <div className='inline-flex items-center justify-between flex-wrap w-full'>
           <CardTitle className='text-ellipsis'>{product.nombre} </CardTitle>
           <div className='inline-flex items-center gap-x-2'>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant='link' className='p-0'>
+                  <span className='sr-only'>Editar producto</span>
+                  <FaEdit
+                    size={20}
+                    className='fill-violet-500 hover:fill-violet-700'
+                  />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-[425px]'>
+                <DialogHeader>
+                  <DialogTitle className='inline-flex items-center'>
+                    <FaEdit size={20} className='mr-2 fill-violet-500' />
+                    {product.nombre}
+                  </DialogTitle>
+                  <DialogDescription className='text-light-3 text-base font-semibold'>
+                    Valor original del producto
+                  </DialogDescription>
+                </DialogHeader>
+                <Form {...editProductForm}>
+                  <form
+                    onSubmit={editProductForm.handleSubmit(
+                      onSubmitEditedProduct
+                    )}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        editProductForm.handleSubmit(onSubmitEditedProduct)(e)
+                      }
+                    }}
+                  >
+                    <FormField
+                      control={editProductForm.control}
+                      name='nombre'
+                      render={({ field }) => (
+                        <FormItem className='mb-4'>
+                          <FormLabel className='shad-form_label'>
+                            Nuevo nombre
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder={product.nombre}
+                              type='text'
+                              className={cn({
+                                'text-light-3': field.value === ''
+                              })}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Nombre original: {product.nombre}
+                          </FormDescription>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={editProductForm.control}
+                      name='precioUnitario'
+                      defaultValue={product.precioUnitario}
+                      render={({ field }) => (
+                        <FormItem className='mb-4'>
+                          <FormLabel className='shad-form_label'>
+                            Nuevo precio de venta
+                          </FormLabel>
+                          <div className='inline-flex w-full items-center gap-x-0.5'>
+                            <span className='p-2 bg-dark-1 rounded-md border border-light-3 text-light-2 text-sm'>
+                              S/.
+                            </span>
+                            <FormControl>
+                              <Input
+                                type='number'
+                                placeholder='Precio del producto'
+                                min={0}
+                                step={0.01}
+                                className={cn({
+                                  'text-light-3':
+                                    field.value === product.precioUnitario
+                                })}
+                                {...field}
+                                onChange={e => {
+                                  field.onChange(Number(e.target.value))
+                                }}
+                              />
+                            </FormControl>
+                          </div>
+                          <FormDescription>
+                            Precio original:{' '}
+                            {numberToCurrency(product.precioUnitario)}
+                          </FormDescription>
+                          <FormMessage className='shad-form_message' />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={editProductForm.control}
+                      defaultValue={format(
+                        product.fechaVencimiento,
+                        'yyyy-MM-dd'
+                      )}
+                      name='fechaVencimiento'
+                      render={({ field }) => (
+                        <FormItem className='mb-4'>
+                          <FormLabel className='shad-form_label'>
+                            Nueva F.V
+                          </FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='ghost'
+                                  className={cn(
+                                    'w-full pl-3 outline bg-dark-1 outline-1 outline-light-3',
+                                    {
+                                      'text-light-3':
+                                        field.value == null ||
+                                        field.value ===
+                                          format(
+                                            product.fechaVencimiento,
+                                            'yyyy-MM-dd'
+                                          )
+                                    }
+                                  )}
+                                >
+                                  {field.value != null &&
+                                    field.value != product.fechaVencimiento &&
+                                    format(addOneDay(field.value), 'PPP', {
+                                      locale: es
+                                    })}
+                                  {field.value != null &&
+                                    field.value == product.fechaVencimiento &&
+                                    format(product.fechaVencimiento, 'PPP', {
+                                      locale: es
+                                    })}
+                                  <FaCalendarAlt
+                                    strokeWidth={1.25}
+                                    className='ml-auto h-4 w-4 fill-light-1'
+                                  />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className='w-auto p-0'
+                              align='start'
+                            >
+                              <Calendar
+                                mode='single'
+                                selected={
+                                  field.value == undefined ||
+                                  field.value === product.fechaVencimiento
+                                    ? new Date(product.fechaVencimiento)
+                                    : addOneDay(field.value)
+                                }
+                                onSelect={date => {
+                                  if (date == null) {
+                                    field.onChange(
+                                      format(
+                                        product.fechaVencimiento,
+                                        'yyyy-MM-dd'
+                                      )
+                                    )
+                                    return
+                                  }
+                                  field.onChange(format(date, 'yyyy-MM-dd'))
+                                }}
+                                disabled={date =>
+                                  date < new Date(product.fechaVencimiento)
+                                }
+                                defaultMonth={
+                                  new Date(product.fechaVencimiento)
+                                }
+                                locale={es}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormDescription>
+                            F.V original:{' '}
+                            {format(product.fechaVencimiento, 'PPP', {
+                              locale: es
+                            })}
+                          </FormDescription>
+                          <FormMessage className='shad-form_message' />
+                        </FormItem>
+                      )}
+                    />
+                    <DialogFooter className='mt-4'>
+                      <DialogClose
+                        type='button'
+                        onClick={() => {
+                          editProductForm.reset()
+                        }}
+                      >
+                        Cancelar
+                      </DialogClose>
+                      <Button
+                        disabled={isUpdatingProduct}
+                        type='submit'
+                        variant='default'
+                        className='hover:bg-dark-4'
+                      >
+                        <div className='flex-center'>
+                          <FaCheck
+                            size={12}
+                            className='fill-violet-500 group-hover:fill-violet-500/80'
+                          />
+                          <span className='sr-only'>
+                            Subir cambios del producto
+                          </span>
+                        </div>
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -123,47 +424,6 @@ const ProductCard = ({ product }: { product: IProducto }) => {
             </TooltipProvider>
           </div>
         </div>
-
-        {/* <CardDescription>
-          <span
-            className={cn(
-              'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-red-700 text-light-1 shadow hover:bg-red-700/80',
-              {
-                'border-transparent bg-green-700 text-light-1 shadow hover:bg-green-700/80':
-                  product.estado.toLowerCase() === 'activo'
-              }
-            )}
-          >
-            {product.estado}
-          </span>
-        </CardDescription> */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                to={
-                  product.estado.toLowerCase() === 'activo'
-                    ? PRIVATE_ROUTES.ADD_PRODUCT
-                    : '.'
-                }
-                className='p-0'
-              >
-                <span className='sr-only'>
-                  Editar producto {product.nombre}
-                </span>
-                {!isPending && (
-                  <FaWrench
-                    size={20}
-                    className='fill-violet-500 hover:fill-violet-500/80'
-                  />
-                )}
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <span className='text-light-3 text-xs'>Editar producto</span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </CardHeader>
       <CardContent>
         <ul className='flex flex-col gap-y-2 justify-between'>
@@ -227,37 +487,16 @@ const ProductCard = ({ product }: { product: IProducto }) => {
               {product.categoria.nombre}
             </Badge>
           </li>
+          <li className='grid grid-cols-2 items-start'>
+            <span className='text-sm text-light-3 max-w-max'>
+              Unidad Medida:
+            </span>
+            <Badge variant='default' className='max-w-max'>
+              {product.unidadMedida.nombre}
+            </Badge>
+          </li>
         </ul>
       </CardContent>
-      {/* <CardFooter className='flex justify-center items-center'>
-        {product.estado === 'activo' ? (
-          <Button
-            variant='outline'
-            className='bg-red-900/10 hover:bg-red-900 hover:text-light-1'
-            onClick={() =>
-              handleClick({
-                productId: product.idProducto,
-                productState: product.estado
-              })
-            }
-          >
-            {isPending ? <LoaderIcon /> : 'Desactivar Producto'}
-          </Button>
-        ) : (
-          <Button
-            variant='outline'
-            className='bg-green-900/10 hover:bg-green-900 hover:text-light-1'
-            onClick={() =>
-              handleClick({
-                productId: product.idProducto,
-                productState: product.estado
-              })
-            }
-          >
-            {isPending ? <LoaderIcon /> : 'Activar Producto'}
-          </Button>
-        )}
-      </CardFooter> */}
     </Card>
   )
 }

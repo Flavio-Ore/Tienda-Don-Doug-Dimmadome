@@ -8,7 +8,7 @@ import { z } from 'zod'
     "idCategoria": 1
   }
 } */
-export const ProviderValidationSchema = z.object({
+export const ProviderFormSchema = z.object({
   nombre: z
     .string({
       required_error: 'El nombre del proveedor es obligatorio'

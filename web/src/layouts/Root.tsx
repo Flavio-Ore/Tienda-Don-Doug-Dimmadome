@@ -1,13 +1,13 @@
 import Bottombar from '@/components/Bottombar'
 import Leftsidebar from '@/components/Leftsidebar'
 import Topsidebar from '@/components/Topsidebar'
-import useInventory from '@/states/inventory/hooks/useInventory'
+import useAuth from '@/states/auth/hooks/useAuth'
 import { Navigate, Outlet } from 'react-router-dom'
 
 const Root = () => {
-  const { login } = useInventory()
+  const { isAuthenticated } = useAuth()
 
-  return login.isLogged ? (
+  return isAuthenticated ? (
     <div className='relative w-full md:flex'>
       <Leftsidebar />
       <Topsidebar />

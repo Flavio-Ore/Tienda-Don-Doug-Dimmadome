@@ -1,19 +1,21 @@
 import axios from '@/lib/axios'
-import { ILoginResponse, IUsuario } from '@/types'
-import { UserSchema } from '@/validations/forms/addUser.schema'
-import { SigninSchema } from '@/validations/forms/signIn.schema'
-import { ENDPOINTS } from '@doug-dimadon/values/constants'
+import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
+import { IUsuario } from '@/types'
+import { UserFormSchema } from '@/validations/forms/addUser.schema'
 import { z } from 'zod'
+
+export const getUser = async (idUsuario: number) => {
+  const res = await axios.get<IUsuario[]>(ENDPOINTS.GET.USUARIO.READ_ALL)
+  const usuario = res.data.find(usuario => usuario.idUsuario === idUsuario)
+  return usuario
+}
+
 export const getAllUsuarios = async () => {
   return await axios.get<IUsuario[]>(ENDPOINTS.GET.USUARIO.READ_ALL)
 }
 
-export const saveUsuario = async (usuario: z.infer<typeof UserSchema>) => {
+export const saveUsuario = async (usuario: z.infer<typeof UserFormSchema>) => {
   return await axios.post<IUsuario>(ENDPOINTS.POST.USUARIO.CREATE, usuario)
-}
-
-export const loginUsuario = async (usuario: z.infer<typeof SigninSchema>) => {
-  return await axios.post<ILoginResponse>(ENDPOINTS.POST.USUARIO.LOGIN, usuario)
 }
 
 export const updateEstadoUsuario = async ({
@@ -23,8 +25,10 @@ export const updateEstadoUsuario = async ({
   idUsuario: number
   estado: 'activo' | 'inactivo'
 }) => {
-  return await axios.put<IUsuario>(`usuarios/${idUsuario}/estado`, {
-    idUsuario,
-    estado
-  })
+  return await axios.patch<IUsuario>(
+    ENDPOINTS.PATCH.USUARIO.UPDATE(idUsuario),
+    {
+      estado
+    }
+  )
 }

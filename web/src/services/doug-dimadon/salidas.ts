@@ -1,7 +1,7 @@
 import axios from '@/lib/axios'
+import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
 import { DetalleSalidaSchema } from '@/validations/schemas/detalleSalida.schema'
 import { SalidaSchema } from '@/validations/schemas/salida.schema'
-import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import { z } from 'zod'
 
 /**

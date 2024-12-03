@@ -22,7 +22,8 @@ const ClientCard = ({ client }: { client: ICliente }) => {
     isPending: isPendingUpdatingClientStatus,
     isError: isErrorUpdatingClientStatus
   } = useMutationChangeClientState()
-  const { isLoading: isLoadingClients , isRefetching: isRefetchingClients } = useQueryAllKardexs()
+  const { isLoading: isLoadingClients, isRefetching: isRefetchingClients } =
+    useQueryAllKardexs()
   const { toast } = useToast()
   const handleClick = async () => {
     await updateClientStatus({
@@ -39,6 +40,7 @@ const ClientCard = ({ client }: { client: ICliente }) => {
         variant: 'destructive'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isErrorUpdatingClientStatus])
 
   return (
@@ -56,7 +58,11 @@ const ClientCard = ({ client }: { client: ICliente }) => {
               <Button
                 variant='link'
                 className='p-0'
-                disabled={isPendingUpdatingClientStatus || isRefetchingClients || isLoadingClients}
+                disabled={
+                  isPendingUpdatingClientStatus ||
+                  isRefetchingClients ||
+                  isLoadingClients
+                }
                 onClick={handleClick}
               >
                 <span className='sr-only'>
@@ -64,9 +70,9 @@ const ClientCard = ({ client }: { client: ICliente }) => {
                     ? 'Desactivar cliente'
                     : 'Activar cliente'}
                 </span>
-                {(isPendingUpdatingClientStatus || isRefetchingClients || isLoadingClients) && (
-                  <LoaderIcon className='size-5' />
-                )}
+                {(isPendingUpdatingClientStatus ||
+                  isRefetchingClients ||
+                  isLoadingClients) && <LoaderIcon className='size-5' />}
                 {!isPendingUpdatingClientStatus && !isRefetchingClients && (
                   <FaCircle
                     size={20}

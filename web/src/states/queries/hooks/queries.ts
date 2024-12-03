@@ -1,13 +1,34 @@
 import { getAllCategorias } from '@/services/doug-dimadon/categoria'
 import { getAllClientes } from '@/services/doug-dimadon/clientes'
+import { getAllTipoDevoluciones } from '@/services/doug-dimadon/devoluciones'
 import { getAllKardexs } from '@/services/doug-dimadon/kardexs'
-import { getAllProductos } from '@/services/doug-dimadon/productos'
+import {
+  getAllProductos,
+  getAllUnidadesMedida
+} from '@/services/doug-dimadon/productos'
 import { getAllProveedores } from '@/services/doug-dimadon/proveedores'
 import { getAllTipoPagos } from '@/services/doug-dimadon/tipo-pagos'
 import { getAllTipoUsuario } from '@/services/doug-dimadon/tipos-usuario'
-import { getAllUsuarios } from '@/services/doug-dimadon/usuarios'
+import { getAllUsuarios, getUser } from '@/services/doug-dimadon/usuarios'
 import { QUERY_KEYS } from '@/states/queries/values/query-keys'
 import { useQuery } from '@tanstack/react-query'
+
+const enabledId = (id: string | number) => {
+  if (typeof id === 'number') {
+    return id > 0
+  }
+  if (id != null && id.trim().length === 0) return false
+  if (id === '') return false
+  return true
+}
+
+export function useQueryUser ({ id }: { id: number }) {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER, id],
+    queryFn: async () => getUser(id),
+    enabled: enabledId(id)
+  })
+}
 
 export function useQueryAllProducts () {
   return useQuery({
@@ -21,6 +42,22 @@ export function useQueryAllProductsCategories () {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_CATEGORIES],
     queryFn: getAllCategorias,
+    select: response => response.data
+  })
+}
+
+export function useQueryAllUnitMeasurements () {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ALL_UNIT_MEASUREMENTS],
+    queryFn: getAllUnidadesMedida,
+    select: response => response.data
+  })
+}
+
+export function useQueryAllRefundTypes () {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ALL_RETURN_TYPES],
+    queryFn: getAllTipoDevoluciones,
     select: response => response.data
   })
 }

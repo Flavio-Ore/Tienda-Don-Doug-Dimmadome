@@ -96,7 +96,7 @@ const Products = () => {
         !isProductsLoading &&
         products != null &&
         products.length <= 0 && (
-          <p className='text-light-3 body-bold text-center w-full'>
+          <p className='text-light-3 body-bold text-center w-full animate-pulse'>
             No hay productos registrados
           </p>
         )}

@@ -2,7 +2,7 @@ import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { useMutationAddProvider } from '@/states/queries/hooks/mutations'
 import { useQueryAllProductsCategories } from '@/states/queries/hooks/queries'
-import { ProviderValidationSchema } from '@/validations/forms/addProvider.schema'
+import { ProviderFormSchema } from '@/validations/forms/addProvider.schema'
 import { PRIVATE_ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,8 +48,8 @@ const ProviderForm = () => {
   } = useMutationAddProvider()
   const navigate = useNavigate()
   const { toast } = useToast()
-  const providerForm = useForm<z.infer<typeof ProviderValidationSchema>>({
-    resolver: zodResolver(ProviderValidationSchema),
+  const providerForm = useForm<z.infer<typeof ProviderFormSchema>>({
+    resolver: zodResolver(ProviderFormSchema),
     defaultValues: {
       nombre: '',
       direccion: '',
@@ -57,7 +57,7 @@ const ProviderForm = () => {
       categoria: undefined
     }
   })
-  const onSubmit = async (value: z.infer<typeof ProviderValidationSchema>) => {
+  const onSubmit = async (value: z.infer<typeof ProviderFormSchema>) => {
     try {
       console.log(value)
       await addProvider(value)
@@ -89,6 +89,7 @@ const ProviderForm = () => {
         variant: 'destructive'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError])
 
   // useEffect(() => {
@@ -184,17 +185,17 @@ const ProviderForm = () => {
                   <PopoverContent className='w-full p-0' align='start'>
                     <Command>
                       <CommandInput placeholder='Busca una categoría...' />
+                      {!isErrorProductsCategory &&
+                        !isLoadingProductsCategory && (
+                          <CommandEmpty>
+                            Tipo de pago no encontrado
+                          </CommandEmpty>
+                        )}
                       <CommandList>
-                        {!isErrorProductsCategory &&
-                          !isLoadingProductsCategory && (
-                            <CommandEmpty>
-                              Categoría no encontrada.
-                            </CommandEmpty>
-                          )}
                         {!isErrorProductsCategory &&
                           !isLoadingProductsCategory &&
                           productsCategory != null &&
-                          productsCategory.length === 0 && (
+                          productsCategory.length <= 0 && (
                             <CommandEmpty>
                               No hay categorías disponibles
                             </CommandEmpty>

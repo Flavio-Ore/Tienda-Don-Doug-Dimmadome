@@ -1,18 +1,40 @@
-import { TYPE_RETURNS_VALUES } from '@/values'
-import { z } from 'zod'
+import z from 'zod'
+/*
+{
+  "producto": {
+    "idProducto": 1
+  },
+  "cliente": {
+    "idCliente": 1
+  },
+  "cantidad": 10,
+  "tipoDevolucion": {
+    "idTipoDevolucion": 2
+  },
+  "descripcion": "primera devolucion"
+}
+*/
 
 export const ReturnProductFormSchema = z.object({
-  DNI: z.string().trim().length(8, {
-    message: 'El DNI debe tener 8 caracteres'
+  producto: z.object({
+    idProducto: z.number().nonnegative({
+      message: 'El producto es obligatorio'
+    })
   }),
-  idProducto: z.number().positive().int(),
-  typeReturn: z.enum(TYPE_RETURNS_VALUES, {
-    message: 'El tipo de devolución no es válido'
+  cliente: z.object({
+    idCliente: z.number().nonnegative({
+      message: 'El cliente es obligatorio'
+    })
   }),
-  cantidad: z.number().positive().min(1, {
-    message: 'La cantidad debe ser mayor o igual a 1'
+  cantidad: z.number().positive({
+    message: 'La cantidad no puede ser negativa'
   }),
-  description: z.string().trim().max(255, {
-    message: 'La descripción no puede tener más de 255 caracteres'
+  tipoDevolucion: z.object({
+    idTipoDevolucion: z.number().nonnegative({
+      message: 'El tipo de devolución es obligatorio'
+    })
+  }),
+  descripcion: z.string().nonempty({
+    message: 'La descripción es obligatoria'
   })
 })

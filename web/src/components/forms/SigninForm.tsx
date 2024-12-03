@@ -1,9 +1,7 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
-import useInventory from '@/states/inventory/hooks/useInventory'
-import { useMutationSignin } from '@/states/queries/hooks/mutations'
-import { SigninSchema } from '@/validations/forms/signIn.schema'
-import { PRIVATE_ROUTES } from '@/values'
+import useAuth from '@/states/auth/hooks/useAuth'
+import { SigninFormSchema } from '@/validations/forms/signIn.schema'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
@@ -25,11 +23,10 @@ import { z } from 'zod'
 const SigninForm = ({ className }: { className?: string }) => {
   const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
-  const { mutateAsync, isPending } = useMutationSignin()
-  const { checkAuth } = useInventory()
-  const nagivation = useNavigate()
-  const form = useForm<z.infer<typeof SigninSchema>>({
-    resolver: zodResolver(SigninSchema),
+  const { login, isLoading } = useAuth()
+  const navigate = useNavigate()
+  const form = useForm<z.infer<typeof SigninFormSchema>>({
+    resolver: zodResolver(SigninFormSchema),
     defaultValues: {
       email: '',
       contrasena: ''
@@ -38,27 +35,18 @@ const SigninForm = ({ className }: { className?: string }) => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
   }
-  async function onSubmit (values: z.infer<typeof SigninSchema>) {
+  async function onSubmit (values: z.infer<typeof SigninFormSchema>) {
     console.log(values)
     try {
-      const loginRes = await mutateAsync({
+      const isLogged = await login({
         email: values.email,
         contrasena: values.contrasena
       })
-
-      checkAuth({
-        email: values.email,
-        password: values.contrasena
-      })
-      if (loginRes.data.success) {
-        toast({
-          title: loginRes.data.message ?? 'Inicio de sesión exitoso',
-          variant: 'accepted'
-        })
-        nagivation(PRIVATE_ROUTES.INVENTORY)
+      if (isLogged) {
+        navigate('/inventario')
       } else {
         toast({
-          title: loginRes.data.message ?? 'Inicio de sesión fallido',
+          title: 'Credenciales incorrectas',
           variant: 'destructive'
         })
       }
@@ -139,7 +127,7 @@ const SigninForm = ({ className }: { className?: string }) => {
             )}
           />
           <Button variant={'default'} type='submit'>
-            {isPending ? <LoaderIcon /> : 'Iniciar Sesión'}
+            {isLoading ? <LoaderIcon /> : 'Iniciar Sesión'}
           </Button>
         </form>
       </div>

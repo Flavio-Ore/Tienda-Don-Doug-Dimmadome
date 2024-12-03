@@ -9,7 +9,7 @@
 } */
 import { z } from 'zod'
 
-export const UserSchema = z.object({
+export const UserFormSchema = z.object({
   nombre: z
     .string()
     .min(2, {

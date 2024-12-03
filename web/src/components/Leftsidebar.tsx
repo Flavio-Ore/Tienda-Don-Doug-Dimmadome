@@ -4,10 +4,10 @@ import {
   FaBoxOpen,
   FaParachuteBox,
   FaStar,
-  FaUserTag
+  FaUserTag,
+  FaUserTie
 } from 'react-icons/fa'
 import {
-  FaGears,
   FaHandHoldingDollar,
   FaMoneyBillTransfer,
   FaSackDollar,
@@ -19,28 +19,58 @@ import {
 
 import { NavLink, useLocation } from 'react-router-dom'
 
+import { loadFromLocalStorage } from '@/lib/local-storage'
 import { cn } from '@/lib/utils'
+import { IUsuario } from '@/types'
 import { PRIVATE_ROUTES } from '@/values'
 import LogoutDialog from '@components/LogoutDialog'
+import { useMemo } from 'react'
 import { FaUsersCog } from 'react-icons/fa'
 
 const Leftsidebar = () => {
   const { pathname } = useLocation()
 
+  const sessionUser = useMemo(
+    () => loadFromLocalStorage<IUsuario>('CURRENT_USER'),
+    []
+  )
+
   return (
-    <nav className='leftsidebar min-w-[15dvw] min-h-dvh bg-dark-1'>
+    <nav className='leftsidebar  min-h-dvh bg-dark-1'>
       <div className='flex flex-col gap-8'>
-        <div className='w-full h-10 flex gap-x-2 justify-start items-center'>
-          <FaGears className='fill-stone-500' size={24} strokeWidth={1.25} />
-          <h2 className='xl:text-2xl md:text-lg font-semibold relative hidden md:inline font-ubuntu'>
-            Operaciones
-          </h2>
+        <div className='w-full h-10 flex gap-x-2 justify-center items-center'>
           <img
             className='block w-8 mx-auto lg:m-0'
             src='/Stock_Image_of_Doug_Dimmadome_logo.png'
           />
+          <h2 className='xl:text-2xl md:text-lg font-semibold relative hidden md:inline font-ubuntu'>
+            Soluciones Dimadon
+          </h2>
         </div>
         <hr className='w-full border-light-3' />
+        <div className='w-full h-10 flex gap-x-2 justify-start items-center'>
+          {sessionUser?.tipoUsuario.nombre === 'Administrador' && (
+            <FaUserTie
+              className='fill-amber-500'
+              size={24}
+              strokeWidth={1.25}
+            />
+          )}
+          {/* <FaUser className='fill-stone-500' size={24} strokeWidth={1.25} /> */}
+          <div>
+            <p>{sessionUser != null ? sessionUser.nombre : 'Cargando...'}</p>
+            <p
+              className={cn('text-xs', {
+                'text-amber-500':
+                  sessionUser?.tipoUsuario.nombre === 'Administrador'
+              })}
+            >
+              {sessionUser?.tipoUsuario.nombre}
+            </p>
+          </div>
+        </div>
+        <hr className='w-full border-light-3' />
+
         <ul className='flex flex-col gap-2'>
           <li className='flex flex-col justify-start'>
             <div className='inline-flex gap-x-2 items-center'>
@@ -110,9 +140,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-3': pathname.includes(
-                      PRIVATE_ROUTES.PRODUCTS
-                    )
+                    'bg-dark-3': pathname.includes(PRIVATE_ROUTES.PRODUCTS)
                   }
                 )}
               >
@@ -239,7 +267,11 @@ const Leftsidebar = () => {
           <hr className='w-full border-light-3 my-4' />
           <li className='flex flex-col justify-start'>
             <div className='inline-flex gap-x-2 items-center'>
-              <FaUsersViewfinder className='fill-teal-500' size={24} strokeWidth={1.25} />
+              <FaUsersViewfinder
+                className='fill-teal-500'
+                size={24}
+                strokeWidth={1.25}
+              />
               <h3 className='text-light-1 text-sm relative xl:text-lg font-ubuntu'>
                 Usuarios
               </h3>

@@ -1,5 +1,4 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/useDebounce'
 import { cn, numberToCurrency } from '@/lib/utils'
@@ -17,8 +16,7 @@ const Kardex = () => {
   const {
     data: kardexs,
     isLoading: isLoadingKardexs,
-    isError: isErrorKardexs,
-    refetch
+    isError: isErrorKardexs
   } = useQueryAllKardexs()
   const [searchValue, setSearchValue] = useState('')
   const debouncedValue = useDebounce(searchValue, 500)
@@ -45,8 +43,10 @@ const Kardex = () => {
             header: () => <p className='text-light-3 px-2'>Fecha</p>,
             cell: info => <time className=''>{info.getValue()}</time>
           }),
-          columnHelper.accessor('empresa', {
-            header: () => <span className='text-light-3 px-2'>Empresa</span>,
+          columnHelper.accessor('descripcion', {
+            header: () => (
+              <span className='text-light-3 px-2'>Descripción</span>
+            ),
             cell: info => <p className=''>{info.getValue()}</p>
           }),
           columnHelper.accessor('producto', {
@@ -189,9 +189,14 @@ const Kardex = () => {
       }),
       columnHelper.group({
         id: 'tipoOperacion',
-        header: () => <div className='w-full bg-yellow-500/5 py-4'>
-          <FaArrowRightArrowLeft size={16} className='fill-yellow-600 mx-auto' />
-        </div>,
+        header: () => (
+          <div className='w-full bg-yellow-500/5 py-4'>
+            <FaArrowRightArrowLeft
+              size={16}
+              className='fill-yellow-600 mx-auto'
+            />
+          </div>
+        ),
         columns: [
           columnHelper.accessor('tipoOperacion', {
             header: () => <span className='text-light-3 px-2'>Operación</span>,
@@ -236,7 +241,9 @@ const Kardex = () => {
               .toLowerCase()
               .includes(debouncedValueLowerCase) ||
             kardex.fecha.toLowerCase().includes(debouncedValueLowerCase) ||
-            kardex.empresa.toLowerCase().includes(debouncedValueLowerCase) ||
+            kardex.descripcion
+              .toLowerCase()
+              .includes(debouncedValueLowerCase) ||
             kardex.tipoOperacion
               .toLowerCase()
               .includes(debouncedValueLowerCase) ||
@@ -278,13 +285,15 @@ const Kardex = () => {
   })
 
   return (
-    <div className='flex flex-col flex-1 gap-10 overflow-y-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar w-full'>
+    <section className='common-container'>
       <div className='inline-flex gap-x-2'>
         <FaTableCellsRowLock size={56} className='fill-blue-500' />
         <div>
-          <h3 className='text-light-2 text-2xl'>Productos en Inventario</h3>
+          <h3 className='text-light-2 text-2xl font-ubuntu'>
+            Inventario Kardex
+          </h3>
           <p className='text-light-3 body-bold'>
-            Tablas de Kardex de productos en inventario.
+            Registro de movimientos de inventario de productos en almacén
           </p>
         </div>
       </div>
@@ -320,7 +329,7 @@ const Kardex = () => {
         !isErrorKardexs &&
         filteredKardexsByProducts.length === 0 && (
           <p className='text-light-3 body-bold text-center w-full'>
-            No se encontraron productos en el inventario
+            No hay inventarios kardex registrados
           </p>
         )}
       {isTyping &&
@@ -328,7 +337,7 @@ const Kardex = () => {
         !isLoadingKardexs &&
         searchedKardexs.length <= 0 && (
           <p className='text-light-3 body-bold text-center w-full animate-pulse'>
-            No se encontraron productos con el término de búsqueda "
+            No se encontraron inventarios kardex con el término de búsqueda "
             {debouncedValue}"
           </p>
         )}
@@ -353,9 +362,6 @@ const Kardex = () => {
                     })}
                   />
                 </div>
-                <Button variant='secondary' onClick={() => refetch()}>
-                  Refrescar
-                </Button>
               </div>
               <TableKardex columns={columns} data={kardex} />
             </section>
@@ -368,7 +374,7 @@ const Kardex = () => {
         kardexs != null &&
         kardexs.length <= 0 && (
           <p className='text-light-3 body-bold text-center w-full'>
-            No se encontraron productos
+            No se han registrado kardexs de inventarios
           </p>
         )}
       {!isTyping &&
@@ -401,7 +407,7 @@ const Kardex = () => {
         ))}
       {/* <TableKardex columns={columns} data={kardexs} />
       <hr className='border-light-3 mt-5' /> */}
-    </div>
+    </section>
   )
 }
 

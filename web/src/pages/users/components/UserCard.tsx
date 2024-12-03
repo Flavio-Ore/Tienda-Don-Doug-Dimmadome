@@ -1,11 +1,6 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Tooltip,
   TooltipContent,
@@ -48,6 +43,7 @@ const UserCard = ({ user }: { user: IUsuario }) => {
         variant: 'destructive'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError])
 
   return (
@@ -124,10 +120,6 @@ const UserCard = ({ user }: { user: IUsuario }) => {
           <li className='w-full inline-flex justify-between'>
             <span className='text-sm text-light-3'>Agregado:</span>
             <Badge variant='default'>{user.fechaCreacion}</Badge>
-          </li>
-          <li className='w-full inline-flex justify-between'>
-            <span className='text-sm text-light-3'>Contraseña:</span>
-            <Badge variant='accept'>{user.contrasena}</Badge>
           </li>
           <li className='w-full inline-flex justify-between'>
             <span className='text-sm text-light-3'>Rol:</span>

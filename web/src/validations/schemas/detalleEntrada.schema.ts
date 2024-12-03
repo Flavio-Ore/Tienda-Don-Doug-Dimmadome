@@ -22,21 +22,20 @@ export const DetallEntradaSchema = z.object({
       message: 'La entrada es obligatoria'
     })
   }),
-  producto: z.object({
-    idProducto: z.number().nonnegative({
-      message: 'El producto es obligatorio'
+  descripcion: z.string().optional(),
+  detallesEntrada: z.array(
+    z.object({
+      producto: z.object({
+        idProducto: z.number().nonnegative({
+          message: 'El producto es obligatorio'
+        })
+      }),
+      cantidad: z.number().nonnegative({
+        message: 'La cantidad es requerida'
+      }),
+      costoUnitario: z.number().nonnegative({
+        message: 'El costo unitario es obligatorio'
+      })
     })
-  }),
-  nombreProducto: z.string().min(1, {
-    message: 'El nombre del producto no puede estar vacío'
-  }),
-  cantidad: z.number().int().positive({
-    message: 'La cantidad no puede ser negativa'
-  }),
-  costoUnitario: z.number().positive({
-    message: 'El costo unitario no puede ser negativo'
-  }),
-  subtotal: z.number().positive({
-    message: 'El total no puede ser negativo'
-  })
+  )
 })

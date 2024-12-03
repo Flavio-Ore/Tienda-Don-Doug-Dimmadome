@@ -15,16 +15,32 @@ import { z } from 'zod'
 
 export const EntradaSchema = z.object({
   usuario: z.object({
-    idUsuario: z.number().nonnegative({
-      message: 'El usuario es obligatorio'
-    })
+    idUsuario: z
+      .number({
+        required_error: 'El usuario es obligatorio',
+        message: 'El usuario es obligatorio'
+      })
+      .int()
+      .positive({
+        message: 'El usuario es obligatorio'
+      })
   }),
   proveedor: z.object({
-    id: z.number().nonnegative({
-      message: 'El proveedor es obligatorio'
-    })
+    id: z
+      .number({
+        required_error: 'El proveedor es obligatorio',
+        message: 'El proveedor es obligatorio'
+      })
+      .int()
+      .positive({
+        message: 'El proveedor es obligatorio'
+      })
   }),
-  total: z.number().positive({
-    message: 'El total no puede ser negativo'
-  })
+  total: z
+    .number({
+      message: 'El total debe ser mayor a 0'
+    })
+    .positive({
+      message: 'El total debe ser mayor a 0'
+    })
 })

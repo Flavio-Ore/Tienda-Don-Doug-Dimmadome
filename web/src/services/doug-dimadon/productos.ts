@@ -1,15 +1,20 @@
 import axios from '@/lib/axios'
-import { IProducto } from '@/types'
+import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
+import { IProducto, IUnidadMedida } from '@/types'
 import { BuyProductSchema } from '@/validations/buyProduct.schema'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { saveDetalleEntrada, saveEntrada } from '@doug-dimadon/entradas'
 import { saveDetalleSalida, saveSalida } from '@doug-dimadon/salidas'
-import { ENDPOINTS } from '@doug-dimadon/values/constants'
 import { z } from 'zod'
 
 export const getAllProductos = async () => {
   return await axios.get<IProducto[]>(ENDPOINTS.GET.PRODUCTO.READ_ALL)
+}
+
+export const getAllUnidadesMedida = async () => {
+  return await axios.get<IUnidadMedida[]>(ENDPOINTS.GET.UNIDAD_MEDIDA.READ_ALL)
 }
 
 export const saveProducto = async (
@@ -21,12 +26,15 @@ export const saveProducto = async (
 export const saveCompraProducto = async (
   compra: z.infer<typeof BuyProductSchema>
 ) => {
+  console.log({
+    compra
+  })
   const { data } = await saveEntrada({
     usuario: {
-      idUsuario: compra.idUsuario
+      idUsuario: compra.usuario.idUsuario
     },
     proveedor: {
-      id: compra.idProveedor
+      id: compra.proveedor.id
     },
     total: compra.total
   })
@@ -35,16 +43,17 @@ export const saveCompraProducto = async (
   })
   if (data.idEntrada != null) {
     await saveDetalleEntrada({
+      detallesEntrada: compra.productos.map(p => ({
+        cantidad: p.cantidad,
+        costoUnitario: p.costoUnitario,
+        producto: {
+          idProducto: p.idProducto
+        }
+      })),
       entrada: {
         idEntrada: data.idEntrada
       },
-      producto: {
-        idProducto: compra.producto.idProducto
-      },
-      nombreProducto: compra.producto.nombreProducto,
-      cantidad: compra.cantidad,
-      costoUnitario: compra.costoUnitario,
-      subtotal: compra.total
+      descripcion: compra.descripcion
     })
   }
 }
@@ -52,29 +61,44 @@ export const saveCompraProducto = async (
 export const saveVentaProducto = async (
   venta: z.infer<typeof SellProductFormSchema>
 ) => {
+  console.log({ venta })
   const { data } = await saveSalida({
     cliente: {
-      idCliente: venta.idCliente
+      idCliente: venta.cliente.idCliente
     },
     tipoPago: {
-      idTipoPago: venta.idTipoPago
+      idTipoPago: venta.tipoPago.idTipoPago
     },
-    costoTotal: venta.total
+    costoTotal: venta.costoTotal
   })
-
+  console.log({ data })
   if (data.idSalida != null) {
     await saveDetalleSalida({
+      detallesSalida: venta.productos.map(p => ({
+        cantidad: p.cantidad,
+        costoUnitario: p.costoUnitario,
+        producto: {
+          idProducto: p.idProducto
+        }
+      })),
       salida: {
         idSalida: data.idSalida
       },
-      producto: {
-        idProducto: venta.idProducto
-      },
-      cantidad: venta.cantidad,
-      costoUnitario: venta.precioUnitario,
-      total: venta.total
+      descripcion: venta.descripcion
     })
+  } else {
+    throw new Error('No se pudo guardar la salida')
   }
+}
+
+export const updateProducto = async ({
+  idProducto,
+  producto
+}: {
+  idProducto: number
+  producto: z.infer<typeof EditProductFormSchema>
+}) => {
+  return await axios.put(ENDPOINTS.PUT.PRODUCTO.UPDATE(idProducto), producto)
 }
 
 export const updateEstadoProducto = async ({

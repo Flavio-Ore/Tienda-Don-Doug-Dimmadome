@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { EntradaSchema } from './schemas/entrada.schema'
 
 /*
 /*
@@ -30,31 +31,61 @@ formulario detalle Entrada
 */
 
 export const BuyProductSchema = z.object({
-  idUsuario: z.number({
-    required_error: 'El ID del usuario es requerido'
-  }).nonnegative({
-    message: 'El ID del usuario no puede ser negativo'
-  }),
-  producto: z.object({
-    idProducto: z.number().nonnegative({
-      message: 'El ID del producto no puede ser negativo'
+  productos: z
+    .array(
+      z.object(
+        {
+          idProducto: z
+            .number({
+              required_error: 'El producto es requerido',
+              message: 'El producto es requerido'
+            })
+            .int({
+              message: 'El producto es requerido'
+            })
+            .positive({
+              message: 'El producto es requerido'
+            }),
+          cantidad: z
+            .number({
+              required_error: 'La cantidad es requerida',
+              message: 'La cantidad es requerida'
+            })
+            .int()
+            .positive({
+              message: 'La cantidad es requerida'
+            }),
+          costoUnitario: z
+            .number({
+              required_error: 'El costo unitario es requerido',
+              message: 'El costo unitario es requerido'
+            })
+            .positive({
+              message: 'El costo unitario es requerido'
+            })
+        },
+        {
+          required_error: 'El producto es requerido',
+          invalid_type_error: 'El producto es requerido',
+          message: 'El producto es requerido'
+        }
+      ),
+      {
+        required_error: 'Mínimo un producto es requerido',
+        invalid_type_error: 'Mínimo un producto es requerido',
+        message: 'Mínimo un producto es requerido'
+      }
+    )
+    .min(1, {
+      message: 'Mínimo un producto es requerido'
     }),
-    nombreProducto: z.string().min(1, {
-      message: 'El nombre del producto no puede estar vacío'
+  descripcion: z
+    .string({
+      required_error: 'La descripción es requerida',
+      message: 'La descripción es requerida'
     })
-  }),
-  idProveedor: z.number({
-    required_error: 'El proveedor es requerido'
-  }).nonnegative({
-    message: 'El ID del proveedor no puede ser negativo'
-  }),
-  cantidad: z.number().min(1, {
-    message: 'La cantidad debe ser mayor a 0'
-  }),
-  costoUnitario: z.number().min(1, {
-    message: 'El precio unitario debe ser mayor a 0'
-  }),
-  total: z.number().nonnegative({
-    message: 'El precio total no puede ser negativo'
-  })
+    .min(1, {
+      message: 'La descripción es requerida'
+    }),
+  ...EntradaSchema.shape
 })

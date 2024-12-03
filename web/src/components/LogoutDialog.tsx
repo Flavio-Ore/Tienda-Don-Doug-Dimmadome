@@ -1,4 +1,4 @@
-import useInventory from '@/states/inventory/hooks/useInventory'
+import useAuth from '@/states/auth/hooks/useAuth'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,11 +14,11 @@ import { ImExit } from 'react-icons/im'
 import { useNavigate } from 'react-router-dom'
 
 const LogoutDialog = () => {
-  const { signOut } = useInventory()
+  const { logout } = useAuth()
   const nagivate = useNavigate()
 
   const handleLogout = () => {
-    signOut()
+    logout()
     nagivate('/')
   }
   return (
@@ -29,7 +29,9 @@ const LogoutDialog = () => {
             size={24}
             className='fill-red-500 group-hover:stroke-red-500'
           />
-          <span className='relative lg:text-sm md:text-xs md:inline hidden'>Cerrar Sesión</span>
+          <span className='relative lg:text-sm md:text-xs md:inline hidden'>
+            Cerrar Sesión
+          </span>
         </div>
       </AlertDialogTrigger>
       <AlertDialogContent>
