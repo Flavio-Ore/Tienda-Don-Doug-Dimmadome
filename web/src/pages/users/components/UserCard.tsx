@@ -71,8 +71,8 @@ const UserCard = ({ user }: { user: IUsuario }) => {
               >
                 <span className='sr-only'>
                   {user.estado === 'activo'
-                    ? 'Desactivar producto'
-                    : 'Activar producto'}
+                    ? 'Desactivar usuario'
+                    : 'Activar usuario'}
                 </span>
                 {isPending && <LoaderIcon className='size-5' />}
                 {!isPending && (
@@ -91,25 +91,12 @@ const UserCard = ({ user }: { user: IUsuario }) => {
             <TooltipContent>
               <span className='text-light-3 text-xs'>
                 {user.estado === 'activo'
-                  ? 'Desactivar producto'
-                  : 'Activar producto'}
+                  ? 'Desactivar usuario'
+                  : 'Activar usuario'}
               </span>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        {/* <CardDescription>
-          <span
-            className={cn(
-              'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-red-700 text-light-1 shadow hover:bg-red-700/80',
-              {
-                'border-transparent bg-green-700 text-light-1 shadow hover:bg-green-700/80':
-                  product.estado.toLowerCase() === 'activo'
-              }
-            )}
-          >
-            {product.estado}
-          </span>
-        </CardDescription> */}
       </CardHeader>
       <CardContent>
         <ul className='flex flex-col gap-y-2 items-center'>
@@ -135,35 +122,6 @@ const UserCard = ({ user }: { user: IUsuario }) => {
           </li>
         </ul>
       </CardContent>
-      {/* <CardFooter className='flex justify-center items-center'>
-        {user.estado === 'activo' ? (
-          <Button
-            variant='outline'
-            className='bg-red-900/10 hover:bg-red-900 hover:text-light-1'
-            onClick={() =>
-              handleClick({
-                userId: user.idUsuario,
-                state: user.estado
-              })
-            }
-          >
-            {isPending ? <LoaderIcon /> : 'Desactivar Usuario'}
-          </Button>
-        ) : (
-          <Button
-            variant='outline'
-            className='bg-green-900/10 hover:bg-green-900 hover:text-light-1'
-            onClick={() =>
-              handleClick({
-                userId: user.idUsuario,
-                state: user.estado
-              })
-            }
-          >
-            {isPending ? <LoaderIcon /> : 'Activar Usuario'}
-          </Button>
-        )}
-      </CardFooter> */}
     </Card>
   )
 }

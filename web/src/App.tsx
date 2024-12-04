@@ -2,7 +2,7 @@ import Auth from '@layouts/Auth'
 import Root from '@layouts/Root'
 
 import Login from '@/pages/login/Login'
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/values'
+import { ROUTES } from '@/values'
 import BuyProduct from '@pages/buy-product/BuyProduct'
 import Clients from '@pages/clients/Clients'
 import ProductRegistration from '@pages/create-product/ProductRegistration'
@@ -16,34 +16,38 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 function App () {
+  // const sessionUser = useMemo(
+  //   () => loadFromLocalStorage<IUsuario>('sessionUser'),
+  //   []
+  // )
+
   return (
     <main className='flex h-dvh text-yellow-50'>
       <ReactQueryDevtools />
       <Routes>
-        <Route path={PUBLIC_ROUTES.LOGIN} element={<Auth />}>
+        <Route path={ROUTES.PUBLIC.LOGIN} element={<Auth />}>
           <Route index element={<Login />} />
         </Route>
-        <Route path={PRIVATE_ROUTES.INVENTORY} element={<Root />}>
-          <Route index element={<Kardex />} />
-          {/* <Route
-            path={PRIVATE_ROUTES.CREATE_KARDEX}
-            element={<CreateKardex />}
-          /> */}
-          <Route path={PRIVATE_ROUTES.PRODUCTS} element={<Products />} />
+        <Route element={<Root />}>
+          <Route path={ROUTES.PRIVATE.INVENTORY.KARDEX} element={<Kardex />} />
+          <Route path={ROUTES.PRIVATE.PRODUCTS.ROOT} element={<Products />} />
           <Route
-            path={PRIVATE_ROUTES.ADD_PRODUCT}
+            path={ROUTES.PRIVATE.PRODUCTS.ADD}
             element={<ProductRegistration />}
           />
-          <Route path={PRIVATE_ROUTES.CLIENTS} element={<Clients />} />
-          <Route path={PRIVATE_ROUTES.USERS} element={<Users />} />
-          <Route path={PRIVATE_ROUTES.PROVIDERS} element={<Providers />} />
-          <Route path={PRIVATE_ROUTES.BUY_PRODUCT} element={<BuyProduct />} />
-          <Route path={PRIVATE_ROUTES.SELL_PRODUCT} element={<SellProduct />} />
+          <Route path={ROUTES.PRIVATE.MOVEMENTS.BUY} element={<BuyProduct />} />
           <Route
-            path={PRIVATE_ROUTES.RETURN_PRODUCT}
+            path={ROUTES.PRIVATE.MOVEMENTS.SELL}
+            element={<SellProduct />}
+          />
+          <Route
+            path={ROUTES.PRIVATE.MOVEMENTS.REFUND}
             element={<ReturnProduct />}
           />
-          <Route path='*' element={<Navigate to='/' />} />
+          <Route path={ROUTES.PRIVATE.USER.PROVIDERS} element={<Providers />} />
+          <Route path={ROUTES.PRIVATE.USER.CLIENTS} element={<Clients />} />
+          <Route path={ROUTES.PRIVATE.ADMIN.USERS} element={<Users />} />
+          <Route path='*' element={<Navigate to={ROUTES.PUBLIC.LOGIN} />} />
         </Route>
       </Routes>
     </main>

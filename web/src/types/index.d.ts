@@ -93,6 +93,7 @@ export interface IAuthContext {
   user: IUsuario | undefined
   isError: boolean
   isLoading: boolean
+  isAdmin: boolean
   isAuthenticated: boolean
   checkAuth: () => Promise<boolean>
   login: (login: { email: string; contrasena: string }) => Promise<boolean>

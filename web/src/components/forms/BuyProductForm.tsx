@@ -504,7 +504,7 @@ const BuyProductForm = () => {
             </FormItem>
           )}
         />
-        <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
+        <div className='w-full grid grid-cols-1 gap-7 max-w-5xl'>
           {selectedProducts.map(product => {
             const selectedProduct =
               products?.find(

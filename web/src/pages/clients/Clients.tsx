@@ -2,12 +2,15 @@ import ClientForm from '@/components/forms/ClientForm'
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useDebounce } from '@/hooks/useDebounce'
 import ClientCard from '@/pages/clients/components/ClientCard'
+import useAuth from '@/states/auth/hooks/useAuth'
 import { useQueryAllClients } from '@/states/queries/hooks/queries'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
 import { FaSearch, FaUsers, FaUserTag } from 'react-icons/fa'
 
 const Clients = () => {
+  const { isAdmin } = useAuth()
+
   const {
     data: clients,
     isLoading: isLoadingClients,
@@ -64,7 +67,7 @@ const Clients = () => {
           </h3>
         </div>
         <div className='flex items-center gap-x-4 px-4 w-full rounded-lg bg-dark-1'>
-          <FaSearch size={24} className='fill-light-3'/>
+          <FaSearch size={24} className='fill-light-3' />
           <Input
             type='search'
             placeholder='Buscar cliente por nombre, número, apellido paterno o apellido materno'
@@ -109,7 +112,7 @@ const Clients = () => {
           clients != null &&
           searchedClients.length > 0 &&
           searchedClients.map(client => (
-            <ClientCard key={client.idCliente} client={client} />
+            <ClientCard key={client.idCliente} client={client} enableEdit={isAdmin}/>
           ))}
 
         {!isTyping &&
@@ -118,7 +121,7 @@ const Clients = () => {
           clients != null &&
           clients.length > 0 &&
           clients.map(client => (
-            <ClientCard key={client.idCliente} client={client} />
+            <ClientCard key={client.idCliente} client={client} enableEdit={isAdmin}/>
           ))}
       </div>
     </div>

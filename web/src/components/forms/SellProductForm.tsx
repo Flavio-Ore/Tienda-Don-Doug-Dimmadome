@@ -24,7 +24,7 @@ import {
 } from '@/states/queries/hooks/queries'
 import { IProducto } from '@/types'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
-import { PRIVATE_ROUTES } from '@/values'
+import { PRIVATE_ROUTES, ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Command,
@@ -356,7 +356,7 @@ const SellProductForm = () => {
               <FormDescription>
                 Si no encuentras al cliente,{' '}
                 <Link
-                  to={PRIVATE_ROUTES.CLIENTS}
+                  to={ROUTES.PRIVATE.USER.CLIENTS}
                   className='text-sky-500/70 underline-offset-4 hover:underline'
                 >
                   regístralo aquí
@@ -608,7 +608,10 @@ const SellProductForm = () => {
               ) ?? null
             if (selectedProduct != null) {
               return (
-                <div className='flex flex-row flex-wrap gap-y-4 justify-evenly items-center bg-dark-3 border border-light-4 p-4'>
+                <div
+                  key={product.idProducto}
+                  className='flex flex-row flex-wrap gap-y-4 justify-evenly items-center bg-dark-3 border border-light-4 p-4'
+                >
                   <div className=''>
                     <p className='text-xl'>
                       {product.nombre}{' '}

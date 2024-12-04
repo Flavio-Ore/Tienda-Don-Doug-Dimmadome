@@ -49,7 +49,6 @@ export const SalidaSchema = z.object({
     .number({
       required_error: 'El costo total no puede ser 0'
     })
-    .int()
     .positive({
       message: 'El costo total no puede ser 0'
     })

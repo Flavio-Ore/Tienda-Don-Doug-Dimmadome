@@ -1,4 +1,5 @@
 import {
+  loadFromLocalStorage,
   removeFromLocalStorage,
   saveToLocalStorage
 } from '@/lib/local-storage'
@@ -11,6 +12,7 @@ import { type ReactNode, useEffect, useState } from 'react'
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUsuario | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isError, setIsError] = useState(false)
 
@@ -28,6 +30,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (cookies != null) {
         setIsLoading(true)
         setIsAuthenticated(true)
+        const user = loadFromLocalStorage<IUsuario>('CURRENT_USER')
+        if (user != null) {
+          setIsAuthenticated(false)
+          return false
+        }
         console.log('AFTER {user,isLoading,isAuthenticated,isError} :>>', {
           user,
           isLoading,
@@ -85,6 +92,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (loginRes.status === HttpStatusCode.Ok) {
         setIsAuthenticated(true)
         saveToLocalStorage('CURRENT_USER', loginRes.data.usuario)
+        setIsAdmin(loginRes.data.usuario.tipoUsuario.nombre === 'Administrador')
         setUser(loginRes.data.usuario)
         return true
       }
@@ -115,6 +123,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     isError,
     isLoading,
+    isAdmin,
     isAuthenticated,
     checkAuth,
     login,

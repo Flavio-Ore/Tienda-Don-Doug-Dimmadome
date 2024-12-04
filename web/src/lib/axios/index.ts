@@ -1,6 +1,6 @@
+import { removeFromLocalStorage } from '@/lib/local-storage'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { removeFromLocalStorage } from '../local-storage'
 const baseURL = import.meta.env.DEV
   ? import.meta.env.VITE_LOCAL_API_URL
   : import.meta.env.VITE_PROD_API_URL
@@ -12,6 +12,8 @@ const newAxios = axios.create({
     'Content-Type': 'application/json'
   }
 })
+
+newAxios.defaults.withCredentials = true
 
 newAxios.interceptors.request.use(config => {
   const token = Cookies.get('token')

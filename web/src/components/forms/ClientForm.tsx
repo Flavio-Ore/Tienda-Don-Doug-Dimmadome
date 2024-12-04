@@ -4,6 +4,7 @@ import { Button } from '@shadcn/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,7 +16,6 @@ import { useForm } from 'react-hook-form'
 import { useToast } from '@/hooks/use-toast'
 import { useMutationAddClient } from '@/states/queries/hooks/mutations'
 import { ClientFormSchema } from '@/validations/forms/addClient.schema'
-import { PRIVATE_ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { useEffect } from 'react'
 import { FaUserPlus } from 'react-icons/fa'
@@ -52,7 +52,6 @@ const ClientForm = () => {
           </p>
         )
       })
-      navigate(PRIVATE_ROUTES.CLIENTS)
     } catch (error) {
       console.error(error)
       toast({
@@ -87,6 +86,7 @@ const ClientForm = () => {
                 <Input type='text' placeholder='DNI del cliente' {...field} />
               </FormControl>
               <FormMessage className='shad-form_message' />
+              <FormDescription>Documento Nacional de Identidad</FormDescription>
             </FormItem>
           )}
         />
@@ -104,6 +104,7 @@ const ClientForm = () => {
                 />
               </FormControl>
               <FormMessage className='shad-form_message' />
+              <FormDescription>La direccion es opcional</FormDescription>
             </FormItem>
           )}
         />
