@@ -109,6 +109,10 @@ export const ENDPOINTS = {
   PATCH: {
     USUARIO: {
       UPDATE: (id: number) => `/usuarios/${id}`
+    },
+    PRODUCTO: {
+      UPDATE: (id: number) => `/producto/${id}`,
+      UPDATE_ESTADO: (id: number) => `/producto/${id}/estado`
     }
   }
 } as const

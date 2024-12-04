@@ -1,13 +1,14 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useDebounce } from '@/hooks/useDebounce'
+import useAuth from '@/states/auth/hooks/useAuth'
 import { useQueryAllProducts } from '@/states/queries/hooks/queries'
 import ProductCard from '@pages/products/components/ProductCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
 import { FaBoxOpen, FaSearch } from 'react-icons/fa'
 
-
 const Products = () => {
+  const { isAdmin } = useAuth()
   const {
     data: products,
     isLoading: isProductsLoading,
@@ -67,11 +68,6 @@ const Products = () => {
           />
         </div>
       </div>
-      {/* <div>
-        {!isProductsLoading && !isProductsError && products != null && (
-          <ProductDataTable products={products} />
-        )}
-      </div> */}
       {isProductsLoading && (
         <div className='w-full'>
           <LoaderIcon className='mx-auto' />
@@ -108,6 +104,7 @@ const Products = () => {
           filteredProducts.map(product => (
             <ProductCard
               key={product.idProducto}
+              enableEdit={isAdmin}
               product={{
                 ...product,
                 fechaVencimiento: new Date(product.fechaVencimiento)
@@ -123,6 +120,7 @@ const Products = () => {
           products.map(product => (
             <ProductCard
               key={product.idProducto}
+              enableEdit={isAdmin}
               product={{
                 ...product,
                 fechaVencimiento: new Date(product.fechaVencimiento)
