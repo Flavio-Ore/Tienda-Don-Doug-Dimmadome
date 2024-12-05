@@ -19,7 +19,6 @@ import { useToast } from '@/hooks/use-toast'
 import { useMutationAddUser } from '@/states/queries/hooks/mutations'
 import { useQueryAllUserTypes } from '@/states/queries/hooks/queries'
 import { UserFormSchema } from '@/validations/forms/addUser.schema'
-import { PRIVATE_ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Command,
@@ -72,7 +71,6 @@ const UserForm = () => {
           </p>
         )
       })
-      navigate(PRIVATE_ROUTES.USERS)
     } catch (error) {
       console.error(error)
     }

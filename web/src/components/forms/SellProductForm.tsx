@@ -24,7 +24,7 @@ import {
 } from '@/states/queries/hooks/queries'
 import { IProducto } from '@/types'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
-import { PRIVATE_ROUTES, ROUTES } from '@/values'
+import { ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Command,
@@ -220,7 +220,6 @@ const SellProductForm = () => {
       })
       setSelectedProducts([])
       sellProductForm.reset()
-      navigate(PRIVATE_ROUTES.SELL_PRODUCT)
     } catch (error) {
       console.error(error)
       if (isError) {

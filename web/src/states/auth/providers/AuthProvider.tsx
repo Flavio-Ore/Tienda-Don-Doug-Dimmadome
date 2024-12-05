@@ -105,7 +105,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const logout = async () => {
+  const logout = () => {
     try {
       Cookies.remove('token')
       setIsAuthenticated(false)

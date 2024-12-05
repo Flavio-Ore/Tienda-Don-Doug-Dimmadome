@@ -2,7 +2,6 @@ import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
 import { ICategoriaProducto } from '@/types'
 import { CategoryFormSchema } from '@/validations/forms/addCategory.schema'
-import Cookies from 'js-cookie'
 import { z } from 'zod'
 
 export const getAllCategorias = async () => {
@@ -11,9 +10,5 @@ export const getAllCategorias = async () => {
 export const saveCategoria = async (
   tipoPago: z.infer<typeof CategoryFormSchema>
 ) => {
-  return await axios.post(ENDPOINTS.POST.CATEGORIA.CREATE, tipoPago, {
-    headers: {
-      Authorization: `Bearer ${Cookies.get('token') ?? ''}`
-    }
-  })
+  return await axios.post(ENDPOINTS.POST.CATEGORIA.CREATE, tipoPago)
 }

@@ -16,7 +16,7 @@ import { FaRegHandshake } from 'react-icons/fa6'
 
 import { useToast } from '@/hooks/use-toast'
 import { BuyProductSchema } from '@/validations/buyProduct.schema'
-import { PRIVATE_ROUTES } from '@/values'
+import { ROUTES } from '@/values'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
@@ -200,7 +200,6 @@ const BuyProductForm = () => {
         )
       })
       setSelectedProducts([])
-      navigate(PRIVATE_ROUTES.BUY_PRODUCT)
     } catch (error) {
       console.error(error)
       if (isError) {
@@ -366,7 +365,7 @@ const BuyProductForm = () => {
               <FormDescription>
                 Si no encuentras al proovedor,{' '}
                 <Link
-                  to={PRIVATE_ROUTES.PROVIDERS}
+                  to={ROUTES.PRIVATE.USER.PROVIDERS}
                   className='text-sky-500/70 underline-offset-4 hover:underline'
                 >
                   regístralo aquí

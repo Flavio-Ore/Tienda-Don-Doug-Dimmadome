@@ -44,9 +44,14 @@ const Leftsidebar = () => {
             className='block w-8 mx-auto lg:m-0'
             src='/Stock_Image_of_Doug_Dimmadome_logo.png'
           />
-          <h2 className='xl:text-2xl md:text-lg font-semibold relative hidden md:inline font-ubuntu'>
-            Soluciones Dimadon
-          </h2>
+          <div>
+            <div>
+              <h2 className='xl:text-xl md:text-lg font-semibold relative hidden md:inline font-ubuntu'>
+                Soluciones Dimmadon
+              </h2>
+              <p className='text-xs text-light-2'>Sistema de Inventario</p>
+            </div>
+          </div>
         </div>
         <hr className='w-full border-light-3' />
         <div className='w-full h-10 flex gap-x-2 justify-start items-center'>
@@ -129,7 +134,7 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-3': pathname === ROUTES.PRIVATE.PRODUCTS.ROOT  
+                    'bg-dark-3': pathname === ROUTES.PRIVATE.PRODUCTS.ROOT
                   }
                 )}
               >
