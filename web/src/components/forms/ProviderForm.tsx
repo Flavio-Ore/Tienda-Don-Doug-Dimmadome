@@ -3,7 +3,6 @@ import { cn } from '@/lib/utils'
 import { useMutationAddProvider } from '@/states/queries/hooks/mutations'
 import { useQueryAllProductsCategories } from '@/states/queries/hooks/queries'
 import { ProviderFormSchema } from '@/validations/forms/addProvider.schema'
-import { PRIVATE_ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
@@ -66,7 +65,7 @@ const ProviderForm = () => {
         description: `Proovedor ${value.nombre} ha sido agregado correctamente.`,
         variant: 'confirmation'
       })
-      navigate(PRIVATE_ROUTES.PROVIDERS)
+
     } catch (error) {
       console.error(error)
       if (isError) {

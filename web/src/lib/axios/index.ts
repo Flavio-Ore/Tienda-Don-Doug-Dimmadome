@@ -13,8 +13,6 @@ const newAxios = axios.create({
   }
 })
 
-newAxios.defaults.withCredentials = true
-
 newAxios.interceptors.request.use(config => {
   const token = Cookies.get('token')
   if (token != null) {

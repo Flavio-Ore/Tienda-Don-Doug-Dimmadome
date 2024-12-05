@@ -23,7 +23,7 @@ import {
   useQueryAllRefundTypes
 } from '@/states/queries/hooks/queries'
 import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
-import { PRIVATE_ROUTES } from '@/values'
+import { ROUTES } from '@/values'
 import {
   Command,
   CommandEmpty,
@@ -93,13 +93,15 @@ const ReturnProductForm = () => {
       await refundProduct(value)
       toast({
         title: 'Devolución de Producto exitoso',
-        description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-900 p-4'>
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        )
+        description: `Se ha devuelto ${value.cantidad} unidades del producto ${
+          products?.find(
+            product => product.idProducto === value.producto.idProducto
+          )?.nombre
+        } al cliente ${
+          clients?.find(client => client.idCliente === value.cliente.idCliente)
+            ?.nombreCliente
+        }`
       })
-      navigate(PRIVATE_ROUTES.RETURN_PRODUCT)
     } catch (error) {
       console.error(error)
       console.error(error)
@@ -212,7 +214,7 @@ const ReturnProductForm = () => {
               <FormDescription>
                 Si no encuentras al cliente,{' '}
                 <Link
-                  to={PRIVATE_ROUTES.CLIENTS}
+                  to={ROUTES.PRIVATE.USER.CLIENTS}
                   className='text-sky-500/70 underline-offset-4 hover:underline'
                 >
                   regístralo aquí

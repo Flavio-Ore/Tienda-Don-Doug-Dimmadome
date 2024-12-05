@@ -1,4 +1,5 @@
 import useAuth from '@/states/auth/hooks/useAuth'
+import { ROUTES } from '@/values'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,12 +20,12 @@ const LogoutDialog = () => {
 
   const handleLogout = () => {
     logout()
-    nagivate('/')
+    nagivate(ROUTES.PUBLIC.LOGIN)
   }
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <div className='flex gap-x-2 justify-start items-center p-4 cursor-pointer focus-visible:border-light-1'>
+        <div className='flex gap-x-2 justify-start items-center p-4 cursor-pointer focus-visible:border-light-1 '>
           <ImExit
             size={24}
             className='fill-red-500 group-hover:stroke-red-500'
@@ -43,7 +44,7 @@ const LogoutDialog = () => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleLogout}>
+          <AlertDialogAction onClick={() => handleLogout()}>
             <div className='flex-center gap-x-2'>
               <span className='focus-visible:text-light-1'>Cerrar Sesión</span>
               <ImExit
