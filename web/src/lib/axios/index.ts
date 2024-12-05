@@ -14,9 +14,15 @@ const newAxios = axios.create({
 })
 
 newAxios.interceptors.request.use(config => {
-  const token = Cookies.get('token')
-  if (token != null) {
-    config.headers.Authorization = `Bearer ${token}`
+  const cookies = Cookies.get()
+  console.log({
+    'interceptor request': config
+  })
+  console.log({
+    cookies_on_resquest: cookies
+  })
+  if (cookies.token != null) {
+    config.headers.Authorization = `Bearer ${cookies.token}`
   }
   return config
 })
@@ -25,11 +31,11 @@ newAxios.interceptors.response.use(null, requestConfig => {
   console.log({
     'interceptor response': requestConfig
   })
+  console.log('Unauthorized, loggin out...')
+  Cookies.remove('token')
+  removeFromLocalStorage('CURRENT_USER')
+  window.location.href = '/'
   if (requestConfig.status === 401 || requestConfig.status === 403) {
-    console.log('Unauthorized')
-    Cookies.remove('token')
-    removeFromLocalStorage('CURRENT_USER')
-    window.location.href = '/'
   }
   return requestConfig
 })
