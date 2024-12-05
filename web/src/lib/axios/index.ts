@@ -13,31 +13,41 @@ const newAxios = axios.create({
   }
 })
 
-newAxios.interceptors.request.use(config => {
-  const cookies = Cookies.get()
-  console.log({
-    'interceptor request': config
-  })
-  console.log({
-    cookies_on_resquest: cookies
-  })
-  if (cookies.token != null) {
-    config.headers.Authorization = `Bearer ${cookies.token}`
+newAxios.interceptors.request.use(
+  onSuccess => {
+    const cookies = Cookies.get()
+    console.log({
+      'interceptor request': onSuccess
+    })
+    console.log({
+      cookies_on_resquest: cookies
+    })
+    if (cookies.token != null) {
+      onSuccess.headers.Authorization = `Bearer ${cookies.token}`
+    }
+    return onSuccess
+  },
+  error => {
+    console.log({
+      'interceptor request error': error
+    })
+    return Promise.reject(error)
   }
-  return config
-})
+)
 
-newAxios.interceptors.response.use(null, requestConfig => {
-  console.log({
-    'interceptor response': requestConfig
-  })
-  console.log('Unauthorized, loggin out...')
-  Cookies.remove('token')
-  removeFromLocalStorage('CURRENT_USER')
-  window.location.href = '/'
-  if (requestConfig.status === 401 || requestConfig.status === 403) {
+newAxios.interceptors.response.use(
+  response => response,
+  requestConfig => {
+    console.log({
+      'interceptor response': requestConfig
+    })
+    if (requestConfig.status === 401 || requestConfig.status === 403) {
+      console.log('Unauthorized, loggin out...')
+      Cookies.remove('token')
+      removeFromLocalStorage('CURRENT_USER')
+    }
+    return requestConfig
   }
-  return requestConfig
-})
+)
 
 export default newAxios
