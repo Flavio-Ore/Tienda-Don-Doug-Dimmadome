@@ -75,7 +75,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('loginResponse: ', loginRes)
       console.log('cookies :>> ', cookies)
 
-      if (loginRes.data.token === cookies.token) {
+      if (cookies.token != null && loginRes.data.token === cookies.token) {
         console.log('loginRes.data.token === cookies.token :>> ', true)
       } else {
         console.log('loginRes.data.token === cookies.token :>> ', false)
