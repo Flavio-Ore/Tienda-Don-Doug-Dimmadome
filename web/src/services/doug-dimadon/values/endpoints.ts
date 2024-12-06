@@ -112,7 +112,7 @@ export const ENDPOINTS = {
     },
     PRODUCTO: {
       UPDATE: (id: number) => `/producto/${id}`,
-      UPDATE_ESTADO: (id: number) => `/producto/${id}/estado`
+      //UPDATE_ESTADO: (id: number) => `/producto/${id}`
     }
   }
 } as const

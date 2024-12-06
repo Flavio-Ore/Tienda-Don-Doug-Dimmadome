@@ -108,7 +108,7 @@ export const updateEstadoProducto = async ({
   idProducto: number
   estado: 'activo' | 'inactivo'
 }) => {
-  return await axios.put(ENDPOINTS.PATCH.PRODUCTO.UPDATE_ESTADO(idProducto), {
+  return await axios.patch(ENDPOINTS.PATCH.PRODUCTO.UPDATE(idProducto), {
     estado
   })
 }

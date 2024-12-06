@@ -10,12 +10,14 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { useMutationChangeUserState } from '@/states/queries/hooks/mutations'
+import { useQueryAllUsers } from '@/states/queries/hooks/queries'
 import { IUsuario } from '@/types'
 import { Button } from '@shadcn/button'
 import { useEffect } from 'react'
 import { FaCircle } from 'react-icons/fa'
 
 const UserCard = ({ user }: { user: IUsuario }) => {
+  const { isRefetching } = useQueryAllUsers()
   const {
     mutateAsync: updateEstadoUsuario,
     isPending,
@@ -61,7 +63,7 @@ const UserCard = ({ user }: { user: IUsuario }) => {
               <Button
                 variant='link'
                 className='p-0'
-                disabled={isPending}
+                disabled={isPending || isRefetching}
                 onClick={() => {
                   handleClick({
                     userId: user.idUsuario,
@@ -74,8 +76,10 @@ const UserCard = ({ user }: { user: IUsuario }) => {
                     ? 'Desactivar usuario'
                     : 'Activar usuario'}
                 </span>
-                {isPending && <LoaderIcon className='size-5' />}
-                {!isPending && (
+                {(isPending || isRefetching) && (
+                  <LoaderIcon className='size-5' />
+                )}
+                {!isPending && !isRefetching && (
                   <FaCircle
                     size={20}
                     className={cn({

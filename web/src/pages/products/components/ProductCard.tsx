@@ -40,6 +40,7 @@ import {
   useMutationChangeProductState,
   useMutationUpdateProduct
 } from '@/states/queries/hooks/mutations'
+import { useQueryAllProducts } from '@/states/queries/hooks/queries'
 import { IProducto } from '@/types'
 import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
 import { ROUTES } from '@/values'
@@ -71,6 +72,7 @@ const ProductCard = ({
   product: IProducto
   enableEdit: boolean
 }) => {
+  const { isRefetching } = useQueryAllProducts()
   const {
     mutateAsync: activateProduct,
     isPending,
@@ -407,7 +409,7 @@ const ProductCard = ({
                     <Button
                       variant='link'
                       className='p-0'
-                      disabled={isPending}
+                      disabled={isPending || isRefetching}
                       onClick={() => {
                         handleClick({
                           productId: product.idProducto,
@@ -420,8 +422,10 @@ const ProductCard = ({
                           ? 'Desactivar producto'
                           : 'Activar producto'}
                       </span>
-                      {isPending && <LoaderIcon className='size-5' />}
-                      {!isPending && (
+                      {(isPending || isRefetching) && (
+                        <LoaderIcon className='size-5' />
+                      )}
+                      {!isPending && !isRefetching && (
                         <FaCircle
                           size={20}
                           className={cn({
