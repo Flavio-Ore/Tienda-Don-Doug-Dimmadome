@@ -18,32 +18,34 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuth = async () => {
     try {
-       const token = Cookies.get('token')
+      setIsLoading(true)
+      setIsError(false)
+
+      const token = Cookies.get('token')
+      const storedUser = loadFromLocalStorage<IUsuario>('CURRENT_USER')
+
       // const token = loadFromsessionStorage('token')
       console.log('cookies :>> ', token)
       console.log('BEFORE {user,isLoading,isAuthenticated,isError} :>>', {
-        user,
+        user: storedUser,
         isLoading,
         isAuthenticated,
         isError
       })
-      setIsError(false)
-      if (token != null) {
-        setIsLoading(true)
-        setIsAuthenticated(true)
-        const user = loadFromLocalStorage<IUsuario>('CURRENT_USER')
-        if (user == null) {
-          setIsAuthenticated(false)
-          return false
-        }
+
+      if (token != null && storedUser != null) {
         console.log('AFTER {user,isLoading,isAuthenticated,isError} :>>', {
-          user,
+          user: storedUser,
           isLoading,
           isAuthenticated,
           isError
         })
+        setIsAdmin(storedUser.tipoUsuario.idTipoUsuario === 1)
+
+        setIsAuthenticated(true)
         return true
       }
+
       removeFromLocalStorage('CURRENT_USER')
       setIsAuthenticated(false)
 
@@ -72,7 +74,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       })
 
       // saveToSessionStorage('token', loginRes.data.token)
-     // const token = loadFromsessionStorage('token')
+      // const token = loadFromsessionStorage('token')
       const token = Cookies.get('token')
       console.log('loginResponse: ', loginRes)
       console.log('cookies :>> ', token)
@@ -94,7 +96,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (loginRes.status === HttpStatusCode.Ok) {
         setIsAuthenticated(true)
         saveToLocalStorage('CURRENT_USER', loginRes.data.usuario)
-        setIsAdmin(loginRes.data.usuario.tipoUsuario.nombre === 'Administrador')
+        setIsAdmin(loginRes.data.usuario.tipoUsuario.idTipoUsuario === 1)
         setUser(loginRes.data.usuario)
         return true
       }

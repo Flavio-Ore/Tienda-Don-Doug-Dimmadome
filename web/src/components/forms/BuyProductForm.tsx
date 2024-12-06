@@ -511,7 +511,10 @@ const BuyProductForm = () => {
               ) ?? null
             if (selectedProduct != null) {
               return (
-                <div className='flex flex-row flex-wrap gap-y-4 justify-evenly items-center bg-dark-3 border border-light-4 p-4'>
+                <div
+                  key={product.idProducto}
+                  className='flex flex-row flex-wrap gap-y-4 justify-evenly items-center bg-dark-3 border border-light-4 p-4'
+                >
                   <div className=''>
                     <p className='text-xl'>
                       {product.nombre}{' '}
