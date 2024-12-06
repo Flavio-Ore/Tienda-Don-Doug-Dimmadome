@@ -17,6 +17,7 @@ newAxios.defaults.withCredentials = true
 
 newAxios.interceptors.request.use(config => {
   const token = Cookies.get('token')
+  // const token = loadFromsessionStorage('token')
   if (token != null) {
     config.headers.Authorization = `Bearer ${token}`
   }

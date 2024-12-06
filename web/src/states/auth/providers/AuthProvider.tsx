@@ -18,8 +18,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuth = async () => {
     try {
-      const cookies = Cookies.get('token')
-      console.log('cookies :>> ', cookies)
+       const token = Cookies.get('token')
+      // const token = loadFromsessionStorage('token')
+      console.log('cookies :>> ', token)
       console.log('BEFORE {user,isLoading,isAuthenticated,isError} :>>', {
         user,
         isLoading,
@@ -27,11 +28,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         isError
       })
       setIsError(false)
-      if (cookies != null) {
+      if (token != null) {
         setIsLoading(true)
         setIsAuthenticated(true)
         const user = loadFromLocalStorage<IUsuario>('CURRENT_USER')
-        if (user != null) {
+        if (user == null) {
           setIsAuthenticated(false)
           return false
         }
@@ -70,15 +71,16 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         loginRes
       })
 
-      const cookies = Cookies.get()
-
+      // saveToSessionStorage('token', loginRes.data.token)
+     // const token = loadFromsessionStorage('token')
+      const token = Cookies.get('token')
       console.log('loginResponse: ', loginRes)
-      console.log('cookies :>> ', cookies)
+      console.log('cookies :>> ', token)
 
-      if (cookies.token != null && loginRes.data.token === cookies.token) {
-        console.log('loginRes.data.token === cookies.token :>> ', true)
+      if (token != null && loginRes.data.token === token) {
+        console.log('loginRes.data.token === token :>> ', true)
       } else {
-        console.log('loginRes.data.token === cookies.token :>> ', false)
+        console.log('loginRes.data.token === token :>> ', false)
       }
 
       if (loginRes.status === HttpStatusCode.Forbidden) {
