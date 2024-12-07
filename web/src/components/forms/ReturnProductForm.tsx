@@ -15,6 +15,7 @@ import {
 import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
+import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useToast } from '@/hooks/use-toast'
 import { useMutationRefundProduct } from '@/states/queries/hooks/mutations'
 import {
@@ -38,7 +39,6 @@ import { BsCheck } from 'react-icons/bs'
 import { GoPackageDependents } from 'react-icons/go'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import LoaderIcon from '../icons/LoaderIcon'
 
 const ReturnProductForm = () => {
   const {

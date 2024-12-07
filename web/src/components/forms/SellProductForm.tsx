@@ -27,6 +27,13 @@ import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { ROUTES } from '@/values'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@shadcn/card'
+import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -34,21 +41,14 @@ import {
   CommandItem,
   CommandList
 } from '@shadcn/command'
+import { Input } from '@shadcn/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
+import { Textarea } from '@shadcn/textarea'
 import { useEffect, useState } from 'react'
 import { BsCheck } from 'react-icons/bs'
 import { FaMinus, FaPlus } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '../ui/card'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
 
 interface IProductsToBeSold extends IProducto {
   cantidad: number

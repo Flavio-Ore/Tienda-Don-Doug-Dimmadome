@@ -1,9 +1,9 @@
 import axios from '@/lib/axios'
 import { IUsuario } from '@/types'
 import { SigninFormSchema } from '@/validations/forms/signIn.schema'
+import { ENDPOINTS } from '@doug-dimadon/values/endpoints'
 import { isAxiosError } from 'axios'
 import { z } from 'zod'
-import { ENDPOINTS } from './values/endpoints'
 
 export const authLogin = async (usuario: z.infer<typeof SigninFormSchema>) => {
   try {
