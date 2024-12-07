@@ -33,6 +33,13 @@ import {
 import { IProducto, IUsuario } from '@/types'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@shadcn/card'
+import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -41,16 +48,9 @@ import {
   CommandList
 } from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
+import { Textarea } from '@shadcn/textarea'
 import { BsCheck } from 'react-icons/bs'
 import { FaMinus, FaPlus } from 'react-icons/fa'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '../ui/card'
-import { Textarea } from '../ui/textarea'
 interface IProductsToBeSold extends IProducto {
   cantidad: number
 }

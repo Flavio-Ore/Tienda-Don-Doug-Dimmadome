@@ -3,11 +3,15 @@ import {
   removeFromLocalStorage,
   saveToLocalStorage
 } from '@/lib/local-storage'
+import {
+  loadFromsessionStorage,
+  removeFromSessionStorage,
+  saveToSessionStorage
+} from '@/lib/session-storage'
 import { authLogin } from '@/services/doug-dimadon/auth'
 import AuthContext from '@/states/auth/contexts/AuthContext'
 import { IUsuario } from '@/types'
 import { HttpStatusCode } from 'axios'
-import Cookies from 'js-cookie'
 import { type ReactNode, useEffect, useState } from 'react'
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUsuario | undefined>(undefined)
@@ -21,11 +25,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true)
       setIsError(false)
 
-      const token = Cookies.get('token')
+      const token = loadFromsessionStorage('token')
       const storedUser = loadFromLocalStorage<IUsuario>('CURRENT_USER')
 
-      // const token = loadFromsessionStorage('token')
-      console.log('cookies :>> ', token)
+      console.log('token fromSession:>> ', token)
       console.log('BEFORE {user,isLoading,isAuthenticated,isError} :>>', {
         user: storedUser,
         isLoading,
@@ -69,17 +72,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setIsLoading(true)
       const loginRes = await authLogin({ email, contrasena: password })
-      console.log({
-        loginRes
-      })
-
-      // saveToSessionStorage('token', loginRes.data.token)
-      // const token = loadFromsessionStorage('token')
-      const token = Cookies.get('token')
       console.log('loginResponse: ', loginRes)
-      console.log('cookies :>> ', token)
 
-      if (token != null && loginRes.data.token === token) {
+      saveToSessionStorage('token', loginRes.data.token)
+
+      if (loginRes.data.token != null) {
         console.log('loginRes.data.token === token :>> ', true)
       } else {
         console.log('loginRes.data.token === token :>> ', false)
@@ -111,7 +108,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     try {
-      Cookies.remove('token')
+      removeFromSessionStorage('token')
       setIsAuthenticated(false)
       removeFromLocalStorage('CURRENT_USER')
       setUser(undefined)

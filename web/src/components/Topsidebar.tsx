@@ -4,18 +4,18 @@ import { IUsuario } from '@/types'
 
 import useAuth from '@/states/auth/hooks/useAuth'
 import { ROUTES } from '@/values'
-import { useMemo } from 'react'
-import { FaAngleDown, FaUserNinja, FaUserTie } from 'react-icons/fa'
-import { ImExit } from 'react-icons/im'
-import { Link, useNavigate } from 'react-router-dom'
-import { Button } from './ui/button'
+import { Button } from '@shadcn/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from './ui/dropdown-menu'
+} from '@shadcn/dropdown-menu'
+import { useMemo } from 'react'
+import { FaAngleDown, FaUserNinja, FaUserTie } from 'react-icons/fa'
+import { ImExit } from 'react-icons/im'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Topsidebar = () => {
   const { logout } = useAuth()
