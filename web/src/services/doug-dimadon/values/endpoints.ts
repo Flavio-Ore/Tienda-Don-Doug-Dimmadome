@@ -111,7 +111,7 @@ export const ENDPOINTS = {
       UPDATE: (id: number) => `/usuarios/${id}`
     },
     PRODUCTO: {
-      UPDATE: (id: number) => `/producto/${id}`,
+      UPDATE: (id: number) => `/producto/${id}`
       //UPDATE_ESTADO: (id: number) => `/producto/${id}`
     }
   }

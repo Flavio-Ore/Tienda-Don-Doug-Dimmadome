@@ -92,6 +92,13 @@ const ProductForm = () => {
           title: 'Error al agregar producto',
           variant: 'destructive'
         })
+      } else {
+        toast({
+          title: 'Error al agregar producto',
+          description:
+            'Hubo un error al agregar el producto, por favor intenta de nuevo más tarde',
+          variant: 'destructive'
+        })
       }
     }
   }
@@ -197,7 +204,7 @@ const ProductForm = () => {
           )}
         />
 
-        <div className='flex gap-4 items-center justify-between w-full'>
+        <div className='flex flex-wrap sm:flex-nowrap gap-4 items-center justify-between w-full'>
           <FormField
             control={productForm.control}
             name='unidadMedida.idUnidadMedida'
@@ -219,7 +226,7 @@ const ProductForm = () => {
                       >
                         {field.value
                           ? productsUnit?.find(
-                              unit => unit?.idUnidadMedida === field.value
+                              unit => unit.idUnidadMedida === field.value
                             )?.nombre ?? 'Elige una unidad de medida'
                           : 'Elige una unidad de medida'}
                         <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
@@ -250,9 +257,10 @@ const ProductForm = () => {
                                 value={unit.nombre}
                                 key={unit.idUnidadMedida}
                                 onSelect={() => {
-                                  productForm.setValue('categoria', {
-                                    idCategoria: unit.idUnidadMedida
-                                  })
+                                  productForm.setValue(
+                                    'unidadMedida.idUnidadMedida',
+                                    unit.idUnidadMedida
+                                  )
                                 }}
                               >
                                 <BsCheck
@@ -277,7 +285,7 @@ const ProductForm = () => {
           />
           <FormField
             control={productForm.control}
-            name='categoria'
+            name='categoria.idCategoria'
             render={({ field }) => (
               <FormItem className='w-full'>
                 <FormLabel className='shad-form_label'>
@@ -294,11 +302,9 @@ const ProductForm = () => {
                           !field.value && 'text-light-3'
                         )}
                       >
-                        {field.value?.idCategoria
+                        {field?.value
                           ? productsCategory?.find(
-                              category =>
-                                category?.idCategoria ===
-                                field.value?.idCategoria
+                              category => category?.idCategoria === field.value
                             )?.nombre ?? 'Elige una categoría'
                           : 'Elige una categoría'}
                         <LuChevronsUpDown className='ml-2 h-4 w-4 shrink-0 fill-light-1' />
@@ -329,14 +335,16 @@ const ProductForm = () => {
                                 value={category.nombre}
                                 key={category.idCategoria}
                                 onSelect={() => {
-                                  productForm.setValue('categoria', category)
+                                  productForm.setValue(
+                                    'categoria.idCategoria',
+                                    category.idCategoria
+                                  )
                                 }}
                               >
                                 <BsCheck
                                   className={cn(
                                     'mr-2 h-4 w-4',
-                                    category.idCategoria ===
-                                      field.value?.idCategoria
+                                    category.idCategoria === field.value
                                       ? 'opacity-100'
                                       : 'opacity-0'
                                   )}
@@ -354,7 +362,7 @@ const ProductForm = () => {
             )}
           />
         </div>
-        <div className='flex gap-4 items-center justify-between w-full'>
+        <div className='flex flex-wrap sm:flex-nowrap gap-4 items-center justify-between w-full'>
           <FormField
             control={productForm.control}
             name='precioUnitario'

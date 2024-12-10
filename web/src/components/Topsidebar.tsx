@@ -30,7 +30,7 @@ const Topsidebar = () => {
     nagivate(ROUTES.PUBLIC.LOGIN)
   }
   return (
-    <section className='sticky top-0 z-50 md:hidden bg-dark-2 w-full'>
+    <section className='sticky top-0 z-50 md:hidden bg-dark-2 w-full '>
       <div className='flex-between py-4 px-5'>
         <Link to='/' className='flex gap-3 items-center'>
           <div className='w-full h-10 flex gap-x-2 justify-start items-center'>
@@ -39,7 +39,7 @@ const Topsidebar = () => {
               src='/Stock_Image_of_Doug_Dimmadome_logo.png'
             />
             <div>
-              <p className='text-lg font-bold font-ubuntu'>
+              <p className='sm:text-lg text-sm font-bold font-ubuntu'>
                 Soluciones Dimmadome
               </p>
               <p className='text-xs text-light-1'>Sistema de Inventario</p>

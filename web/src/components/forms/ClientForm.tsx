@@ -42,7 +42,15 @@ const ClientForm = () => {
   const onSubmit = async (value: z.infer<typeof ClientFormSchema>) => {
     try {
       console.log(value)
-      await saveCliente(value)
+      const savedClient = await saveCliente(value)
+      if (savedClient.status >= 400) {
+        toast({
+          title: 'Error al registrar el cliente',
+          description: 'Puede que el cliente ya exista, verifique',
+          variant: 'action'
+        })
+        return
+      }
       toast({
         title: 'Cliente registrado exitosamente',
         description: (
