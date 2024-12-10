@@ -5,14 +5,9 @@ import { z } from 'zod'
   "direccion":"Av. canto grande"  
 } */
 export const ClientFormSchema = z.object({
-  dni: z
-    .string()
-    .min(8, {
-      message: 'El DNI del cliente debe tener 8 carácteres'
-    })
-    .max(9, {
-      message: 'Máximo 9 carácteres'
-    }),
+  dni: z.string().regex(/^\d{8,9}$/, {
+    message: 'El DNI del cliente debe ser números y tener entre 8 y 9 números'
+  }),
   direccion: z.string().min(0).max(200, {
     message: 'La dirección del cliente no puede tener más de 200 carácteres'
   })

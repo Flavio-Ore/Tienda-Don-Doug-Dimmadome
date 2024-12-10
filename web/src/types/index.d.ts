@@ -181,6 +181,31 @@ export interface IDetalleSalida {
   total: number
   descripcion: string
 }
+export interface IVenta {
+  id: string
+  idCliente: number
+  idsProductos: number[]
+  idTipoPago: number
+  fechaVenta: string
+  costoUnitario: number
+  costoTotal: number
+  descripcion: string
+}
+
+export interface IBoletaVenta {
+  numeroSerie: string
+  cliente: ICliente
+  items: Array<{
+    id: number
+    cantidad: number
+    costoUnitario: number
+    producto: IProducto
+    descripcion: string
+  }>
+  tipoPago: ITipoPago
+  fechaVenta: string
+  costoTotal: number
+}
 
 export interface IEntrada {
   idEntrada: number

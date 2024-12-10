@@ -257,10 +257,9 @@ const BuyProductForm = () => {
           control={buyProductForm.control}
           name='usuario.idUsuario'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='hidden'>
               <FormControl>
                 <Input
-                  className='hidden'
                   readOnly
                   type='text'
                   placeholder='Usuario que realiza la compra'

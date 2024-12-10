@@ -4,7 +4,8 @@ import { getAllTipoDevoluciones } from '@/services/doug-dimadon/devoluciones'
 import { getAllKardexs } from '@/services/doug-dimadon/kardexs'
 import {
   getAllProductos,
-  getAllUnidadesMedida
+  getAllUnidadesMedida,
+  getALlVentas
 } from '@/services/doug-dimadon/productos'
 import { getAllProveedores } from '@/services/doug-dimadon/proveedores'
 import { getAllTipoPagos } from '@/services/doug-dimadon/tipo-pagos'
@@ -30,6 +31,14 @@ export function useQueryUser ({ id }: { id: number }) {
   })
 }
 
+export function useQueryAllSales () {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ALL_SALES],
+    queryFn: getALlVentas,
+    select: response => response.data
+  })
+}
+
 export function useQueryAllProducts () {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
@@ -38,6 +47,25 @@ export function useQueryAllProducts () {
   })
 }
 
+export function useQueryProductsByIds ({ ids }: { ids: string[] }) {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PRODUCTS_BY_IDS, ...ids],
+    queryFn: async () =>
+      getAllProductos().then(res =>
+        res.data.filter(p => ids.includes(p.idProducto.toString()))
+      ),
+    enabled: ids.length > 0
+  })
+}
+
+export function useQueryProductById ({ id }: { id: string | number }) {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PRODUCT_BY_ID, id],
+    queryFn: async () =>
+      getAllProductos().then(res => res.data.find(p => p.idProducto === id)),
+    enabled: enabledId(id)
+  })
+}
 export function useQueryAllProductsCategories () {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_CATEGORIES],
@@ -78,6 +106,15 @@ export function useQueryAllPaymentMethods () {
   })
 }
 
+export function useQueryPaymentMethodById ({ id }: { id: string | number }) {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PAYMENT_METHOD_BY_ID, id],
+    queryFn: async () =>
+      getAllTipoPagos().then(res => res.data.find(p => p.idTipoPago === id)),
+    enabled: enabledId(id)
+  })
+}
+
 export function useQueryAllKardexs () {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_KARDEXS],
@@ -99,6 +136,15 @@ export function useQueryAllClients () {
     queryKey: [QUERY_KEYS.GET_ALL_CLIENTS],
     queryFn: getAllClientes,
     select: response => response.data
+  })
+}
+
+export function useQueryClientById ({ id }: { id: string | number }) {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CLIENT_BY_ID, id],
+    queryFn: async () =>
+      getAllClientes().then(res => res.data.find(c => c.idCliente === id)),
+    enabled: enabledId(id)
   })
 }
 

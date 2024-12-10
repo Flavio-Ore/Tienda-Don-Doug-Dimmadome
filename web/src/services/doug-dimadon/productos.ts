@@ -1,12 +1,18 @@
 import axios from '@/lib/axios'
+import { formatSerialNumber } from '@/lib/utils'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { IProducto, IUnidadMedida } from '@/types'
+import { IBoletaVenta, IProducto, IUnidadMedida } from '@/types'
 import { BuyProductSchema } from '@/validations/buyProduct.schema'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
 import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { saveDetalleEntrada, saveEntrada } from '@doug-dimadon/entradas'
-import { saveDetalleSalida, saveSalida } from '@doug-dimadon/salidas'
+import {
+  getAllDetalleSalidas,
+  getAllSalidas,
+  saveDetalleSalida,
+  saveSalida
+} from '@doug-dimadon/salidas'
 import { z } from 'zod'
 
 export const getAllProductos = async () => {
@@ -21,6 +27,41 @@ export const saveProducto = async (
   producto: z.infer<typeof AddProductFormSchema>
 ) => {
   return await axios.post(ENDPOINTS.POST.PRODUCTO.CREATE, producto)
+}
+
+export const getALlVentas = async () => {
+  const salidaRes = await getAllSalidas()
+  const detalleSalidasRes = await getAllDetalleSalidas()
+
+  const salidas = salidaRes.data
+  const detalleSalidas = detalleSalidasRes.data
+
+  const ventas: IBoletaVenta[] = salidas
+    .filter(s => detalleSalidas.some(ds => ds.salida.idSalida === s.idSalida))
+    .map(s => ({
+      numeroSerie: formatSerialNumber('B001', s.idSalida),
+      cliente: s.cliente,
+      items: detalleSalidas
+        .filter(d => d.salida.idSalida === s.idSalida)
+        .map(d => ({
+          id: d.idDetalle,
+          cantidad: d.cantidad,
+          costoUnitario: d.costoUnitario,
+          producto: d.producto,
+          descripcion: d.descripcion
+        })),
+      tipoPago: s.tipoPago,
+      fechaVenta: s.fechaSalida,
+      costoTotal: s.costoTotal
+    }))
+
+  console.log({
+    ventas
+  })
+
+  return {
+    data: ventas
+  }
 }
 
 export const saveCompraProducto = async (

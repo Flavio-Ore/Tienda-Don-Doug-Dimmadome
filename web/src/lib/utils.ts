@@ -39,3 +39,7 @@ export const formatDateDisplay = (
   const parsedDate = parseISO(dateString)
   return format(parsedDate, 'PPP', { locale })
 }
+
+export const formatSerialNumber = (serie: string, number: number) => {
+  return `${serie}-${number.toString().padStart(8, '0')}`;
+};

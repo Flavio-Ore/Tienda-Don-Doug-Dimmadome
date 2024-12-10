@@ -96,6 +96,10 @@ export function useMutationSellProduct () {
         queryKey: [QUERY_KEYS.GET_ALL_KARDEXS],
         type: 'all'
       })
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_SALES],
+        type: 'all'
+      })
     }
   })
 }

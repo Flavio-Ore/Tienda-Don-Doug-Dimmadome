@@ -1,5 +1,6 @@
 import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
+import { IDetalleSalida, ISalida } from '@/types'
 import { DetalleSalidaSchema } from '@/validations/schemas/detalleSalida.schema'
 import { SalidaSchema } from '@/validations/schemas/salida.schema'
 import { z } from 'zod'
@@ -119,6 +120,16 @@ interface IDetalleSalidaResponse {
   cantidad: number
   costoUnitario: number
   total: number
+}
+
+export const getAllSalidas = async () => {
+  return await axios.get<ISalida[]>(ENDPOINTS.GET.SALIDA.READ_ALL)
+}
+
+export const getAllDetalleSalidas = async () => {
+  return await axios.get<IDetalleSalida[]>(
+    ENDPOINTS.GET.DETALLE_SALIDA.READ_ALL
+  )
 }
 
 export const saveSalida = async (salida: z.infer<typeof SalidaSchema>) => {
