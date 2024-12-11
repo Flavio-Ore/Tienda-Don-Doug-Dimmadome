@@ -1,7 +1,10 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { useMutationAddProvider } from '@/states/queries/hooks/mutations'
-import { useQueryAllProductsCategories } from '@/states/queries/hooks/queries'
+import {
+  useQueryAllProductsCategories,
+  useQueryAllProviders
+} from '@/states/queries/hooks/queries'
 import { ProviderFormSchema } from '@/validations/forms/addProvider.schema'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -35,6 +38,7 @@ import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 const ProviderForm = () => {
+  const { data: providers } = useQueryAllProviders()
   const {
     data: productsCategory,
     isLoading: isLoadingProductsCategory,
@@ -59,13 +63,31 @@ const ProviderForm = () => {
   const onSubmit = async (value: z.infer<typeof ProviderFormSchema>) => {
     try {
       console.log(value)
+      if (providers == null) {
+        toast({
+          title: 'Cargando',
+          description: <LoaderIcon />
+        })
+        return
+      }
+
+      if (providers.some(p => p.contacto === value.contacto)) {
+        providerForm.setError('contacto', {
+          type: 'manual',
+          message: 'El contacto ya existe'
+        })
+        toast({
+          title: 'El contacto ya existe',
+          variant: 'action'
+        })
+        return
+      }
       await addProvider(value)
       toast({
         title: 'Proveedor agregado exitosamente',
         description: `Proovedor ${value.nombre} ha sido agregado correctamente.`,
         variant: 'confirmation'
       })
-
     } catch (error) {
       console.error(error)
       if (isError) {

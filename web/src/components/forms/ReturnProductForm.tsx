@@ -149,7 +149,9 @@ const ReturnProductForm = () => {
                 Tipo de Devolución{' '}
                 <span className='text-amber-600/50 text-xs'>
                   {' '}
-                  Primero debe seleccionar el tipo de devolución
+                  {sessionUser?.tipoUsuario.idTipoUsuario === 2
+                    ? 'Solo puedes atender devoluciones a clientes'
+                    : 'Selecciona el tipo de devolución'}
                 </span>
               </FormLabel>
               <Popover>
@@ -245,7 +247,7 @@ const ReturnProductForm = () => {
               <FormMessage className='shad-form_message' />
               <FormDescription>
                 Recuerda la <strong>devolución recibida</strong> es de productos
-                que el cliente devuelve y la
+                que el cliente devuelve y la{' '}
                 <strong>devolución entregada</strong> es de productos que la
                 empresa devuelve al proveedor.
               </FormDescription>
