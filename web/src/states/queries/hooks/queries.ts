@@ -1,6 +1,9 @@
 import { getAllCategorias } from '@/services/doug-dimadon/categoria'
 import { getAllClientes } from '@/services/doug-dimadon/clientes'
-import { getAllTipoDevoluciones } from '@/services/doug-dimadon/devoluciones'
+import {
+  getAllDevoluciones,
+  getAllTipoDevoluciones
+} from '@/services/doug-dimadon/devoluciones'
 import { getAllKardexs } from '@/services/doug-dimadon/kardexs'
 import {
   getAllProductos,
@@ -35,6 +38,14 @@ export function useQueryAllSales () {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_SALES],
     queryFn: getALlVentas,
+    select: response => response.data
+  })
+}
+
+export function useQueryAllRefunds () {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ALL_REFUNDS],
+    queryFn: getAllDevoluciones,
     select: response => response.data
   })
 }

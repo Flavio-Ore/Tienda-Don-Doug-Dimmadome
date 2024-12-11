@@ -225,6 +225,39 @@ export interface IDetalleEntrada {
   descripcion: string
 }
 
+export interface IDevolucion {
+  idDevolucion: number
+  producto: IProducto
+  cliente: ICliente
+  fechaDevolucion: string
+  cantidad: number
+  tipoDevolucion: ITipoDevolucion
+  descripcion: string
+}
+
+export interface IDevolucionV2 {
+  idDevolucion: number
+  producto: IProducto
+  nombre: string
+  fechaDevolucion: string
+  cantidad: number
+  tipoDevolucion: ITipoDevolucion
+  descripcion: string
+}
+
+
+export interface INotaDeCredito {
+  numeroSerie: string
+  producto: IProducto
+  cliente: ICliente | null
+  proveedor: IProveedor | null
+  fechaDevolucion: string
+  tipoDevolucion: ITipoDevolucion
+  cantidad: number
+  costoTotal: number
+  descripcion: string
+}
+
 export interface Usuario {
   idUsuario: number
   nombre: string

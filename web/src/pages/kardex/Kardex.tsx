@@ -353,10 +353,14 @@ const Kardex = () => {
                 <div className='flex flex-wrap justify-between items-center w-full mb-4 gap-x-4 gap-y-4'>
                   <div className='inline-flex gap-x-4 items-center'>
                     <FaClipboardList size={36} className='fill-blue-500' />
-                    <h3 className='text-light-2 font-ubuntu text-3xl'>
-                      {kardex[0].producto.nombre}
-                    </h3>
-                    <p>Creado el {kardex[0].fecha}</p>
+                    <div>
+                      <h3 className='text-light-2 font-ubuntu text-3xl'>
+                        {kardex[0].producto.nombre}
+                      </h3>
+                      <p className='text-light-3'>
+                        Fecha de inicio {kardex[0].fecha}
+                      </p>
+                    </div>
                     {/* <FaCircle
                       size={24}
                       className={cn({

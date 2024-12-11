@@ -117,6 +117,10 @@ export function useMutationRefundProduct () {
         queryKey: [QUERY_KEYS.GET_ALL_KARDEXS],
         type: 'all'
       })
+      void queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_REFUNDS],
+        type: 'all'
+      })
     }
   })
 }
