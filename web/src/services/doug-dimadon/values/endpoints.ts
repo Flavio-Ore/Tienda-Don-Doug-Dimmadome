@@ -37,6 +37,9 @@ export const ENDPOINTS = {
       READ_ALL: '/detalleEntrada/obtener',
       READ_ULTIMO_ID: '/detalleEntrada/ultimoIdEntrada'
     },
+    DEVOLUCION:{ 
+      READ_ALL: '/devolucion/obtener'
+    },
     TIPO_DEVOLUCION: {
       READ_ALL: '/tipoDevolucion/obtener'
     },
