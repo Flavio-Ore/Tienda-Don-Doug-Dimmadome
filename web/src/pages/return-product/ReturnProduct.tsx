@@ -21,6 +21,7 @@ const ReturnProduct = () => {
     () =>
       refunds?.filter(
         p =>
+          p.numeroSerie.toLowerCase().includes(debouncedValue.toLowerCase()) ||
           p.cliente?.nombreCliente
             .toLowerCase()
             .includes(debouncedValue.toLowerCase()) ||

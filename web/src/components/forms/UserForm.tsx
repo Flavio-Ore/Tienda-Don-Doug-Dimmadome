@@ -243,32 +243,44 @@ const UserForm = () => {
             </FormItem>
           )}
         />
-        <div className='flex gap-4 items-center justify-end'>
+        <div className='flex gap-4 items-center justify-between'>
           <Button
             type='button'
-            variant='outline'
-            className='shad-button_dark_4'
+            variant='destructive'
+            className='shad-button_dark_4 bg-red-900'
             onClick={() => {
-              navigate(-1)
+              userForm.reset()
             }}
           >
-            Cancelar
+            Limpiar Formulario
           </Button>
-          <Button
-            variant='default'
-            type='submit'
-            disabled={isPending}
-            className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
-          >
-            {!isPending && 'Crear Usuario'}
-            {!isPending && (
-              <FaUserPlus
-                size={20}
-                className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
-              />
-            )}
-            {isPending && <LoaderIcon />}
-          </Button>
+          <div className='inline-flex gap-x-4 items-center'>
+            <Button
+              type='button'
+              variant='outline'
+              className='shad-button_dark_4'
+              onClick={() => {
+                navigate(-1)
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant='default'
+              type='submit'
+              disabled={isPending}
+              className='group focus-visible:bg-dark-3 focus-visible:text-light-1 '
+            >
+              {!isPending && 'Crear Usuario'}
+              {!isPending && (
+                <FaUserPlus
+                  size={20}
+                  className='ml-2 fill-dark-1 group-focus-visible:fill-light-1'
+                />
+              )}
+              {isPending && <LoaderIcon />}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>
