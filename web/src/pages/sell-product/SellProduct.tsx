@@ -3,10 +3,10 @@ import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useQueryAllSales } from '@/states/queries/hooks/queries'
+import SaleCard from '@pages/sell-product/components/SaleCard'
 import { useMemo, useState } from 'react'
 import { FaReceipt, FaSearch } from 'react-icons/fa'
 import { FaSackDollar } from 'react-icons/fa6'
-import SaleCard from './components/SaleCard'
 
 const SellProduct = () => {
   const {
@@ -63,7 +63,6 @@ const SellProduct = () => {
       <div className='common-inner_container'>
         <SellProductForm />
       </div>
-
 
       <div className='common-inner_container'>
         <div className='common-container__title'>
