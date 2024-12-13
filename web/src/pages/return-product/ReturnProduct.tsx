@@ -3,10 +3,10 @@ import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useQueryAllRefunds } from '@/states/queries/hooks/queries'
+import RefundCard from '@pages/return-product/components/RefundCard'
 import { useMemo, useState } from 'react'
 import { FaReceipt, FaSearch } from 'react-icons/fa'
 import { FaHandHoldingDollar } from 'react-icons/fa6'
-import RefundCard from './components/RefundCard'
 
 const ReturnProduct = () => {
   const {

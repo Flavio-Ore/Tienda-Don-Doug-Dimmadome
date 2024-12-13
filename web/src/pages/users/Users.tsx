@@ -104,7 +104,7 @@ const Users = () => {
               No hay usuarios registrados
             </p>
           )}
-        <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl'>
+        <div className='w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-7 max-w-5xl'>
           {isTyping &&
             !isLoadingUsers &&
             !isErrorUsers &&
@@ -113,7 +113,6 @@ const Users = () => {
             searchedUsers.map(user => (
               <UserCard key={user.email} user={user} />
             ))}
-
           {!isTyping &&
             !isLoadingUsers &&
             !isErrorUsers &&

@@ -16,13 +16,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 function App () {
-  // const sessionUser = useMemo(
-  //   () => loadFromLocalStorage<IUsuario>('sessionUser'),
-  //   []
-  // )
-
   return (
-    <main className='flex h-dvh text-yellow-50'>
+    <main className='flex h-dvh text-yellow-50 lg:overflow-hidden overflow-auto custom-scrollbar'>
       <ReactQueryDevtools />
       <Routes>
         <Route path={ROUTES.PUBLIC.LOGIN} element={<Auth />}>

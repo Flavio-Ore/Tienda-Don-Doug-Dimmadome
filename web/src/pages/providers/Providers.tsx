@@ -27,7 +27,7 @@ const Providers = () => {
           p.categoria.nombre
             .toLowerCase()
             .includes(debouncedValue.toLowerCase())
-      ) ?? [],
+      ) ?? [],    
     [debouncedValue, providers]
   )
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

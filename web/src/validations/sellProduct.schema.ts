@@ -1,5 +1,5 @@
+import { SalidaSchema } from '@/validations/schemas/salida.schema'
 import { z } from 'zod'
-import { SalidaSchema } from './schemas/salida.schema'
 
 /**
 SALIDA FORM:

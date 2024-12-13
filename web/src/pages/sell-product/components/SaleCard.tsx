@@ -17,8 +17,8 @@ import {
 } from '@/components/ui/dialog'
 import { numberToCurrency } from '@/lib/utils'
 import { IBoletaVenta } from '@/types'
+import Receipt from '@pages/sell-product/components/Receipt'
 import { FaReceipt } from 'react-icons/fa'
-import Receipt from './Receipt'
 
 const SaleCard = ({ sale }: { sale: IBoletaVenta }) => {
   console.log({

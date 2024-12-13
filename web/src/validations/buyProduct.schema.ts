@@ -1,5 +1,5 @@
+import { EntradaSchema } from '@/validations/schemas/entrada.schema'
 import { z } from 'zod'
-import { EntradaSchema } from './schemas/entrada.schema'
 
 /*
 /*
