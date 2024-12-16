@@ -35,7 +35,7 @@ import { BsCheck } from 'react-icons/bs'
 import { FaTruckArrowRight } from 'react-icons/fa6'
 import { LuChevronsUpDown } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 const ProviderForm = () => {
   const { data: providers } = useQueryAllProviders()

@@ -1,8 +1,8 @@
 import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { DetallEntradaSchema } from '@/validations/schemas/detalleEntrada.schema'
-import { EntradaSchema } from '@/validations/schemas/entrada.schema'
-import { z } from 'zod'
+import type { DetallEntradaSchema } from '@/validations/schemas/detalleEntrada.schema'
+import type { EntradaSchema } from '@/validations/schemas/entrada.schema'
+import type { z } from 'zod'
 
 /*
 formulario entrada

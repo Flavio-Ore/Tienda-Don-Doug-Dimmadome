@@ -1,8 +1,8 @@
 import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { ITipoPago } from '@/types'
-import { PaymentMethodValidationSchema } from '@/validations/forms/addPaymentMethod.schema'
-import { z } from 'zod'
+import type { ITipoPago } from '@/types'
+import type { PaymentMethodValidationSchema } from '@/validations/forms/addPaymentMethod.schema'
+import type { z } from 'zod'
 export const saveTipoPago = async (
   tipoPago: z.infer<typeof PaymentMethodValidationSchema>
 ) => {

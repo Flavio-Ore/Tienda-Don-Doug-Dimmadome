@@ -1,15 +1,15 @@
 import axios from '@/lib/axios'
 import { formatSerialNumber } from '@/lib/utils'
-import {
+import type {
   ICliente,
   IDevolucionV2,
   INotaDeCredito,
   IProveedor,
   ITipoDevolucion
 } from '@/types'
-import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
+import type { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
 import { ENDPOINTS } from '@doug-dimadon/values/endpoints'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export const getAllTipoDevoluciones = async () => {
   return await axios.get<ITipoDevolucion[]>(

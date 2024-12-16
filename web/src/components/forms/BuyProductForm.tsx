@@ -16,9 +16,9 @@ import { FaRegHandshake } from 'react-icons/fa6'
 
 import { useToast } from '@/hooks/use-toast'
 import { BuyProductSchema } from '@/validations/buyProduct.schema'
-import { ROUTES } from '@/values'
+import { ROUTES } from '@/values/routes'
 import { Link, useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import { cn, numberToCurrency } from '@/lib/utils'
 import { LuChevronsUpDown } from 'react-icons/lu'
@@ -30,7 +30,7 @@ import {
   useQueryAllProviders,
   useQueryAllUsers
 } from '@/states/queries/hooks/queries'
-import { IProducto, IUsuario } from '@/types'
+import type { IProducto, IUsuario } from '@/types'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Card,

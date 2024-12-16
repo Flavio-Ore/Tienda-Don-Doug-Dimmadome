@@ -39,7 +39,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { BsCheck } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 const ProductForm = () => {
   const {
     data: productsCategory,

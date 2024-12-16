@@ -10,7 +10,7 @@ import {
 } from '@/lib/session-storage'
 import { authLogin } from '@/services/doug-dimadon/auth'
 import AuthContext from '@/states/auth/contexts/AuthContext'
-import { IUsuario } from '@/types'
+import type { IUsuario } from '@/types'
 import { HttpStatusCode } from 'axios'
 import { type ReactNode, useEffect, useState } from 'react'
 const AuthProvider = ({ children }: { children: ReactNode }) => {

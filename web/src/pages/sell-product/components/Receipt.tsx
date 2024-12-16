@@ -1,5 +1,5 @@
 import { numberToCurrency } from '@/lib/utils'
-import { IBoletaVenta } from '@/types'
+import type { IBoletaVenta } from '@/types'
 import {
   Document,
   Image,

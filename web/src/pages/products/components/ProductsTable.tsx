@@ -1,4 +1,4 @@
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
 import {
   Table,
@@ -20,7 +20,7 @@ import {
 // }
 
 import { cn, numberToCurrency } from '@/lib/utils'
-import { IProducto } from '@/types'
+import type { IProducto } from '@/types'
 import { FaEllipsisH, FaRegPlayCircle, FaRegStopCircle } from 'react-icons/fa'
 
 import { Button } from '@/components/ui/button'

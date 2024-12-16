@@ -15,7 +15,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Input, InputProps } from "@/components/ui/input";
+import type { InputProps } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,

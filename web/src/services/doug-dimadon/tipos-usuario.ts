@@ -1,8 +1,8 @@
 import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { ITipoUsuario } from '@/types'
-import { UserTypeSchema } from '@/validations/forms/addUserType.schema'
-import { z } from 'zod'
+import type { ITipoUsuario } from '@/types'
+import type { UserTypeSchema } from '@/validations/forms/addUserType.schema'
+import type { z } from 'zod'
 
 export const saveTipoUsuario = async (
   tipoPago: z.infer<typeof UserTypeSchema>

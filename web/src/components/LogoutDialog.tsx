@@ -1,5 +1,5 @@
 import useAuth from '@/states/auth/hooks/useAuth'
-import { ROUTES } from '@/values'
+import { ROUTES } from '@/values/routes'
 import {
   AlertDialog,
   AlertDialogAction,

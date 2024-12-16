@@ -1,8 +1,8 @@
 import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { ICliente } from '@/types'
-import { ClientFormSchema } from '@/validations/forms/addClient.schema'
-import { z } from 'zod'
+import type { ICliente } from '@/types'
+import type { ClientFormSchema } from '@/validations/forms/addClient.schema'
+import type { z } from 'zod'
 
 export const getAllClientes = async () => {
   return await axios.get<ICliente[]>(ENDPOINTS.GET.CLIENTE.READ_ALL)

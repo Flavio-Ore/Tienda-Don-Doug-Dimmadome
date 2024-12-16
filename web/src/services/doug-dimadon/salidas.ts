@@ -1,9 +1,9 @@
 import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { IDetalleSalida, ISalida } from '@/types'
-import { DetalleSalidaSchema } from '@/validations/schemas/detalleSalida.schema'
-import { SalidaSchema } from '@/validations/schemas/salida.schema'
-import { z } from 'zod'
+import type { IDetalleSalida, ISalida } from '@/types'
+import type { DetalleSalidaSchema } from '@/validations/schemas/detalleSalida.schema'
+import type { SalidaSchema } from '@/validations/schemas/salida.schema'
+import type { z } from 'zod'
 
 /**
 SALIDA FORM:

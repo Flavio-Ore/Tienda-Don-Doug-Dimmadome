@@ -1,5 +1,5 @@
 import { numberToCurrency } from '@/lib/utils'
-import { INotaDeCredito } from '@/types'
+import type { INotaDeCredito } from '@/types'
 import {
   Document,
   Image,

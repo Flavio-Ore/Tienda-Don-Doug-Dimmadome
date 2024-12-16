@@ -41,9 +41,9 @@ import {
   useMutationUpdateProduct
 } from '@/states/queries/hooks/mutations'
 import { useQueryAllProducts } from '@/states/queries/hooks/queries'
-import { IProducto } from '@/types'
+import type { IProducto } from '@/types'
 import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
-import { ROUTES } from '@/values'
+import { ROUTES } from '@/values/routes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -57,7 +57,7 @@ import {
   FaPlusCircle
 } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 const getStockColor = (stock: number) => {
   const red = Math.min(255, Math.max(0, 255 - stock * 2.55))

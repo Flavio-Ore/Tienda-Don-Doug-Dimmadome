@@ -33,7 +33,7 @@ import { useEffect, useState } from 'react'
 import { BsCheck } from 'react-icons/bs'
 import { FaEye, FaEyeSlash, FaUserPlus } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 const UserForm = () => {
   const {
@@ -81,10 +81,10 @@ const UserForm = () => {
       toast({
         title: 'Error al crear el usuario',
         description:
-          ' Ocurrió un error al intentar crear el usuario. Por favor, intenta de nuevo.'
+          'Ocurrió un error al intentar crear el usuario. Por favor, intenta de nuevo.'
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [isError])
 
   return (

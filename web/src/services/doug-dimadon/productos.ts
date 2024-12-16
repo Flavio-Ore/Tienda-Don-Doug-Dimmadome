@@ -1,11 +1,11 @@
 import axios from '@/lib/axios'
 import { formatSerialNumber } from '@/lib/utils'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { IBoletaVenta, IProducto, IUnidadMedida } from '@/types'
-import { BuyProductSchema } from '@/validations/buyProduct.schema'
-import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
-import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
-import { SellProductFormSchema } from '@/validations/sellProduct.schema'
+import type { IBoletaVenta, IProducto, IUnidadMedida } from '@/types'
+import type { BuyProductSchema } from '@/validations/buyProduct.schema'
+import type { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import type { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
+import type { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { saveDetalleEntrada, saveEntrada } from '@doug-dimadon/entradas'
 import {
   getAllDetalleSalidas,
@@ -13,7 +13,7 @@ import {
   saveDetalleSalida,
   saveSalida
 } from '@doug-dimadon/salidas'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export const getAllProductos = async () => {
   return await axios.get<IProducto[]>(ENDPOINTS.GET.PRODUCTO.READ_ALL)

@@ -2,7 +2,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
 import useAuth from '@/states/auth/hooks/useAuth'
-import { ROUTES } from '@/values'
+import { ROUTES } from '@/values/routes'
 import { Button } from '@shadcn/button'
 import {
   DropdownMenu,
