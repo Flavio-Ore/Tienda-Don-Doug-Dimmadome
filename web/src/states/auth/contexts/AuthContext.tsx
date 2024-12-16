@@ -1,4 +1,4 @@
-import { IAuthContext } from '@/types'
+import type { IAuthContext } from '@/types'
 import { createContext } from 'react'
 
 export const AuthContext = createContext<IAuthContext>({

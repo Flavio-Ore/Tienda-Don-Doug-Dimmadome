@@ -1,6 +1,6 @@
-import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
-import { UserFormSchema } from '@/validations/forms/addUser.schema'
-import { z } from 'zod'
+import type { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import type { UserFormSchema } from '@/validations/forms/addUser.schema'
+import type { z } from 'zod'
 
 export interface InventarioDimadon {
   tipo_comprobante: TipoComprobante[]

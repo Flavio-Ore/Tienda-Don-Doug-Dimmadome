@@ -22,9 +22,9 @@ import {
   useQueryAllPaymentMethods,
   useQueryAllProducts
 } from '@/states/queries/hooks/queries'
-import { IProducto } from '@/types'
+import type { IProducto } from '@/types'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
-import { ROUTES } from '@/values'
+import { ROUTES } from '@/values/routes'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Card,
@@ -48,7 +48,7 @@ import { useEffect, useState } from 'react'
 import { BsCheck } from 'react-icons/bs'
 import { FaMinus, FaPlus } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 interface IProductsToBeSold extends IProducto {
   cantidad: number

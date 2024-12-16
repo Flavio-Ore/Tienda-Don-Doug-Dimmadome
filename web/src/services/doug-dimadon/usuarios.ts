@@ -1,8 +1,8 @@
 import axios from '@/lib/axios'
 import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
-import { IUsuario } from '@/types'
-import { UserFormSchema } from '@/validations/forms/addUser.schema'
-import { z } from 'zod'
+import type { IUsuario } from '@/types'
+import type { UserFormSchema } from '@/validations/forms/addUser.schema'
+import type { z } from 'zod'
 
 export const getUser = async (idUsuario: number) => {
   const res = await axios.get<IUsuario[]>(ENDPOINTS.GET.USUARIO.READ_ALL)

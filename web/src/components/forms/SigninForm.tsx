@@ -18,7 +18,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 const SigninForm = ({ className }: { className?: string }) => {
   const { toast } = useToast()

@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog'
 import { numberToCurrency } from '@/lib/utils'
 import CreditNote from '@/pages/return-product/components/CreditNote'
-import { INotaDeCredito } from '@/types'
+import type { INotaDeCredito } from '@/types'
 import { FaReceipt } from 'react-icons/fa'
 
 const RefundCard = ({ refund }: { refund: INotaDeCredito }) => {

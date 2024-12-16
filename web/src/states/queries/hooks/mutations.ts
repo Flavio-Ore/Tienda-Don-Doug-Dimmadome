@@ -2,7 +2,7 @@ import { saveToLocalStorage } from '@/lib/local-storage'
 import { authLogin } from '@/services/doug-dimadon/auth'
 import { saveDevolucionProducto } from '@/services/doug-dimadon/devoluciones'
 import { QUERY_KEYS } from '@/states/queries/values/query-keys'
-import { IUsuario } from '@/types'
+import type { IUsuario } from '@/types'
 import { saveClienteReniec, updateEstadoCliente } from '@doug-dimadon/clientes'
 import {
   saveCompraProducto,
