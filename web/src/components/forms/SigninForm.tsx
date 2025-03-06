@@ -117,6 +117,8 @@ const SigninForm = ({ className }: { className?: string }) => {
                   <Button
                     variant='ghost'
                     type='button'
+                    name='toggle-password'
+                    aria-label='Mostrar contraseña'
                     onClick={() => handleClickShowPassword()}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
