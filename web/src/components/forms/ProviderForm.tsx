@@ -1,10 +1,10 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
-import { useMutationAddProvider } from '@/states/queries/hooks/mutations'
+import { useMutationAddProvider } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/providers/useMutationAddProvider'
 import {
   useQueryAllProductsCategories,
   useQueryAllProviders
-} from '@/states/queries/hooks/queries'
+} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
 import { ProviderFormSchema } from '@/validations/forms/addProvider.schema'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'

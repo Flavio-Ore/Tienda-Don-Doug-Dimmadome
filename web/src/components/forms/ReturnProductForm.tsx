@@ -18,13 +18,13 @@ import { useForm } from 'react-hook-form'
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useToast } from '@/hooks/use-toast'
 import { loadFromLocalStorage } from '@/lib/local-storage'
-import { useMutationRefundProduct } from '@/states/queries/hooks/mutations'
+import { useMutationRefundProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationRefundProduct'
 import {
   useQueryAllClients,
   useQueryAllProducts,
   useQueryAllProviders,
   useQueryAllRefundTypes
-} from '@/states/queries/hooks/queries'
+} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
 import type { IUsuario } from '@/types'
 import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
 import { ROUTES } from '@/values/routes'

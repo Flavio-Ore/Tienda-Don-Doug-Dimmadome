@@ -24,12 +24,12 @@ import { cn, numberToCurrency } from '@/lib/utils'
 import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { loadFromLocalStorage } from '@/lib/local-storage'
-import { useMutationBuyProduct } from '@/states/queries/hooks/mutations'
+import { useMutationBuyProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationBuyProduct'
 import {
   useQueryAllProducts,
   useQueryAllProviders,
   useQueryAllUsers
-} from '@/states/queries/hooks/queries'
+} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
 import type { IProducto, IUsuario } from '@/types'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {

@@ -1,7 +1,7 @@
 import ProviderForm from '@/components/forms/ProviderForm'
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useDebounce } from '@/hooks/useDebounce'
-import { useQueryAllProviders } from '@/states/queries/hooks/queries'
+import { useQueryAllProviders } from '@/states/doug-dimadon-tankstack-query/hooks/queries'
 import ProviderCard from '@pages/providers/components/ProviderCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'

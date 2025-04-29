@@ -16,12 +16,12 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import { useMutationSellProduct } from '@/states/queries/hooks/mutations'
+import { useMutationSellProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationSellProduct'
 import {
   useQueryAllClients,
   useQueryAllPaymentMethods,
   useQueryAllProducts
-} from '@/states/queries/hooks/queries'
+} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
 import type { IProducto } from '@/types'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
 import { ROUTES } from '@/values/routes'

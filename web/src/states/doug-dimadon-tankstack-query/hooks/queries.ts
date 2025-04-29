@@ -1,4 +1,4 @@
-import { getAllCategorias } from '@/services/doug-dimadon/categoria'
+import { getAllCategorias } from '@/services/doug-dimadon/categorias/getAllCategorias'
 import { getAllClientes } from '@/services/doug-dimadon/clientes'
 import {
   getAllDevoluciones,
@@ -13,28 +13,12 @@ import {
 import { getAllProveedores } from '@/services/doug-dimadon/proveedores'
 import { getAllTipoPagos } from '@/services/doug-dimadon/tipo-pagos'
 import { getAllTipoUsuario } from '@/services/doug-dimadon/tipos-usuario'
-import { getAllUsuarios, getUser } from '@/services/doug-dimadon/usuarios'
-import { QUERY_KEYS } from '@/states/queries/values/query-keys'
+import { getAllUsuarios } from '@/services/doug-dimadon/usuarios'
+import { enabledId } from '@/states/doug-dimadon-tankstack-query/utils/enabledId'
+import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
 import { useQuery } from '@tanstack/react-query'
 
-const enabledId = (id: string | number) => {
-  if (typeof id === 'number') {
-    return id > 0
-  }
-  if (id != null && id.trim().length === 0) return false
-  if (id === '') return false
-  return true
-}
-
-export function useQueryUser ({ id }: { id: number }) {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_USER, id],
-    queryFn: async () => getUser(id),
-    enabled: enabledId(id)
-  })
-}
-
-export function useQueryAllSales () {
+export function useQueryAllSales() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_SALES],
     queryFn: getALlVentas,
@@ -42,7 +26,7 @@ export function useQueryAllSales () {
   })
 }
 
-export function useQueryAllRefunds () {
+export function useQueryAllRefunds() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_REFUNDS],
     queryFn: getAllDevoluciones,
@@ -50,7 +34,7 @@ export function useQueryAllRefunds () {
   })
 }
 
-export function useQueryAllProducts () {
+export function useQueryAllProducts() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_PRODUCTS],
     queryFn: getAllProductos,
@@ -58,7 +42,7 @@ export function useQueryAllProducts () {
   })
 }
 
-export function useQueryProductsByIds ({ ids }: { ids: string[] }) {
+export function useQueryProductsByIds({ ids }: { ids: string[] }) {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_PRODUCTS_BY_IDS, ...ids],
     queryFn: async () =>
@@ -69,7 +53,7 @@ export function useQueryProductsByIds ({ ids }: { ids: string[] }) {
   })
 }
 
-export function useQueryProductById ({ id }: { id: string | number }) {
+export function useQueryProductById({ id }: { id: string | number }) {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_PRODUCT_BY_ID, id],
     queryFn: async () =>
@@ -77,7 +61,7 @@ export function useQueryProductById ({ id }: { id: string | number }) {
     enabled: enabledId(id)
   })
 }
-export function useQueryAllProductsCategories () {
+export function useQueryAllProductsCategories() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_CATEGORIES],
     queryFn: getAllCategorias,
@@ -85,7 +69,7 @@ export function useQueryAllProductsCategories () {
   })
 }
 
-export function useQueryAllUnitMeasurements () {
+export function useQueryAllUnitMeasurements() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_UNIT_MEASUREMENTS],
     queryFn: getAllUnidadesMedida,
@@ -93,7 +77,7 @@ export function useQueryAllUnitMeasurements () {
   })
 }
 
-export function useQueryAllRefundTypes () {
+export function useQueryAllRefundTypes() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_RETURN_TYPES],
     queryFn: getAllTipoDevoluciones,
@@ -101,7 +85,7 @@ export function useQueryAllRefundTypes () {
   })
 }
 
-export function useQueryAllUserTypes () {
+export function useQueryAllUserTypes() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_USER_TYPES],
     queryFn: getAllTipoUsuario,
@@ -109,7 +93,7 @@ export function useQueryAllUserTypes () {
   })
 }
 
-export function useQueryAllPaymentMethods () {
+export function useQueryAllPaymentMethods() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_PAYMENT_METHODS],
     queryFn: getAllTipoPagos,
@@ -117,7 +101,7 @@ export function useQueryAllPaymentMethods () {
   })
 }
 
-export function useQueryPaymentMethodById ({ id }: { id: string | number }) {
+export function useQueryPaymentMethodById({ id }: { id: string | number }) {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_PAYMENT_METHOD_BY_ID, id],
     queryFn: async () =>
@@ -126,7 +110,7 @@ export function useQueryPaymentMethodById ({ id }: { id: string | number }) {
   })
 }
 
-export function useQueryAllKardexs () {
+export function useQueryAllKardexs() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_KARDEXS],
     queryFn: getAllKardexs,
@@ -134,7 +118,7 @@ export function useQueryAllKardexs () {
   })
 }
 
-export function useQueryAllProviders () {
+export function useQueryAllProviders() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_PROVIDERS],
     queryFn: getAllProveedores,
@@ -142,7 +126,7 @@ export function useQueryAllProviders () {
   })
 }
 
-export function useQueryAllClients () {
+export function useQueryAllClients() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_CLIENTS],
     queryFn: getAllClientes,
@@ -150,7 +134,7 @@ export function useQueryAllClients () {
   })
 }
 
-export function useQueryClientById ({ id }: { id: string | number }) {
+export function useQueryClientById({ id }: { id: string | number }) {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CLIENT_BY_ID, id],
     queryFn: async () =>
@@ -159,7 +143,7 @@ export function useQueryClientById ({ id }: { id: string | number }) {
   })
 }
 
-export function useQueryAllUsers () {
+export function useQueryAllUsers() {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_ALL_USERS],
     queryFn: getAllUsuarios,

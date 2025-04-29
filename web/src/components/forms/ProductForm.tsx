@@ -21,11 +21,11 @@ import { FaCalendarAlt, FaParachuteBox } from 'react-icons/fa'
 import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { useToast } from '@/hooks/use-toast'
-import { useMutationAddProduct } from '@/states/queries/hooks/mutations'
+import { useMutationAddProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/products/useMutationAddProduct'
 import {
   useQueryAllProductsCategories,
   useQueryAllUnitMeasurements
-} from '@/states/queries/hooks/queries'
+} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { Calendar } from '@shadcn/calendar'
 import {

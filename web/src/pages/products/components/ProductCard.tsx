@@ -36,11 +36,9 @@ import {
 } from '@/components/ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
 import { addOneDay, cn, numberToCurrency } from '@/lib/utils'
-import {
-  useMutationChangeProductState,
-  useMutationUpdateProduct
-} from '@/states/queries/hooks/mutations'
-import { useQueryAllProducts } from '@/states/queries/hooks/queries'
+import { useMutationChangeProductState } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/products/useMutationChangeProductState'
+import { useMutationUpdateProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/products/useMutationUpdateProduct'
+import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries'
 import type { IProducto } from '@/types'
 import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
 import { ROUTES } from '@/values/routes'
