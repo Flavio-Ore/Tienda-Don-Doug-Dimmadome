@@ -1,23 +1,21 @@
-'use client'
-
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
 import {
   type ComponentPropsWithoutRef,
   type ElementRef,
   forwardRef,
   type HTMLAttributes
-} from 'react';
-import { FaTimes } from 'react-icons/fa';
+} from 'react'
+import { FaTimes } from 'react-icons/fa'
 
 const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
 const DialogPortal = DialogPrimitive.Portal
 
 const DialogOverlay = forwardRef<
-ElementRef<typeof DialogPrimitive.Overlay>,
-ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+  ElementRef<typeof DialogPrimitive.Overlay>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
@@ -30,8 +28,8 @@ ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 const DialogContent = forwardRef<
-ElementRef<typeof DialogPrimitive.Content>,
-ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+  ElementRef<typeof DialogPrimitive.Content>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
@@ -45,7 +43,7 @@ ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
     >
       {children}
       <DialogPrimitive.Close className='absolute right-2 top-2 rounded-md p-1 opacity-50 transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-light-1'>
-        <FaTimes  className='fill-red-500' size={24} />
+        <FaTimes className='fill-red-500' size={24} />
         <span className='sr-only'>Cerrar</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -79,8 +77,8 @@ const DialogFooter = ({
 )
 DialogFooter.displayName = 'DialogFooter'
 const DialogTitle = forwardRef<
-ElementRef<typeof DialogPrimitive.Title>,
-ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+  ElementRef<typeof DialogPrimitive.Title>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
@@ -90,8 +88,8 @@ ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 ))
 DialogTitle.displayName = DialogPrimitive.Title.displayName
 const DialogDescription = forwardRef<
-ElementRef<typeof DialogPrimitive.Description>,
-ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+  ElementRef<typeof DialogPrimitive.Description>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
@@ -103,8 +101,8 @@ ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
 const DialogClose = forwardRef<
-ElementRef<typeof DialogPrimitive.Close>,
-ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
+  ElementRef<typeof DialogPrimitive.Close>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Close
     ref={ref}
@@ -129,5 +127,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger
-};
+}
 

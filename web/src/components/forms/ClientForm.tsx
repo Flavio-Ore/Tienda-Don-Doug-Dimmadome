@@ -14,7 +14,7 @@ import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
 
 import { useToast } from '@/hooks/use-toast'
-import { useMutationAddClient } from '@/states/queries/hooks/mutations'
+import { useMutationAddClient } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/clients/useMutationAddClient'
 import { ClientFormSchema } from '@/validations/forms/addClient.schema'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { useEffect } from 'react'

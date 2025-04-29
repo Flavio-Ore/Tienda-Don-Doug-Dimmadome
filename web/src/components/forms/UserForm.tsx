@@ -1,8 +1,6 @@
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
-import { LuChevronsUpDown } from 'react-icons/lu'
-
 import {
   Form,
   FormControl,
@@ -14,10 +12,11 @@ import {
 } from '@shadcn/form'
 import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
+import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { useToast } from '@/hooks/use-toast'
-import { useMutationAddUser } from '@/states/queries/hooks/mutations'
-import { useQueryAllUserTypes } from '@/states/queries/hooks/queries'
+import { useMutationAddUser } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/users/useMutationAddUser'
+import { useQueryAllUserTypes } from '@/states/doug-dimadon-tankstack-query/hooks/queries/users/useQueryAllUserTypes'
 import { UserFormSchema } from '@/validations/forms/addUser.schema'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
@@ -84,7 +83,6 @@ const UserForm = () => {
           'Ocurrió un error al intentar crear el usuario. Por favor, intenta de nuevo.'
       })
     }
-
   }, [isError])
 
   return (

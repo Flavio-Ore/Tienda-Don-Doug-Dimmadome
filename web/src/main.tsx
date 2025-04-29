@@ -1,6 +1,6 @@
 import App from '@/App.tsx'
 import '@/index.css'
-import QueryProvider from '@/states/queries/providers/QueryProvider'
+import QueryProvider from '@/states/doug-dimadon-tankstack-query/providers/QueryProvider'
 import '@fontsource/ubuntu'
 
 import LazyPages from '@/components/LazyPage'

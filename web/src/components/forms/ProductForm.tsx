@@ -1,7 +1,21 @@
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
+import { useMutationAddProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/products/useMutationAddProduct'
+import { useQueryAllProductsCategories } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProductsCategories'
+import { useQueryAllUnitMeasurements } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllUnitMeasurements'
 import { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
+import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
+import { Calendar } from '@shadcn/calendar'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@shadcn/command'
 import {
   Form,
   FormControl,
@@ -12,32 +26,15 @@ import {
   FormMessage
 } from '@shadcn/form'
 import { Input } from '@shadcn/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { Textarea } from '@shadcn/textarea'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import { BsCheck } from 'react-icons/bs'
 import { FaCalendarAlt, FaParachuteBox } from 'react-icons/fa'
 import { LuChevronsUpDown } from 'react-icons/lu'
-
-import { useToast } from '@/hooks/use-toast'
-import { useMutationAddProduct } from '@/states/queries/hooks/mutations'
-import {
-  useQueryAllProductsCategories,
-  useQueryAllUnitMeasurements
-} from '@/states/queries/hooks/queries'
-import LoaderIcon from '@components/icons/LoaderIcon'
-import { Calendar } from '@shadcn/calendar'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@shadcn/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
-import { BsCheck } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 import type { z } from 'zod'
 const ProductForm = () => {

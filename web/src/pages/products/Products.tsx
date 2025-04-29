@@ -1,7 +1,7 @@
 import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useDebounce } from '@/hooks/useDebounce'
 import useAuth from '@/states/auth/hooks/useAuth'
-import { useQueryAllProducts } from '@/states/queries/hooks/queries'
+import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProducts'
 import ProductCard from '@pages/products/components/ProductCard'
 import { Input } from '@shadcn/input'
 import { useMemo, useState } from 'react'
