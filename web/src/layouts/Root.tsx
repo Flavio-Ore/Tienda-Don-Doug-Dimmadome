@@ -1,8 +1,8 @@
 import Bottombar from '@/components/Bottombar'
 import Leftsidebar from '@/components/Leftsidebar'
 import Topsidebar from '@/components/Topsidebar'
+import { PUBLIC_ROUTES } from '@/pages/routes/public'
 import useAuth from '@/states/auth/hooks/useAuth'
-import { ROUTES } from '@/values/routes'
 import { Navigate, Outlet } from 'react-router-dom'
 
 const Root = () => {
@@ -18,7 +18,7 @@ const Root = () => {
       <Bottombar />
     </div>
   ) : (
-    <Navigate to={ROUTES.PUBLIC.LOGIN} />
+    <Navigate to={PUBLIC_ROUTES.LOGIN} />
   )
 }
 

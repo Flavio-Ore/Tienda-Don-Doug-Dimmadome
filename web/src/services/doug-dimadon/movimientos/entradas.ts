@@ -1,5 +1,4 @@
 import axios from '@/lib/axios'
-import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type { DetallEntradaSchema } from '@/validations/schemas/detalleEntrada.schema'
 import type { EntradaSchema } from '@/validations/schemas/entrada.schema'
 import type { z } from 'zod'
@@ -134,7 +133,7 @@ interface IDetalleEntradaResponse {
 
 export const saveEntrada = async (entrada: z.infer<typeof EntradaSchema>) => {
   return await axios.post<IEntradaResponse>(
-    ENDPOINTS.POST.ENTRADA.CREATE,
+    '/entrada/insertar',
     entrada
   )
 }
@@ -142,8 +141,5 @@ export const saveEntrada = async (entrada: z.infer<typeof EntradaSchema>) => {
 export const saveDetalleEntrada = async (
   detalleEntrada: z.infer<typeof DetallEntradaSchema>
 ) => {
-  return await axios.post<IDetalleEntradaResponse>(
-    ENDPOINTS.POST.DETALLE_ENTRADA.CREATE,
-    detalleEntrada
-  )
+  return await axios.post<IDetalleEntradaResponse>('/detalleEntrada/insertar', detalleEntrada)
 }

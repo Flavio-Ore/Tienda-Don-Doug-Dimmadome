@@ -1,5 +1,4 @@
 import axios from '@/lib/axios'
-import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type { IUsuario } from '@/types'
 import type { SigninFormSchema } from '@/validations/forms/signIn.schema'
 import { isAxiosError } from 'axios'
@@ -10,7 +9,7 @@ export const authLogin = async (usuario: z.infer<typeof SigninFormSchema>) => {
     const response = await axios.post<{
       token: string
       usuario: IUsuario
-    }>(ENDPOINTS.POST.AUTH.LOGIN, usuario)
+    }>('/auth/login', usuario)
 
     return {
       data: response.data,

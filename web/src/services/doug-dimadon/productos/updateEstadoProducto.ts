@@ -1,5 +1,4 @@
 import axios from '@/lib/axios'
-import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 
 export const updateEstadoProducto = async ({
   idProducto,
@@ -8,7 +7,7 @@ export const updateEstadoProducto = async ({
   idProducto: number
   estado: 'activo' | 'inactivo'
 }) => {
-  return await axios.patch(ENDPOINTS.PATCH.PRODUCTO.UPDATE(idProducto), {
+  return await axios.patch(`/producto/${idProducto}`, {
     estado
   })
 }

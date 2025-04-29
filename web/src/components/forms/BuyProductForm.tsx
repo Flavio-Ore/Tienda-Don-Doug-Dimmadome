@@ -1,19 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@shadcn/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@shadcn/form'
-import { Input } from '@shadcn/input'
-import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { FaRegHandshake } from 'react-icons/fa6'
-
 import { useToast } from '@/hooks/use-toast'
 import { loadFromLocalStorage } from '@/lib/local-storage'
 import { cn, numberToCurrency } from '@/lib/utils'
@@ -23,8 +7,10 @@ import { useQueryAllProviders } from '@/states/doug-dimadon-tankstack-query/hook
 import { useQueryAllUsers } from '@/states/doug-dimadon-tankstack-query/hooks/queries/users/useQueryAllUsers'
 import type { IProducto, IUsuario } from '@/types'
 import { BuyProductSchema } from '@/validations/buyProduct.schema'
-import { ROUTES } from '@/values/routes'
 import LoaderIcon from '@components/icons/LoaderIcon'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { SESSION_ROUTES } from '@pages/routes/session'
+import { Button } from '@shadcn/button'
 import {
   Card,
   CardContent,
@@ -40,10 +26,23 @@ import {
   CommandItem,
   CommandList
 } from '@shadcn/command'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@shadcn/form'
+import { Input } from '@shadcn/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { Textarea } from '@shadcn/textarea'
+import { useEffect, useMemo, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { BsCheck } from 'react-icons/bs'
 import { FaMinus, FaPlus } from 'react-icons/fa'
+import { FaRegHandshake } from 'react-icons/fa6'
 import { LuChevronsUpDown } from 'react-icons/lu'
 import { Link, useNavigate } from 'react-router-dom'
 import type { z } from 'zod'
@@ -360,7 +359,7 @@ const BuyProductForm = () => {
               <FormDescription>
                 Si no encuentras al proovedor,{' '}
                 <Link
-                  to={ROUTES.PRIVATE.USER.PROVIDERS}
+                  to={SESSION_ROUTES.USER.PROVIDERS}
                   className='text-sky-500/70 underline-offset-4 hover:underline'
                 >
                   regístralo aquí
