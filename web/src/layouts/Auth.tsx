@@ -1,6 +1,8 @@
+import { SESSION_ROUTES } from '@/pages/routes/session'
 import useAuth from '@/states/auth/hooks/useAuth'
-import { ROUTES } from '@/values/routes'
-import { Navigate, Outlet } from 'react-router-dom'
+import { lazy } from 'react'
+import { Navigate } from 'react-router-dom'
+const Login = lazy(async () => await import('@pages/login/Login'))
 
 const Auth = () => {
   const { isAuthenticated, isAdmin } = useAuth()
@@ -9,13 +11,13 @@ const Auth = () => {
     <Navigate
       to={
         isAdmin
-          ? ROUTES.PRIVATE.INVENTORY.KARDEX
-          : ROUTES.PRIVATE.MOVEMENTS.SELL
+          ? SESSION_ROUTES.INVENTORY.KARDEX
+          : SESSION_ROUTES.MOVEMENTS.SELL
       }
     />
   ) : (
     <section className='flex flex-1 items-center justify-center flex-col'>
-      <Outlet />
+      <Login />
     </section>
   )
 }

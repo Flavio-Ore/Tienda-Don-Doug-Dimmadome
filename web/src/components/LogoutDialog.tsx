@@ -1,5 +1,5 @@
 import useAuth from '@/states/auth/hooks/useAuth'
-import { ROUTES } from '@/values/routes'
+import { PUBLIC_ROUTES } from '@pages/routes/public'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +20,7 @@ const LogoutDialog = () => {
 
   const handleLogout = () => {
     logout()
-    nagivate(ROUTES.PUBLIC.LOGIN)
+    nagivate(PUBLIC_ROUTES.LOGIN)
   }
   return (
     <AlertDialog>

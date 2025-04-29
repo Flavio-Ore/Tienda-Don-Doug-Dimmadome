@@ -1,23 +1,16 @@
 import axios from '@/lib/axios'
 import { formatSerialNumber } from '@/lib/utils'
-import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type {
-  ICliente,
   IDevolucionV2,
-  INotaDeCredito,
-  IProveedor
+  INotaDeCredito
 } from '@/types'
+import { getAllClientes } from '@doug-dimadon/clientes/getAllClientes'
+import { getAllProveedores } from '@doug-dimadon/proveedores/getAllProveedores'
 
 export const getAllDevoluciones = async () => {
-  const devolucionesRes = await axios.get<IDevolucionV2[]>(
-    ENDPOINTS.GET.DEVOLUCION.READ_ALL
-  )
-  const clientesRes = await axios.get<ICliente[]>(
-    ENDPOINTS.GET.CLIENTE.READ_ALL
-  )
-  const proveedoresRes = await axios.get<IProveedor[]>(
-    ENDPOINTS.GET.PROVEEDOR.READ_ALL
-  )
+  const devolucionesRes = await axios.get<IDevolucionV2[]>('/devolucion/obtener')
+  const clientesRes = await getAllClientes()
+  const proveedoresRes = await getAllProveedores()
   const devoluciones = devolucionesRes.data
 
   const notaCreditos: INotaDeCredito[] = devoluciones.map(d => ({

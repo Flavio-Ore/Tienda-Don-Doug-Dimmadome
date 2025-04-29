@@ -1,12 +1,12 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn, numberToCurrency } from '@/lib/utils'
+import { SESSION_ROUTES } from '@/pages/routes/session'
 import { useMutationSellProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationSellProduct'
 import { useQueryAllClients } from '@/states/doug-dimadon-tankstack-query/hooks/queries/clients/useQueryAllClients'
 import { useQueryAllPaymentMethods } from '@/states/doug-dimadon-tankstack-query/hooks/queries/payment-method/useQueryAllPaymentMethods'
 import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProducts'
 import type { IProducto } from '@/types'
 import { SellProductFormSchema } from '@/validations/sellProduct.schema'
-import { ROUTES } from '@/values/routes'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
@@ -351,7 +351,7 @@ const SellProductForm = () => {
               <FormDescription>
                 Si no encuentras al cliente,{' '}
                 <Link
-                  to={ROUTES.PRIVATE.USER.CLIENTS}
+                  to={SESSION_ROUTES.USER.CLIENTS}
                   className='text-sky-500/70 underline-offset-4 hover:underline'
                 >
                   regístralo aquí

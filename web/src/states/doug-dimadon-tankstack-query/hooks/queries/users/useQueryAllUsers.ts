@@ -1,5 +1,5 @@
-import { getAllUsuarios } from '@/services/doug-dimadon/usuarios/getAllUsuarios'
 import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
+import { getAllUsuarios } from '@doug-dimadon/usuarios/getAllUsuarios'
 import { useQuery } from '@tanstack/react-query'
 
 export function useQueryAllUsers() {

@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
+import { ADMIN_ROUTES } from '@/pages/routes/admin'
+import { SESSION_ROUTES } from '@/pages/routes/session'
 import useAuth from '@/states/auth/hooks/useAuth'
-import { ROUTES } from '@/values/routes'
 import { Button } from '@shadcn/button'
 import {
   DropdownMenu,
@@ -45,7 +46,7 @@ const Bottombar = () => {
                   className={cn(
                     'inline-flex gap-x-2 items-center px-4 py-6 rounded-lg',
                     {
-                      'bg-dark-4': pathname === ROUTES.PRIVATE.INVENTORY.KARDEX
+                      'bg-dark-4': pathname === SESSION_ROUTES.INVENTORY.KARDEX
                     }
                   )}
                 >
@@ -59,11 +60,11 @@ const Bottombar = () => {
                 <DropdownMenuGroup>
                   <DropdownMenuItem
                     className={cn('cursor-pointer', {
-                      'bg-dark-4': pathname === ROUTES.PRIVATE.INVENTORY.KARDEX
+                      'bg-dark-4': pathname === SESSION_ROUTES.INVENTORY.KARDEX
                     })}
                   >
                     <NavLink
-                      to={ROUTES.PRIVATE.INVENTORY.KARDEX}
+                      to={SESSION_ROUTES.INVENTORY.KARDEX}
                       className={cn(
                         'flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                       )}
@@ -90,8 +91,8 @@ const Bottombar = () => {
                   'inline-flex gap-x-2 items-center px-4 py-6 rounded-lg',
                   {
                     'bg-dark-4':
-                      pathname === ROUTES.PRIVATE.PRODUCTS.ROOT ||
-                      pathname === ROUTES.PRIVATE.PRODUCTS.ADD
+                      pathname === SESSION_ROUTES.PRODUCTS.ROOT ||
+                      pathname === SESSION_ROUTES.PRODUCTS.ADD
                   }
                 )}
               >
@@ -108,11 +109,11 @@ const Bottombar = () => {
                 {isAdmin && (
                   <DropdownMenuItem
                     className={cn('cursor-pointer', {
-                      'bg-dark-4': pathname === ROUTES.PRIVATE.PRODUCTS.ADD
+                      'bg-dark-4': pathname === SESSION_ROUTES.PRODUCTS.ADD
                     })}
                   >
                     <NavLink
-                      to={ROUTES.PRIVATE.PRODUCTS.ADD}
+                      to={SESSION_ROUTES.PRODUCTS.ADD}
                       className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                     >
                       <FaParachuteBox size={24} className='fill-violet-500' />
@@ -122,11 +123,11 @@ const Bottombar = () => {
                 )}
                 <DropdownMenuItem
                   className={cn('cursor-pointer', {
-                    'bg-dark-4': pathname === ROUTES.PRIVATE.PRODUCTS.ROOT
+                    'bg-dark-4': pathname === SESSION_ROUTES.PRODUCTS.ROOT
                   })}
                 >
                   <NavLink
-                    to={ROUTES.PRIVATE.PRODUCTS.ROOT}
+                    to={SESSION_ROUTES.PRODUCTS.ROOT}
                     className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                   >
                     <FaBoxOpen size={24} className='fill-violet-500' />
@@ -146,9 +147,9 @@ const Bottombar = () => {
                   'inline-flex gap-x-2 items-center px-4 py-6 rounded-lg',
                   {
                     'bg-dark-4':
-                      pathname === ROUTES.PRIVATE.MOVEMENTS.SELL ||
-                      pathname === ROUTES.PRIVATE.MOVEMENTS.BUY ||
-                      pathname === ROUTES.PRIVATE.MOVEMENTS.REFUND
+                      pathname === SESSION_ROUTES.MOVEMENTS.SELL ||
+                      pathname === SESSION_ROUTES.MOVEMENTS.BUY ||
+                      pathname === SESSION_ROUTES.MOVEMENTS.REFUND
                   }
                 )}
               >
@@ -167,11 +168,11 @@ const Bottombar = () => {
                 {isAdmin && (
                   <DropdownMenuItem
                     className={cn('cursor-pointer', {
-                      'bg-dark-4': pathname === ROUTES.PRIVATE.MOVEMENTS.BUY
+                      'bg-dark-4': pathname === SESSION_ROUTES.MOVEMENTS.BUY
                     })}
                   >
                     <NavLink
-                      to={ROUTES.PRIVATE.MOVEMENTS.BUY}
+                      to={SESSION_ROUTES.MOVEMENTS.BUY}
                       className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                     >
                       <FaTruckRampBox size={24} className='fill-lime-500' />
@@ -181,11 +182,11 @@ const Bottombar = () => {
                 )}
                 <DropdownMenuItem
                   className={cn('cursor-pointer', {
-                    'bg-dark-4': pathname === ROUTES.PRIVATE.MOVEMENTS.SELL
+                    'bg-dark-4': pathname === SESSION_ROUTES.MOVEMENTS.SELL
                   })}
                 >
                   <NavLink
-                    to={ROUTES.PRIVATE.MOVEMENTS.SELL}
+                    to={SESSION_ROUTES.MOVEMENTS.SELL}
                     className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                   >
                     <FaSackDollar size={24} className='fill-lime-500' />
@@ -194,11 +195,11 @@ const Bottombar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className={cn('cursor-pointer', {
-                    'bg-dark-4': pathname === ROUTES.PRIVATE.MOVEMENTS.REFUND
+                    'bg-dark-4': pathname === SESSION_ROUTES.MOVEMENTS.REFUND
                   })}
                 >
                   <NavLink
-                    to={ROUTES.PRIVATE.MOVEMENTS.REFUND}
+                    to={SESSION_ROUTES.MOVEMENTS.REFUND}
                     className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                   >
                     <FaHandHoldingDollar size={24} className='fill-lime-500' />
@@ -218,8 +219,8 @@ const Bottombar = () => {
                   'inline-flex gap-x-2 items-center px-4 py-6 rounded-lg',
                   {
                     'bg-dark-4':
-                      pathname === ROUTES.PRIVATE.USER.PROVIDERS ||
-                      pathname === ROUTES.PRIVATE.USER.CLIENTS
+                      pathname === SESSION_ROUTES.USER.PROVIDERS ||
+                      pathname === SESSION_ROUTES.USER.CLIENTS
                   }
                 )}
               >
@@ -236,11 +237,11 @@ const Bottombar = () => {
                 {isAdmin && (
                   <DropdownMenuItem
                     className={cn('cursor-pointer', {
-                      'bg-dark-4': pathname === ROUTES.PRIVATE.USER.PROVIDERS
+                      'bg-dark-4': pathname === SESSION_ROUTES.USER.PROVIDERS
                     })}
                   >
                     <NavLink
-                      to={ROUTES.PRIVATE.USER.PROVIDERS}
+                      to={SESSION_ROUTES.USER.PROVIDERS}
                       className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                     >
                       <FaTruckPlane size={24} className='fill-sky-500' />
@@ -250,11 +251,11 @@ const Bottombar = () => {
                 )}
                 <DropdownMenuItem
                   className={cn('cursor-pointer', {
-                    'bg-dark-4': pathname === ROUTES.PRIVATE.USER.CLIENTS
+                    'bg-dark-4': pathname === SESSION_ROUTES.USER.CLIENTS
                   })}
                 >
                   <NavLink
-                    to={ROUTES.PRIVATE.USER.CLIENTS}
+                    to={SESSION_ROUTES.USER.CLIENTS}
                     className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                   >
                     <FaUserTag size={24} className='fill-sky-500' />
@@ -274,7 +275,7 @@ const Bottombar = () => {
                   className={cn(
                     'inline-flex gap-x-2 items-center px-4 py-6 rounded-lg',
                     {
-                      'bg-dark-4': pathname === ROUTES.PRIVATE.ADMIN.USERS
+                      'bg-dark-4': pathname === ADMIN_ROUTES.USERS
                     }
                   )}
                 >
@@ -292,11 +293,11 @@ const Bottombar = () => {
                 <DropdownMenuGroup>
                   <DropdownMenuItem
                     className={cn('cursor-pointer', {
-                      'bg-dark-4': pathname === ROUTES.PRIVATE.ADMIN.USERS
+                      'bg-dark-4': pathname === ADMIN_ROUTES.USERS
                     })}
                   >
                     <NavLink
-                      to={ROUTES.PRIVATE.ADMIN.USERS}
+                      to={ADMIN_ROUTES.USERS}
                       className='flex w-full justify gap-x-2 justify-start items-center py-4 xl:p-4'
                     >
                       <FaUsersCog

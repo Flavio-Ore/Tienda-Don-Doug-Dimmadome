@@ -1,8 +1,8 @@
 import { loadFromLocalStorage } from '@/lib/local-storage'
 import { cn } from '@/lib/utils'
+import { PUBLIC_ROUTES } from '@/pages/routes/public'
 import useAuth from '@/states/auth/hooks/useAuth'
 import type { IUsuario } from '@/types'
-import { ROUTES } from '@/values/routes'
 import { Button } from '@shadcn/button'
 import {
   DropdownMenu,
@@ -26,7 +26,7 @@ const Topsidebar = () => {
   )
   const handleLogout = () => {
     logout()
-    nagivate(ROUTES.PUBLIC.LOGIN)
+    nagivate(PUBLIC_ROUTES.LOGIN)
   }
   return (
     <section className='sticky top-0 z-50 md:hidden bg-dark-2 w-full '>

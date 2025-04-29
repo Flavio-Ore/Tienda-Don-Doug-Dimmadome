@@ -1,3 +1,10 @@
+import { loadFromLocalStorage } from '@/lib/local-storage'
+import { cn } from '@/lib/utils'
+import { ADMIN_ROUTES } from '@/pages/routes/admin'
+import { SESSION_ROUTES } from '@/pages/routes/session'
+import type { IUsuario } from '@/types'
+import LogoutDialog from '@components/LogoutDialog'
+import { useMemo } from 'react'
 import {
   FaBox,
   FaBoxes,
@@ -5,6 +12,7 @@ import {
   FaParachuteBox,
   FaStar,
   FaUserNinja,
+  FaUsersCog,
   FaUserTag,
   FaUserTie
 } from 'react-icons/fa'
@@ -17,16 +25,7 @@ import {
   FaTruckRampBox,
   FaUsersViewfinder
 } from 'react-icons/fa6'
-
 import { NavLink, useLocation } from 'react-router-dom'
-
-import { loadFromLocalStorage } from '@/lib/local-storage'
-import { cn } from '@/lib/utils'
-import type { IUsuario } from '@/types'
-import { ROUTES } from '@/values/routes'
-import LogoutDialog from '@components/LogoutDialog'
-import { useMemo } from 'react'
-import { FaUsersCog } from 'react-icons/fa'
 
 const Leftsidebar = () => {
   const { pathname } = useLocation()
@@ -97,12 +96,12 @@ const Leftsidebar = () => {
                       'leftsidebar-link relative group base-regular hover:bg-dark-4',
                       {
                         'bg-dark-3':
-                          pathname === ROUTES.PRIVATE.INVENTORY.KARDEX
+                          pathname === SESSION_ROUTES.INVENTORY.KARDEX
                       }
                     )}
                   >
                     <NavLink
-                      to={ROUTES.PRIVATE.INVENTORY.KARDEX}
+                      to={SESSION_ROUTES.INVENTORY.KARDEX}
                       className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                     >
                       <FaTableCellsRowLock
@@ -134,12 +133,12 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-3': pathname === ROUTES.PRIVATE.PRODUCTS.ROOT
+                    'bg-dark-3': pathname === SESSION_ROUTES.PRODUCTS.ROOT
                   }
                 )}
               >
                 <NavLink
-                  to={ROUTES.PRIVATE.PRODUCTS.ROOT}
+                  to={SESSION_ROUTES.PRODUCTS.ROOT}
                   className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                 >
                   <FaBoxOpen
@@ -158,13 +157,13 @@ const Leftsidebar = () => {
                     'leftsidebar-link relative group base-regular hover:bg-dark-4',
                     {
                       'bg-dark-3': pathname.includes(
-                        ROUTES.PRIVATE.PRODUCTS.ADD
+                        SESSION_ROUTES.PRODUCTS.ADD
                       )
                     }
                   )}
                 >
                   <NavLink
-                    to={ROUTES.PRIVATE.PRODUCTS.ADD}
+                    to={SESSION_ROUTES.PRODUCTS.ADD}
                     className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                   >
                     <FaParachuteBox
@@ -201,13 +200,13 @@ const Leftsidebar = () => {
                     'leftsidebar-link relative group base-regular hover:bg-dark-4',
                     {
                       'bg-dark-3': pathname.includes(
-                        ROUTES.PRIVATE.MOVEMENTS.BUY
+                        SESSION_ROUTES.MOVEMENTS.BUY
                       )
                     }
                   )}
                 >
                   <NavLink
-                    to={ROUTES.PRIVATE.MOVEMENTS.BUY}
+                    to={SESSION_ROUTES.MOVEMENTS.BUY}
                     className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                   >
                     <FaTruckRampBox
@@ -226,13 +225,13 @@ const Leftsidebar = () => {
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
                     'bg-dark-3': pathname.includes(
-                      ROUTES.PRIVATE.MOVEMENTS.SELL
+                      SESSION_ROUTES.MOVEMENTS.SELL
                     )
                   }
                 )}
               >
                 <NavLink
-                  to={ROUTES.PRIVATE.MOVEMENTS.SELL}
+                  to={SESSION_ROUTES.MOVEMENTS.SELL}
                   className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                 >
                   <FaSackDollar size={24} className='fill-lime-500' />
@@ -246,13 +245,13 @@ const Leftsidebar = () => {
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
                     'bg-dark-3': pathname.includes(
-                      ROUTES.PRIVATE.MOVEMENTS.REFUND
+                      SESSION_ROUTES.MOVEMENTS.REFUND
                     )
                   }
                 )}
               >
                 <NavLink
-                  to={ROUTES.PRIVATE.MOVEMENTS.REFUND}
+                  to={SESSION_ROUTES.MOVEMENTS.REFUND}
                   className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                 >
                   <FaHandHoldingDollar
@@ -287,13 +286,13 @@ const Leftsidebar = () => {
                     'leftsidebar-link relative group base-regular hover:bg-dark-4',
                     {
                       'bg-dark-3': pathname.includes(
-                        ROUTES.PRIVATE.USER.PROVIDERS
+                        SESSION_ROUTES.USER.PROVIDERS
                       )
                     }
                   )}
                 >
                   <NavLink
-                    to={ROUTES.PRIVATE.USER.PROVIDERS}
+                    to={SESSION_ROUTES.USER.PROVIDERS}
                     className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                   >
                     <FaTruckPlane
@@ -311,12 +310,12 @@ const Leftsidebar = () => {
                 className={cn(
                   'leftsidebar-link relative group base-regular hover:bg-dark-4',
                   {
-                    'bg-dark-3': pathname.includes(ROUTES.PRIVATE.USER.CLIENTS)
+                    'bg-dark-3': pathname.includes(SESSION_ROUTES.USER.CLIENTS)
                   }
                 )}
               >
                 <NavLink
-                  to={ROUTES.PRIVATE.USER.CLIENTS}
+                  to={SESSION_ROUTES.USER.CLIENTS}
                   className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                 >
                   <FaUserTag
@@ -349,14 +348,12 @@ const Leftsidebar = () => {
                     className={cn(
                       'leftsidebar-link relative group base-regular hover:bg-dark-4',
                       {
-                        'bg-dark-3': pathname.includes(
-                          ROUTES.PRIVATE.ADMIN.USERS
-                        )
+                        'bg-dark-3': pathname.includes(ADMIN_ROUTES.USERS)
                       }
                     )}
                   >
                     <NavLink
-                      to={ROUTES.PRIVATE.ADMIN.USERS}
+                      to={ADMIN_ROUTES.USERS}
                       className='flex gap-x-2 items-center justify-start px-2 py-4 xl:p-4'
                     >
                       <FaUsersCog

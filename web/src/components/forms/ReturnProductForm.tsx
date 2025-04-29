@@ -1,8 +1,25 @@
+import LoaderIcon from '@/components/icons/LoaderIcon'
+import { useToast } from '@/hooks/use-toast'
+import { loadFromLocalStorage } from '@/lib/local-storage'
 import { cn } from '@/lib/utils'
+import { SESSION_ROUTES } from '@/pages/routes/session'
+import { useMutationRefundProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationRefundProduct'
+import { useQueryAllClients } from '@/states/doug-dimadon-tankstack-query/hooks/queries/clients/useQueryAllClients'
+import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProducts'
+import { useQueryAllProviders } from '@/states/doug-dimadon-tankstack-query/hooks/queries/providers/useQueryAllProviders'
+import { useQueryAllRefundTypes } from '@/states/doug-dimadon-tankstack-query/hooks/queries/refunds/useQueryAllRefundTypes'
+import type { IUsuario } from '@/types'
+import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
-import { LuChevronsUpDown } from 'react-icons/lu'
-
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@shadcn/command'
 import {
   Form,
   FormControl,
@@ -13,32 +30,13 @@ import {
   FormMessage
 } from '@shadcn/form'
 import { Input } from '@shadcn/input'
-import { useForm } from 'react-hook-form'
-
-import LoaderIcon from '@/components/icons/LoaderIcon'
-import { useToast } from '@/hooks/use-toast'
-import { loadFromLocalStorage } from '@/lib/local-storage'
-import { useMutationRefundProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationRefundProduct'
-import { useQueryAllClients } from '@/states/doug-dimadon-tankstack-query/hooks/queries/clients/useQueryAllClients'
-import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProducts'
-import { useQueryAllProviders } from '@/states/doug-dimadon-tankstack-query/hooks/queries/providers/useQueryAllProviders'
-import { useQueryAllRefundTypes } from '@/states/doug-dimadon-tankstack-query/hooks/queries/refunds/useQueryAllRefundTypes'
-import type { IUsuario } from '@/types'
-import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
-import { ROUTES } from '@/values/routes'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { Textarea } from '@shadcn/textarea'
 import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 import { BsCheck } from 'react-icons/bs'
 import { FaHandHoldingDollar } from 'react-icons/fa6'
+import { LuChevronsUpDown } from 'react-icons/lu'
 import { Link, useNavigate } from 'react-router-dom'
 import type { z } from 'zod'
 
@@ -356,7 +354,7 @@ const ReturnProductForm = () => {
                 <FormDescription>
                   Si no encuentras al proovedor,{' '}
                   <Link
-                    to={ROUTES.PRIVATE.USER.PROVIDERS}
+                    to={SESSION_ROUTES.USER.PROVIDERS}
                     className='text-sky-500/70 underline-offset-4 hover:underline'
                   >
                     regístralo aquí
@@ -470,7 +468,7 @@ const ReturnProductForm = () => {
                 <FormDescription>
                   Si no encuentras al cliente,{' '}
                   <Link
-                    to={ROUTES.PRIVATE.USER.CLIENTS}
+                    to={SESSION_ROUTES.USER.CLIENTS}
                     className='text-sky-500/70 underline-offset-4 hover:underline'
                   >
                     regístralo aquí

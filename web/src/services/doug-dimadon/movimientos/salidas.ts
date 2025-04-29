@@ -1,5 +1,4 @@
 import axios from '@/lib/axios'
-import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type { IDetalleSalida, ISalida } from '@/types'
 import type { DetalleSalidaSchema } from '@/validations/schemas/detalleSalida.schema'
 import type { SalidaSchema } from '@/validations/schemas/salida.schema'
@@ -123,24 +122,19 @@ interface IDetalleSalidaResponse {
 }
 
 export const getAllSalidas = async () => {
-  return await axios.get<ISalida[]>(ENDPOINTS.GET.SALIDA.READ_ALL)
+  return await axios.get<ISalida[]>('/salida/obtener')
 }
 
 export const getAllDetalleSalidas = async () => {
-  return await axios.get<IDetalleSalida[]>(
-    ENDPOINTS.GET.DETALLE_SALIDA.READ_ALL
-  )
+  return await axios.get<IDetalleSalida[]>('/detalleSalida/obtener')
 }
 
 export const saveSalida = async (salida: z.infer<typeof SalidaSchema>) => {
-  return await axios.post<ISalidaResponse>(ENDPOINTS.POST.SALIDA.CREATE, salida)
+  return await axios.post<ISalidaResponse>('/salida/insertar', salida)
 }
 
 export const saveDetalleSalida = async (
   detalleEntrada: z.infer<typeof DetalleSalidaSchema>
 ) => {
-  return await axios.post<IDetalleSalidaResponse>(
-    ENDPOINTS.POST.DETALLE_SALIDA.CREATE,
-    detalleEntrada
-  )
+  return await axios.post<IDetalleSalidaResponse>('/detalleSalida/insertar', detalleEntrada)
 }

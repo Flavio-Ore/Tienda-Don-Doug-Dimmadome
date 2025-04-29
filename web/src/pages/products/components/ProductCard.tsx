@@ -36,12 +36,12 @@ import {
 } from '@/components/ui/tooltip'
 import { useToast } from '@/hooks/use-toast'
 import { addOneDay, cn, numberToCurrency } from '@/lib/utils'
+import { SESSION_ROUTES } from '@/pages/routes/session'
 import { useMutationChangeProductState } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/products/useMutationChangeProductState'
 import { useMutationUpdateProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/products/useMutationUpdateProduct'
 import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProducts'
 import type { IProducto } from '@/types'
 import { EditProductFormSchema } from '@/validations/forms/editProduct.schema'
-import { ROUTES } from '@/values/routes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -485,7 +485,7 @@ const ProductCard = ({
                       <Link
                         to={
                           product.estado.toLowerCase() === 'activo'
-                            ? ROUTES.PRIVATE.MOVEMENTS.BUY
+                            ? SESSION_ROUTES.MOVEMENTS.BUY
                             : '.'
                         }
                       >
