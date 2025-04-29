@@ -1,5 +1,5 @@
 import axios from '@/lib/axios'
-import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
+import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type { CategoryFormSchema } from '@/validations/forms/addCategory.schema'
 import type { z } from 'zod'
 

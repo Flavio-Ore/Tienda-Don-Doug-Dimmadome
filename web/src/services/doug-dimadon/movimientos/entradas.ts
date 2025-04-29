@@ -1,5 +1,5 @@
 import axios from '@/lib/axios'
-import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
+import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type { DetallEntradaSchema } from '@/validations/schemas/detalleEntrada.schema'
 import type { EntradaSchema } from '@/validations/schemas/entrada.schema'
 import type { z } from 'zod'

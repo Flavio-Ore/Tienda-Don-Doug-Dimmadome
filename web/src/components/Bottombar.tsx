@@ -1,5 +1,3 @@
-import { NavLink, useLocation } from 'react-router-dom'
-
 import { cn } from '@/lib/utils'
 import useAuth from '@/states/auth/hooks/useAuth'
 import { ROUTES } from '@/values/routes'
@@ -29,6 +27,7 @@ import {
   FaTruckPlane,
   FaTruckRampBox
 } from 'react-icons/fa6'
+import { NavLink, useLocation } from 'react-router-dom'
 
 const Bottombar = () => {
   const { pathname } = useLocation()

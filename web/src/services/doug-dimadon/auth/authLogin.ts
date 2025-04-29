@@ -1,7 +1,7 @@
 import axios from '@/lib/axios'
+import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type { IUsuario } from '@/types'
 import type { SigninFormSchema } from '@/validations/forms/signIn.schema'
-import { ENDPOINTS } from '@doug-dimadon/values/endpoints'
 import { isAxiosError } from 'axios'
 import type { z } from 'zod'
 
@@ -32,10 +32,4 @@ export const authLogin = async (usuario: z.infer<typeof SigninFormSchema>) => {
       status: 400
     }
   }
-}
-
-export const authRegister = async (
-  usuario: z.infer<typeof SigninFormSchema>
-) => {
-  return await axios.post(ENDPOINTS.POST.AUTH.REGISTRO, usuario)
 }

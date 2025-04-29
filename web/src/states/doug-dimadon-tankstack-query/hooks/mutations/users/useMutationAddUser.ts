@@ -1,5 +1,5 @@
 import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
-import { saveUsuario } from '@doug-dimadon/usuarios'
+import { saveUsuario } from '@doug-dimadon/usuarios/saveUsuario'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationAddUser() {

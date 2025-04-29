@@ -11,7 +11,7 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { useMutationChangeClientState } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/clients/useMutationChangeClientState'
-import { useQueryAllClients } from '@/states/doug-dimadon-tankstack-query/hooks/queries'
+import { useQueryAllClients } from '@/states/doug-dimadon-tankstack-query/hooks/queries/clients/useQueryAllClients'
 import { type ICliente } from '@/types'
 import { useEffect } from 'react'
 import { FaCircle } from 'react-icons/fa'

@@ -1,10 +1,8 @@
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { useMutationAddProvider } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/providers/useMutationAddProvider'
-import {
-  useQueryAllProductsCategories,
-  useQueryAllProviders
-} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
+import { useQueryAllProductsCategories } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProductsCategories'
+import { useQueryAllProviders } from '@/states/doug-dimadon-tankstack-query/hooks/queries/providers/useQueryAllProviders'
 import { ProviderFormSchema } from '@/validations/forms/addProvider.schema'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import { zodResolver } from '@hookform/resolvers/zod'

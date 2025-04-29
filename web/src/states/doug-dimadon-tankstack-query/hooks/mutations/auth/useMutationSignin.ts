@@ -1,5 +1,5 @@
 import { saveToLocalStorage } from '@/lib/local-storage'
-import { authLogin } from '@/services/doug-dimadon/auth'
+import { authLogin } from '@/services/doug-dimadon/auth/authLogin'
 import type { IUsuario } from '@/types'
 import { useMutation } from '@tanstack/react-query'
 

@@ -1,21 +1,12 @@
 import axios from '@/lib/axios'
 import { formatSerialNumber } from '@/lib/utils'
+import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type {
   ICliente,
   IDevolucionV2,
   INotaDeCredito,
-  IProveedor,
-  ITipoDevolucion
+  IProveedor
 } from '@/types'
-import type { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
-import { ENDPOINTS } from '@doug-dimadon/values/endpoints'
-import type { z } from 'zod'
-
-export const getAllTipoDevoluciones = async () => {
-  return await axios.get<ITipoDevolucion[]>(
-    ENDPOINTS.GET.TIPO_DEVOLUCION.READ_ALL
-  )
-}
 
 export const getAllDevoluciones = async () => {
   const devolucionesRes = await axios.get<IDevolucionV2[]>(
@@ -40,10 +31,4 @@ export const getAllDevoluciones = async () => {
     ...devolucionesRes,
     data: notaCreditos
   }
-}
-
-export const saveDevolucionProducto = async (
-  refund: z.infer<typeof ReturnProductFormSchema>
-) => {
-  return await axios.post(ENDPOINTS.POST.DEVOLUCION.CREATE, refund)
 }

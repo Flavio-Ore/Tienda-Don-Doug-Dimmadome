@@ -19,12 +19,10 @@ import LoaderIcon from '@/components/icons/LoaderIcon'
 import { useToast } from '@/hooks/use-toast'
 import { loadFromLocalStorage } from '@/lib/local-storage'
 import { useMutationRefundProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationRefundProduct'
-import {
-  useQueryAllClients,
-  useQueryAllProducts,
-  useQueryAllProviders,
-  useQueryAllRefundTypes
-} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
+import { useQueryAllClients } from '@/states/doug-dimadon-tankstack-query/hooks/queries/clients/useQueryAllClients'
+import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProducts'
+import { useQueryAllProviders } from '@/states/doug-dimadon-tankstack-query/hooks/queries/providers/useQueryAllProviders'
+import { useQueryAllRefundTypes } from '@/states/doug-dimadon-tankstack-query/hooks/queries/refunds/useQueryAllRefundTypes'
 import type { IUsuario } from '@/types'
 import { ReturnProductFormSchema } from '@/validations/returnProduct.schema'
 import { ROUTES } from '@/values/routes'

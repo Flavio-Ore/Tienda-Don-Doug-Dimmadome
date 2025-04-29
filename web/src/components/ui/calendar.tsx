@@ -1,11 +1,10 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import * as React from 'react'
-import { DayPicker } from 'react-day-picker'
-
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import type { ComponentProps } from 'react'
+import { DayPicker } from 'react-day-picker'
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = ComponentProps<typeof DayPicker>
 
 function Calendar ({
   className,
@@ -18,7 +17,8 @@ function Calendar ({
       showOutsideDays={showOutsideDays}
       className={cn('p-3', className)}
       classNames={{
-        months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 text-light-2',
+        months:
+          'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 text-light-2',
         month: 'space-y-4',
         caption: 'flex justify-center pt-1 relative items-center',
         caption_label: 'text-sm font-medium',
@@ -31,8 +31,7 @@ function Calendar ({
         nav_button_next: 'absolute right-1',
         table: 'w-full border-collapse space-y-1',
         head_row: 'flex',
-        head_cell:
-          'text-light-3 rounded-md w-8 font-normal text-[0.8rem]',
+        head_cell: 'text-light-3 rounded-md w-8 font-normal text-[0.8rem]',
         row: 'flex w-full mt-2',
         cell: cn(
           'relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md',

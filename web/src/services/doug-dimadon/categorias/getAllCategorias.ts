@@ -1,5 +1,5 @@
 import axios from '@/lib/axios'
-import { ENDPOINTS } from '@/services/doug-dimadon/values/endpoints'
+import { ENDPOINTS } from '@/services/doug-dimadon/routes/endpoints'
 import type { ICategoriaProducto } from '@/types'
 
 export const getAllCategorias = async () => {

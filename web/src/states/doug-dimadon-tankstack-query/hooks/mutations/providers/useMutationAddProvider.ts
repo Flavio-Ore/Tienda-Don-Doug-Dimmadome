@@ -1,5 +1,5 @@
+import { saveProveedor } from '@/services/doug-dimadon/proveedores/saveProveedor'
 import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
-import { saveProveedor } from '@doug-dimadon/proveedores'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationAddProvider() {

@@ -8,7 +8,7 @@ import {
   removeFromSessionStorage,
   saveToSessionStorage
 } from '@/lib/session-storage'
-import { authLogin } from '@/services/doug-dimadon/auth'
+import { authLogin } from '@/services/doug-dimadon/auth/authLogin'
 import AuthContext from '@/states/auth/contexts/AuthContext'
 import type { IUsuario } from '@/types'
 import { HttpStatusCode } from 'axios'

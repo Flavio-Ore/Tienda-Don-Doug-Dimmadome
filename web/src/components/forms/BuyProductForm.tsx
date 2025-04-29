@@ -15,22 +15,15 @@ import { useForm } from 'react-hook-form'
 import { FaRegHandshake } from 'react-icons/fa6'
 
 import { useToast } from '@/hooks/use-toast'
+import { loadFromLocalStorage } from '@/lib/local-storage'
+import { cn, numberToCurrency } from '@/lib/utils'
+import { useMutationBuyProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationBuyProduct'
+import { useQueryAllProducts } from '@/states/doug-dimadon-tankstack-query/hooks/queries/products/useQueryAllProducts'
+import { useQueryAllProviders } from '@/states/doug-dimadon-tankstack-query/hooks/queries/providers/useQueryAllProviders'
+import { useQueryAllUsers } from '@/states/doug-dimadon-tankstack-query/hooks/queries/users/useQueryAllUsers'
+import type { IProducto, IUsuario } from '@/types'
 import { BuyProductSchema } from '@/validations/buyProduct.schema'
 import { ROUTES } from '@/values/routes'
-import { Link, useNavigate } from 'react-router-dom'
-import type { z } from 'zod'
-
-import { cn, numberToCurrency } from '@/lib/utils'
-import { LuChevronsUpDown } from 'react-icons/lu'
-
-import { loadFromLocalStorage } from '@/lib/local-storage'
-import { useMutationBuyProduct } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/movements/useMutationBuyProduct'
-import {
-  useQueryAllProducts,
-  useQueryAllProviders,
-  useQueryAllUsers
-} from '@/states/doug-dimadon-tankstack-query/hooks/queries'
-import type { IProducto, IUsuario } from '@/types'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {
   Card,
@@ -51,6 +44,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/popover'
 import { Textarea } from '@shadcn/textarea'
 import { BsCheck } from 'react-icons/bs'
 import { FaMinus, FaPlus } from 'react-icons/fa'
+import { LuChevronsUpDown } from 'react-icons/lu'
+import { Link, useNavigate } from 'react-router-dom'
+import type { z } from 'zod'
 interface IProductsToBeSold extends IProducto {
   cantidad: number
 }

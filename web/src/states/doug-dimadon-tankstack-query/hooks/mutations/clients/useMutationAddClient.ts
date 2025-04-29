@@ -1,5 +1,5 @@
 import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
-import { saveClienteReniec } from '@doug-dimadon/clientes'
+import { saveClienteReniec } from '@doug-dimadon/clientes/saveClienteReniec'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationAddClient() {

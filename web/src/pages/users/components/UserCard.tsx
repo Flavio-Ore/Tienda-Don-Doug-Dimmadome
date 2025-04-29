@@ -10,7 +10,7 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { useMutationChangeUserState } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/users/useMutationChangeUserState'
-import { useQueryAllUsers } from '@/states/doug-dimadon-tankstack-query/hooks/queries'
+import { useQueryAllUsers } from '@/states/doug-dimadon-tankstack-query/hooks/queries/users/useQueryAllUsers'
 import type { IUsuario } from '@/types'
 import { Button } from '@shadcn/button'
 import { useEffect } from 'react'

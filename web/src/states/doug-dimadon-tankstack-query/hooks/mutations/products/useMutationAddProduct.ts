@@ -1,7 +1,7 @@
 import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
 import {
   saveProducto
-} from '@doug-dimadon/productos'
+} from '@doug-dimadon/productos/saveProducto'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationAddProduct() {

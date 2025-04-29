@@ -1,5 +1,5 @@
 import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
-import { updateEstadoUsuario } from '@doug-dimadon/usuarios'
+import { updateEstadoUsuario } from '@doug-dimadon/usuarios/updateEstadoUsuario'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useMutationChangeUserState() {

@@ -1,8 +1,6 @@
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@shadcn/button'
-import { LuChevronsUpDown } from 'react-icons/lu'
-
 import {
   Form,
   FormControl,
@@ -14,10 +12,11 @@ import {
 } from '@shadcn/form'
 import { Input } from '@shadcn/input'
 import { useForm } from 'react-hook-form'
+import { LuChevronsUpDown } from 'react-icons/lu'
 
 import { useToast } from '@/hooks/use-toast'
 import { useMutationAddUser } from '@/states/doug-dimadon-tankstack-query/hooks/mutations/users/useMutationAddUser'
-import { useQueryAllUserTypes } from '@/states/doug-dimadon-tankstack-query/hooks/queries'
+import { useQueryAllUserTypes } from '@/states/doug-dimadon-tankstack-query/hooks/queries/users/useQueryAllUserTypes'
 import { UserFormSchema } from '@/validations/forms/addUser.schema'
 import LoaderIcon from '@components/icons/LoaderIcon'
 import {

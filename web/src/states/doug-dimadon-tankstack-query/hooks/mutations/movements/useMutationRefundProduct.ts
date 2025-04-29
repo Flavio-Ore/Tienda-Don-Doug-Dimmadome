@@ -1,4 +1,4 @@
-import { saveDevolucionProducto } from '@/services/doug-dimadon/devoluciones'
+import { saveDevolucionProducto } from '@/services/doug-dimadon/productos/saveDevolucionProducto'
 import { QUERY_KEYS } from '@/states/doug-dimadon-tankstack-query/values/query-keys'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 

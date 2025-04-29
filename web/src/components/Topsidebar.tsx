@@ -1,8 +1,7 @@
 import { loadFromLocalStorage } from '@/lib/local-storage'
 import { cn } from '@/lib/utils'
-import type { IUsuario } from '@/types'
-
 import useAuth from '@/states/auth/hooks/useAuth'
+import type { IUsuario } from '@/types'
 import { ROUTES } from '@/values/routes'
 import { Button } from '@shadcn/button'
 import {
