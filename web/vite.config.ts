@@ -11,10 +11,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@components': path.resolve(__dirname, './src/components'),
       '@shadcn': path.resolve(__dirname, './src/components/ui'),
-      '@layouts': path.resolve(__dirname, './src/layouts'),
-      '@api': path.resolve(__dirname, './src/api'),
-      '@pages': path.resolve(__dirname, './src/pages'),
-      '@doug-dimadon': path.resolve(__dirname, './src/services/doug-dimadon')
     }
   },
   test: {

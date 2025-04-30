@@ -1,13 +1,11 @@
-import {
-  addOneDay,
-  cn,
-  extractFirstRoutePart,
-  formatDate,
-  formatDateDisplay,
-  formatSerialNumber,
-  numberToCurrency
-} from '@/lib/utils'
+import { addOneDay } from '@/dimadon/utils/addOneDay'
+import { extractFirstRoutePart } from '@/dimadon/utils/extractFirstRoutePart'
+import { formatSerialNumber } from '@/dimadon/utils/formatSerialNumber'
+import { numberToCurrency } from '@/dimadon/utils/numberToCurrency'
+import { cn } from '@/utils/cn'
 import { enUS } from 'date-fns/locale'
+import { formatDate } from 'tests/utils/formatDate'
+import { formatDateDisplay } from 'tests/utils/formatDateDisplay'
 import { describe, expect, it } from 'vitest'
 
 describe('Functions from `utils` dir', () => {

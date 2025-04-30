@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import {
   CheckIcon,

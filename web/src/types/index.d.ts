@@ -1,5 +1,5 @@
-import type { AddProductFormSchema } from '@/validations/forms/addProduct.schema'
-import type { UserFormSchema } from '@/validations/forms/addUser.schema'
+import type { AddProductFormSchema } from '@/dimadon/products/product-registration/schemas/addProduct.schema'
+import type { UserFormSchema } from '@/dimadon/users/schemas/addUser.schema'
 import type { z } from 'zod'
 
 export interface InventarioDimadon {

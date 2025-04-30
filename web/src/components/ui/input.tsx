@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import type { InputHTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 
