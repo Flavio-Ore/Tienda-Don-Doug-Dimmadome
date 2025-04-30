@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/cn'
 import type * as LabelPrimitive from '@radix-ui/react-label'
 import { Slot } from '@radix-ui/react-slot'
 import { type ComponentPropsWithoutRef, createContext, type ElementRef, forwardRef, type HTMLAttributes, useContext, useId } from 'react'

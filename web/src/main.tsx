@@ -1,8 +1,8 @@
 import App from '@/App.tsx'
 import LazyPages from '@/components/LazyPage'
+import AuthProvider from '@/dimadon/states/AuthProvider'
+import DimadonProvider from '@/dimadon/states/DimadonProvider'
 import '@/index.css'
-import AuthProvider from '@/states/auth/providers/AuthProvider'
-import QueryProvider from '@/states/doug-dimadon-tankstack-query/providers/QueryProvider'
 import '@fontsource/ubuntu'
 import { Toaster } from '@shadcn/toaster'
 import { StrictMode } from 'react'
@@ -13,13 +13,13 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LazyPages>
       <Toaster />
-      <QueryProvider>
+      <DimadonProvider>
         <AuthProvider>
           <BrowserRouter>
             <App />
           </BrowserRouter>
         </AuthProvider>
-      </QueryProvider>
+      </DimadonProvider>
     </LazyPages>
   </StrictMode>
 )

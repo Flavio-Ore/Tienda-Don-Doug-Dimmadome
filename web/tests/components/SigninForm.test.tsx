@@ -1,6 +1,6 @@
-import SigninForm from '@/components/forms/SigninForm'
+import SigninForm from '@/dimadon/auth/components/SigninForm'
+import useAuth from '@/dimadon/states/useAuth'
 import { useToast } from '@/hooks/use-toast'
-import useAuth from '@/states/auth/hooks/useAuth'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
