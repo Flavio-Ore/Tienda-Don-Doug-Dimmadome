@@ -1,9 +1,7 @@
-import { ROOT } from "@/dimadon/routes/root";
-
-const INVENTORY = `${ROOT}inventario`
-const PRODUCTS = `${ROOT}productos`
-const MOVEMENTS = `${ROOT}movimientos`
-const USERS = `${ROOT}usuarios`
+const INVENTORY = 'inventario'
+const PRODUCTS = 'productos'
+const MOVEMENTS = 'movimientos'
+const USERS = 'usuarios'
 
 export const SESSION_ROUTES = {
   INVENTORY: {

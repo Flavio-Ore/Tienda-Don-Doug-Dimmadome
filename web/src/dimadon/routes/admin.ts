@@ -1,6 +1,4 @@
-import { ROOT } from "@/dimadon/routes/root";
-
-const ADMIN = `${ROOT}administracion`
+const ADMIN = '/administracion'
 
 export const ADMIN_ROUTES = {
   ROOT: `${ADMIN}`,
