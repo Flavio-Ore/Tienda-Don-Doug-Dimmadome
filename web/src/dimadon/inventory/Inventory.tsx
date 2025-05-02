@@ -2,6 +2,7 @@ import LoaderIcon from '@/components/icons/LoaderIcon'
 import { Input } from '@/components/ui/input'
 import TableKardex from '@/dimadon/inventory/components/TableKardex'
 import { useQueryAllKardexs } from '@/dimadon/inventory/hooks/useQueryAllKardexs'
+import { numberToCurrency } from '@/dimadon/utils/numberToCurrency'
 import { useDebounce } from '@/hooks/useDebounce'
 import { type IKardex } from '@/types'
 import { cn } from '@/utils/cn'
@@ -10,7 +11,6 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { Fragment, useMemo, useState } from 'react'
 import { FaClipboardList, FaSearch } from 'react-icons/fa'
 import { FaArrowRightArrowLeft, FaTableCellsRowLock } from 'react-icons/fa6'
-import { numberToCurrency } from '../utils/numberToCurrency'
 
 const columnHelper = createColumnHelper<IKardex>()
 
